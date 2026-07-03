@@ -1,0 +1,12 @@
+allowBuilds:
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
+# pnpm-workspace.yaml
+# pnpm 11+ configuration — settings moved here from package.json
+# See: https://pnpm.io/settings
+
+# Explicitly ignore build scripts for packages that don't need them.
+# sharp is an optional Next.js image optimization dependency — not required for dev.
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver

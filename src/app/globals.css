@@ -1,0 +1,68 @@
+@import "./styles/tokens.css";
+@import "./styles/typography.css";
+@import "tailwindcss";
+
+/* ─── Tailwind theme extension via CSS variables ─────────────────── */
+@theme {
+  --color-bg-base: var(--c-bg-base);
+  --color-bg-elevated: var(--c-bg-elevated);
+  --color-bg-subtle: var(--c-bg-subtle);
+  --color-bg-hover: var(--c-bg-hover);
+
+  --color-border-subtle: var(--c-border-subtle);
+  --color-border-default: var(--c-border-default);
+  --color-border-strong: var(--c-border-strong);
+
+  --color-text-primary: var(--c-text-primary);
+  --color-text-secondary: var(--c-text-secondary);
+  --color-text-tertiary: var(--c-text-tertiary);
+  --color-text-disabled: var(--c-text-disabled);
+
+  --color-accent: var(--c-accent);
+  --color-accent-hover: var(--c-accent-hover);
+
+  --color-success: var(--c-success);
+  --color-warning: var(--c-warning);
+  --color-danger: var(--c-danger);
+  --color-info: var(--c-info);
+
+  --font-family-sans: var(--font-sans);
+  --font-family-mono: var(--font-mono);
+}
+
+/* ─── Global resets ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Scrollbar — subtle, dark ───────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--c-bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--c-border-default);
+  border-radius: var(--r-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-border-strong);
+}
+
+/* ─── Focus ring — accessible, consistent ────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 2px;
+}

@@ -1,0 +1,330 @@
+// prisma/schema.prisma
+// Source of truth for the AXIOM database schema.
+// Spec §5.2 — complete schema with all tables and enums.
+//
+// NOTE: No migration has been run in Sprint 0.1.
+// Run `pnpm prisma migrate dev` once Supabase is connected (Sprint 0.2+).
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================
+// FOUNDATION TABLES
+// ============================================================
+
+model Workspace {
+  id        String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  name      String
+  slug      String   @unique
+  plan      Plan     @default(FREE)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  users        User[]
+  prospects    Prospect[]
+  leads        Lead[]
+  categories   BusinessCategory[]
+  aiCosts      AiCostRecord[]
+  apiKeys      ApiKey[]
+  integrations Integration[]
+
+  @@map("workspaces")
+}
+
+model User {
+  id          String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId String   @map("workspace_id")
+  email       String   @unique
+  name        String?
+  avatarUrl   String?  @map("avatar_url")
+  role        UserRole @default(MEMBER)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId])
+  @@map("users")
+}
+
+model ApiKey {
+  id           String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId  String   @map("workspace_id")
+  provider     String   // 'anthropic' | 'google_places' | 'gmail'
+  encryptedKey String   @map("encrypted_key") // AES-256-GCM
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, provider])
+  @@index([workspaceId])
+  @@map("api_keys")
+}
+
+model Integration {
+  id          String            @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId String            @map("workspace_id")
+  provider    String            // 'gmail' | 'outlook' | ...
+  status      IntegrationStatus @default(DISCONNECTED)
+  metadata    Json              @default("{}")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@map("integrations")
+}
+
+model AiCostRecord {
+  id           String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId  String   @map("workspace_id")
+  taskId       String   @map("task_id") // 'prospect_analysis' etc.
+  model        String   // 'claude-sonnet-4-5' etc.
+  inputTokens  Int      @map("input_tokens")
+  outputTokens Int      @map("output_tokens")
+  costUsdCents Int      @map("cost_usd_cents")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, createdAt])
+  @@index([taskId])
+  @@map("ai_cost_records")
+}
+
+model AiPromptLog {
+  id           String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId  String   @map("workspace_id")
+  taskId       String   @map("task_id")
+  model        String
+  inputHash    String   @map("input_hash") // SHA-256 of input
+  inputJson    Json     @map("input_json")
+  outputJson   Json     @map("output_json")
+  durationMs   Int      @map("duration_ms")
+  tokensIn     Int      @map("tokens_in")
+  tokensOut    Int      @map("tokens_out")
+  errorMessage String?  @map("error_message")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([workspaceId, createdAt])
+  @@index([taskId])
+  @@index([inputHash])
+  @@map("ai_prompt_logs")
+}
+
+// ============================================================
+// AXIOM GROWTH TABLES
+// ============================================================
+
+model BusinessCategory {
+  id              String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId     String?  @map("workspace_id") // null = global taxonomy
+  label           String   // "Barbershops"
+  googlePlaceType String   @map("google_place_type") // "hair_care"
+  icon            String?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  prospects Prospect[]
+
+  @@unique([workspaceId, label])
+  @@map("business_categories")
+}
+
+model City {
+  id          String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  name        String   // "Madrid"
+  countryCode String   @map("country_code") // "ES"
+  lat         Float
+  lng         Float
+  placeId     String?  @map("place_id") // Google Places ID for the city
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  prospects Prospect[]
+
+  @@unique([name, countryCode])
+  @@map("cities")
+}
+
+model Prospect {
+  id               String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId      String   @map("workspace_id")
+  placeId          String   @map("place_id") // Google Places ID — idempotency key
+  name             String
+  categoryId       String?  @map("category_id")
+  cityId           String?  @map("city_id")
+  address          String?
+  phone            String?
+  website          String?
+  email            String?  // from website scraping or Google
+  rating           Float?
+  userRatingsCount Int?     @map("user_ratings_count")
+  priceLevel       Int?     @map("price_level") // 0-4
+  businessStatus   String?  @map("business_status")
+  googleUrl        String?  @map("google_url")
+  lat              Float?
+  lng              Float?
+  metadata         Json     @default("{}") // raw Places response, photos, hours
+  // Analysis fields
+  analysisStatus     AnalysisStatus @default(PENDING) @map("analysis_status")
+  qualityScore       Int?           @map("quality_score") // 0-100
+  scoreRationale     Json?          @map("score_rationale")
+  signals            Json?          // { has_website: bool, low_rating: bool, ... }
+  opportunities      Json?          // [{ type: 'no_online_booking', severity: 'high', ... }]
+  analyzedAt         DateTime?      @map("analyzed_at")
+  analyzedByModel    String?        @map("analyzed_by_model")
+  // Outreach fields
+  messageDraft       String?   @map("message_draft")
+  messageDraftModel  String?   @map("message_draft_model")
+  messageDraftAt     DateTime? @map("message_draft_at")
+  messageEdited      String?   @map("message_edited") // user-edited version
+  userNotes          String?   @map("user_notes")
+  // Conversion
+  convertedToLeadId String?   @map("converted_to_lead_id")
+  // Soft delete + timestamps
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  workspace Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  category  BusinessCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  city      City?             @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  lead      Lead?             @relation(fields: [convertedToLeadId], references: [id], onDelete: SetNull)
+
+  @@unique([workspaceId, placeId])
+  @@index([workspaceId, cityId, categoryId])
+  @@index([workspaceId, qualityScore])
+  @@index([workspaceId, analysisStatus])
+  @@index([workspaceId, convertedToLeadId])
+  @@map("prospects")
+}
+
+model Lead {
+  id             String     @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId    String     @map("workspace_id")
+  prospectId     String?    @map("prospect_id") // nullable: leads can exist without prospect
+  name           String
+  businessName   String?    @map("business_name")
+  email          String?
+  phone          String?
+  website        String?
+  source         LeadSource @default(PROSPECTING)
+  status         LeadStatus @default(NEW)
+  qualityScore   Int?       @map("quality_score")
+  // Message that was sent
+  finalMessage   String?    @map("final_message")
+  // Pipeline
+  priority       Int        @default(0)
+  assignedToId   String?    @map("assigned_to_id")
+  lastContactedAt DateTime? @map("last_contacted_at")
+  nextFollowUpAt  DateTime? @map("next_follow_up_at")
+  // Outreach audit
+  outreachChannel String?   @map("outreach_channel") // 'email' | 'whatsapp' | 'copy'
+  outreachSentAt  DateTime? @map("outreach_sent_at")
+  // Metadata
+  metadata  Json      @default("{}")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  workspace  Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  prospect   Prospect?      @relation(fields: [prospectId], references: [id], onDelete: SetNull)
+  activities LeadActivity[]
+  events     LeadEvent[]
+
+  @@index([workspaceId, status])
+  @@index([workspaceId, priority])
+  @@index([workspaceId, nextFollowUpAt])
+  @@map("leads")
+}
+
+model LeadActivity {
+  id        String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  leadId    String   @map("lead_id")
+  type      String   // 'note' | 'call' | 'email' | 'meeting'
+  content   String
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId, createdAt])
+  @@map("lead_activities")
+}
+
+model LeadEvent {
+  id        String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  leadId    String   @map("lead_id")
+  eventType String   @map("event_type") // 'status_changed' | 'message_sent' | ...
+  fromValue String?  @map("from_value")
+  toValue   String?  @map("to_value")
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId, createdAt])
+  @@index([eventType, createdAt])
+  @@map("lead_events")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Plan {
+  FREE
+  PRO
+  TEAM
+  ENTERPRISE
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum IntegrationStatus {
+  DISCONNECTED
+  CONNECTED
+  ERROR
+}
+
+enum AnalysisStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  SKIPPED
+}
+
+enum LeadSource {
+  PROSPECTING
+  MANUAL
+  IMPORTED
+  REFERRAL
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL
+  WON
+  LOST
+  ARCHIVED
+}
