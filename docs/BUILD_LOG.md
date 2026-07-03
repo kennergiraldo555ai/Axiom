@@ -191,3 +191,22 @@ Sentar las bases (Foundations) de integraci�n de datos e inteligencia artifici
 - Agregada observabilidad (Pino) registrando inputs, outputs, duraci�n y costo en peticiones IA.
 - Implementaci�n de \src/lib/adapters/places/router.ts\ y adaptador \Google Places (New)\ con fetch nativo.
 - Verificaci�n exhaustiva superada.
+
+---
+
+# Sprint 1.2
+
+**Estado:** Completado
+
+## Objetivo
+
+Construir completamente el backend del m�dulo AXIOM Growth (Prospecting Engine).
+
+### Alcance
+
+- Creaci�n de la arquitectura Domain-Driven Design (DDD) con separaci�n de Entities, Repositories, Services, Use Cases, Validators y DTOs.
+- Ejecuci�n exitosa de la migraci�n de Prisma \init_growth\ y validaci�n del modelo Prospect en Supabase.
+- Desarrollo de \SearchProspectsUseCase\, \AnalyzeProspectUseCase\ y \QueryProspectsUseCase\.
+- Integraci�n del AI Router con Anthropic para el an�lisis de prospectos usando tipado estricto.
+- Definici�n de validadores robustos con Zod.
+- Cumplimiento de reglas de calidad (Lint, TypeScript strict, Next Build).

@@ -52,9 +52,9 @@ export class GooglePlacesAdapter implements IPlacesProviderAdapter {
           name: ((p.displayName as Record<string, unknown>)?.text as string) || "Unknown",
           address: (p.formattedAddress as string) || "",
           category: (p.primaryType as string) || "business",
-          websiteUrl: p.websiteUri as string | undefined,
-          phoneNumber: p.nationalPhoneNumber as string | undefined,
-          rating: p.rating as number | undefined,
+          ...(p.websiteUri ? { websiteUrl: p.websiteUri as string } : {}),
+          ...(p.nationalPhoneNumber ? { phoneNumber: p.nationalPhoneNumber as string } : {}),
+          ...(p.rating ? { rating: p.rating as number } : {}),
           provider: this.id,
         };
       });

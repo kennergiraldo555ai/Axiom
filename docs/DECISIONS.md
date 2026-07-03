@@ -382,3 +382,9 @@ It is the result of documented decisions that can be understood, challenged and 
 - **Decisi�n:** Implementar \src/lib/adapters/places/router.ts\ para abstraer el origen de datos de prospectos (Google Places API New como primer adaptador).
 - **Razonamiento:** Evita acoplar la l�gica de negocio a un �nico proveedor de datos, permitiendo inyectar Yelp u otras fuentes en el futuro.
 - **Fecha:** Sprint 1.1
+
+### 6. Prospecting Domain Architecture
+
+- **Decisi�n:** Implementar Clean Architecture estricta en el m�dulo \growth/prospecting\ separando en \domain/\, \pplication/\, \infrastructure/\ y \presentation/\.
+- **Razonamiento:** El m�dulo Prospecting es el n�cleo de AXIOM Growth. Separar entidades, validadores, casos de uso y repositorios garantiza que la l�gica de negocio pueda testearse y escalar sin depender de Prisma o de Next.js directamente.
+- **Fecha:** Sprint 1.2
