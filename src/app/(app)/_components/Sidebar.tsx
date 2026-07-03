@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { Route } from "next";
 
 interface NavItem {
   href: string;
@@ -16,9 +17,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/crm", label: "CRM", icon: "◉" },
 ];
 
-const BOTTOM_NAV_ITEMS: NavItem[] = [
-  { href: "/settings", label: "Settings", icon: "⚙" },
-];
+const BOTTOM_NAV_ITEMS: NavItem[] = [{ href: "/settings", label: "Settings", icon: "⚙" }];
 
 /**
  * App sidebar — collapsible navigation per spec §6.2.
@@ -92,7 +91,7 @@ interface SidebarItemProps {
 function SidebarItem({ item, active }: SidebarItemProps) {
   return (
     <Link
-      href={item.href}
+      href={item.href as Route}
       style={{
         display: "flex",
         alignItems: "center",
