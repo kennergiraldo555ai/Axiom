@@ -370,3 +370,15 @@ This preserves the historical evolution of AXIOM.
 Good software is not the result of perfect decisions.
 
 It is the result of documented decisions that can be understood, challenged and improved over time.
+
+### 4. AI Provider Abstraction (AI Router)
+
+- **Decisi�n:** Implementar \src/lib/ai/router.ts\ como una capa de abstracci�n para modelos LLM (Anthropic como primer proveedor).
+- **Razonamiento:** Previene vendor lock-in a nivel de framework de IA. Vercel AI SDK fue descartado temporalmente por acoplar excesivamente el backend con componentes UI y asumir flujos de streaming para Chat, mientras que AXIOM Growth requiere procesamiento en background as�ncrono para Prospecting. Adem�s, facilita la observabilidad detallada.
+- **Fecha:** Sprint 1.1
+
+### 5. Places Provider Abstraction
+
+- **Decisi�n:** Implementar \src/lib/adapters/places/router.ts\ para abstraer el origen de datos de prospectos (Google Places API New como primer adaptador).
+- **Razonamiento:** Evita acoplar la l�gica de negocio a un �nico proveedor de datos, permitiendo inyectar Yelp u otras fuentes en el futuro.
+- **Fecha:** Sprint 1.1

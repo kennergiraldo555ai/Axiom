@@ -114,39 +114,38 @@ Iniciar Sprint 0.3.
 
 ## Objetivo
 
-Finalizar la configuración de la infraestructura base (Fase 0), integrando Prisma (Base de Datos) y la observabilidad (Pino Logger, Sentry), además de preparar el despliegue a Vercel.
+Finalizar la configuraciï¿½n de la infraestructura base (Fase 0), integrando Prisma (Base de Datos) y la observabilidad (Pino Logger, Sentry), ademï¿½s de preparar el despliegue a Vercel.
 
 ### Alcance
 
-- Integración de Prisma Client Singleton en \src/lib/db/client.ts\.
-- Implementación de helpers de transacciones (\withTransaction\) y seguridad RLS (\setWorkspaceId\).
-- Integración de Sentry de forma 100% manual (\sentry.client.config.ts\, \sentry.server.config.ts\, \sentry.edge.config.ts\, \instrumentation.ts\, \
-ext.config.ts\).
-- Configuración de Pino Logger estructurado.
-- Middleware para inyectar \x-request-id\ en cada petición.
-- Corrección de sintaxis de relaciones Prisma en \schema.prisma\.
+- Integraciï¿½n de Prisma Client Singleton en \src/lib/db/client.ts\.
+- Implementaciï¿½n de helpers de transacciones (\withTransaction\) y seguridad RLS (\setWorkspaceId\).
+- Integraciï¿½n de Sentry de forma 100% manual (\sentry.client.config.ts\, \sentry.server.config.ts\, \sentry.edge.config.ts\, \instrumentation.ts\, \
+  ext.config.ts\).
+- Configuraciï¿½n de Pino Logger estructurado.
+- Middleware para inyectar \x-request-id\ en cada peticiï¿½n.
+- Correcciï¿½n de sintaxis de relaciones Prisma en \schema.prisma\.
 
 ### Fuera del alcance
 
-- Conexión a bases de datos de desarrollo temporal o local.
-- Lógica de negocio de la Fase 1.
-- Ejecutar migraciones automatizadas sin autorización explícita y credenciales de producción.
+- Conexiï¿½n a bases de datos de desarrollo temporal o local.
+- Lï¿½gica de negocio de la Fase 1.
+- Ejecutar migraciones automatizadas sin autorizaciï¿½n explï¿½cita y credenciales de producciï¿½n.
 
 ### Resultado
 
-Completado a nivel de código. La infraestructura se encuentra lista. Se validaron los tipos, linter y build general satisfactoriamente (\pnpm build\, \pnpm lint\, \pnpm typecheck\). Prisma generó su cliente local sin problemas (\
+Completado a nivel de cï¿½digo. La infraestructura se encuentra lista. Se validaron los tipos, linter y build general satisfactoriamente (\pnpm build\, \pnpm lint\, \pnpm typecheck\). Prisma generï¿½ su cliente local sin problemas (\
 px prisma generate\).
 
-### Decisiones técnicas
+### Decisiones tï¿½cnicas
 
-- **Prisma v6:** Se optó por Prisma 6 en lugar de Prisma 7 para evitar incompatibilidades de configuración no documentadas o inestables con el esquema pre-existente, preservando la compatibilidad de \url\ y \directUrl\ sin requerir configuraciones de adaptadores complejas.
-- **Sentry Manual:** Se implementó manualmente y de forma limpia en lugar de utilizar el \@sentry/wizard\, evitando código generado residual.
-- **Relaciones Prisma:** Se corrigió un error de ambigüedad en \schema.prisma\ donde las relaciones 1-a-1 entre \Prospect\ y \Lead\ colisionaban. Se resolvieron agregando nombres explícitos y especificando el constraint \@unique\ correcto en el modelo \Lead\.
+- **Prisma v6:** Se optï¿½ por Prisma 6 en lugar de Prisma 7 para evitar incompatibilidades de configuraciï¿½n no documentadas o inestables con el esquema pre-existente, preservando la compatibilidad de \url\ y \directUrl\ sin requerir configuraciones de adaptadores complejas.
+- **Sentry Manual:** Se implementï¿½ manualmente y de forma limpia en lugar de utilizar el \@sentry/wizard\, evitando cï¿½digo generado residual.
+- **Relaciones Prisma:** Se corrigiï¿½ un error de ambigï¿½edad en \schema.prisma\ donde las relaciones 1-a-1 entre \Prospect\ y \Lead\ colisionaban. Se resolvieron agregando nombres explï¿½citos y especificando el constraint \@unique\ correcto en el modelo \Lead\.
 
 ### Problemas encontrados
 
-- **Build ignorados en pnpm:** pnpm bloqueó la generación del Prisma Client (\@prisma/client\) por restricciones de ejecución de scripts postinstall. Se resolvió registrando los paquetes explícitamente en el nodo \pnpm.approvedBuilds\ de \package.json\.
-
+- **Build ignorados en pnpm:** pnpm bloqueï¿½ la generaciï¿½n del Prisma Client (\@prisma/client\) por restricciones de ejecuciï¿½n de scripts postinstall. Se resolviï¿½ registrando los paquetes explï¿½citamente en el nodo \pnpm.approvedBuilds\ de \package.json\.
 
 ---
 
@@ -156,21 +155,39 @@ px prisma generate\).
 
 ## Objetivo
 
-Auditoría técnica general y preparación final de la infraestructura para dar paso a la Phase 1. No se implementaron nuevas funcionalidades, sino que se estabilizó la base actual.
+Auditorï¿½a tï¿½cnica general y preparaciï¿½n final de la infraestructura para dar paso a la Phase 1. No se implementaron nuevas funcionalidades, sino que se estabilizï¿½ la base actual.
 
 ### Alcance
 
-- Auditoría de dependencias, seguridad, estructura de archivos y consistencia del código.
-- Revisión de la configuración para despliegue en Vercel (Supabase, Sentry, Prisma).
-- Verificación final exhaustiva (\lint\, \	ypecheck\, \uild\).
-- Elaboración de propuesta técnica (plan de implementación) para la Phase 1 enfocada en AXIOM Growth (módulo de prospección y generación de ingresos).
+- Auditorï¿½a de dependencias, seguridad, estructura de archivos y consistencia del cï¿½digo.
+- Revisiï¿½n de la configuraciï¿½n para despliegue en Vercel (Supabase, Sentry, Prisma).
+- Verificaciï¿½n final exhaustiva (\lint\, \ ypecheck\, \uild\).
+- Elaboraciï¿½n de propuesta tï¿½cnica (plan de implementaciï¿½n) para la Phase 1 enfocada en AXIOM Growth (mï¿½dulo de prospecciï¿½n y generaciï¿½n de ingresos).
 
 ### Resultado
 
-Completado. La base de código de la Phase 0 (Foundation) se encuentra 100% estable y lista para escalar. No hay advertencias de linter, y los tipos de TypeScript están completamente alineados. 
+Completado. La base de cï¿½digo de la Phase 0 (Foundation) se encuentra 100% estable y lista para escalar. No hay advertencias de linter, y los tipos de TypeScript estï¿½n completamente alineados.
 
-### Decisiones técnicas
+### Decisiones tï¿½cnicas
 
-- **Mantenimiento de Dependencias:** Se decidió NO actualizar Prisma a 7.x ni React a 19.2.7 para preservar la estabilidad obtenida con Prisma 6.19.3, evitando la introducción de bugs relacionados a configuraciones de adaptadores y conexiones directas de DB en la capa SSR.
-- **Preparación Vercel/Supabase:** La integración quedó condicionada a la inyección final de variables de entorno en Vercel por parte del usuario, manteniendo la seguridad de las credenciales fuera del repositorio.
+- **Mantenimiento de Dependencias:** Se decidiï¿½ NO actualizar Prisma a 7.x ni React a 19.2.7 para preservar la estabilidad obtenida con Prisma 6.19.3, evitando la introducciï¿½n de bugs relacionados a configuraciones de adaptadores y conexiones directas de DB en la capa SSR.
+- **Preparaciï¿½n Vercel/Supabase:** La integraciï¿½n quedï¿½ condicionada a la inyecciï¿½n final de variables de entorno en Vercel por parte del usuario, manteniendo la seguridad de las credenciales fuera del repositorio.
 
+---
+
+# Sprint 1.1
+
+**Estado:** Completado
+
+## Objetivo
+
+Sentar las bases (Foundations) de integraciï¿½n de datos e inteligencia artificial para AXIOM Growth, aislando el proyecto de proveedores especï¿½ficos.
+
+### Alcance
+
+- Soluciï¿½n definitiva al issue de scripts de construcciï¿½n de pnpm configurando \llowBuilds\ en \pnpm-workspace.yaml\.
+- Implementaciï¿½n de \src/lib/ai/router.ts\ y adaptador de \Anthropic\.
+- Diseï¿½o escalable de prompts tipados en \src/lib/ai/prompts\.
+- Agregada observabilidad (Pino) registrando inputs, outputs, duraciï¿½n y costo en peticiones IA.
+- Implementaciï¿½n de \src/lib/adapters/places/router.ts\ y adaptador \Google Places (New)\ con fetch nativo.
+- Verificaciï¿½n exhaustiva superada.
