@@ -105,3 +105,45 @@ Variables de entorno estÃ¡n seguras mediante `zod` (`src/lib/config/env.ts`).
 ### PrÃ³ximos pasos
 
 Iniciar Sprint 0.3.
+
+---
+
+# Sprint 0.3
+
+**Estado:** Completado (A la espera de credenciales para migraciones)
+
+## Objetivo
+
+Finalizar la configuración de la infraestructura base (Fase 0), integrando Prisma (Base de Datos) y la observabilidad (Pino Logger, Sentry), además de preparar el despliegue a Vercel.
+
+### Alcance
+
+- Integración de Prisma Client Singleton en \src/lib/db/client.ts\.
+- Implementación de helpers de transacciones (\withTransaction\) y seguridad RLS (\setWorkspaceId\).
+- Integración de Sentry de forma 100% manual (\sentry.client.config.ts\, \sentry.server.config.ts\, \sentry.edge.config.ts\, \instrumentation.ts\, \
+ext.config.ts\).
+- Configuración de Pino Logger estructurado.
+- Middleware para inyectar \x-request-id\ en cada petición.
+- Corrección de sintaxis de relaciones Prisma en \schema.prisma\.
+
+### Fuera del alcance
+
+- Conexión a bases de datos de desarrollo temporal o local.
+- Lógica de negocio de la Fase 1.
+- Ejecutar migraciones automatizadas sin autorización explícita y credenciales de producción.
+
+### Resultado
+
+Completado a nivel de código. La infraestructura se encuentra lista. Se validaron los tipos, linter y build general satisfactoriamente (\pnpm build\, \pnpm lint\, \pnpm typecheck\). Prisma generó su cliente local sin problemas (\
+px prisma generate\).
+
+### Decisiones técnicas
+
+- **Prisma v6:** Se optó por Prisma 6 en lugar de Prisma 7 para evitar incompatibilidades de configuración no documentadas o inestables con el esquema pre-existente, preservando la compatibilidad de \url\ y \directUrl\ sin requerir configuraciones de adaptadores complejas.
+- **Sentry Manual:** Se implementó manualmente y de forma limpia en lugar de utilizar el \@sentry/wizard\, evitando código generado residual.
+- **Relaciones Prisma:** Se corrigió un error de ambigüedad en \schema.prisma\ donde las relaciones 1-a-1 entre \Prospect\ y \Lead\ colisionaban. Se resolvieron agregando nombres explícitos y especificando el constraint \@unique\ correcto en el modelo \Lead\.
+
+### Problemas encontrados
+
+- **Build ignorados en pnpm:** pnpm bloqueó la generación del Prisma Client (\@prisma/client\) por restricciones de ejecución de scripts postinstall. Se resolvió registrando los paquetes explícitamente en el nodo \pnpm.approvedBuilds\ de \package.json\.
+

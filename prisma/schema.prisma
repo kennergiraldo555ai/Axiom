@@ -192,7 +192,7 @@ model Prospect {
   messageEdited      String?   @map("message_edited") // user-edited version
   userNotes          String?   @map("user_notes")
   // Conversion
-  convertedToLeadId String?   @map("converted_to_lead_id")
+  convertedToLeadId String?   @unique @map("converted_to_lead_id")
   // Soft delete + timestamps
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
@@ -201,7 +201,8 @@ model Prospect {
   workspace Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   category  BusinessCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   city      City?             @relation(fields: [cityId], references: [id], onDelete: SetNull)
-  lead      Lead?             @relation(fields: [convertedToLeadId], references: [id], onDelete: SetNull)
+  lead      Lead?             @relation("ProspectToLead", fields: [convertedToLeadId], references: [id], onDelete: SetNull)
+  leadsFromThis Lead[]        @relation("LeadToProspect")
 
   @@unique([workspaceId, placeId])
   @@index([workspaceId, cityId, categoryId])
@@ -240,7 +241,8 @@ model Lead {
   deletedAt DateTime? @map("deleted_at")
 
   workspace  Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  prospect   Prospect?      @relation(fields: [prospectId], references: [id], onDelete: SetNull)
+  prospect   Prospect?      @relation("LeadToProspect", fields: [prospectId], references: [id], onDelete: SetNull)
+  sourceProspect Prospect?  @relation("ProspectToLead")
   activities LeadActivity[]
   events     LeadEvent[]
 
