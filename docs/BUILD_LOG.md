@@ -147,3 +147,30 @@ px prisma generate\).
 
 - **Build ignorados en pnpm:** pnpm bloqueó la generación del Prisma Client (\@prisma/client\) por restricciones de ejecución de scripts postinstall. Se resolvió registrando los paquetes explícitamente en el nodo \pnpm.approvedBuilds\ de \package.json\.
 
+
+---
+
+# Sprint 0.4
+
+**Estado:** Completado (Cierre de Phase 0)
+
+## Objetivo
+
+Auditoría técnica general y preparación final de la infraestructura para dar paso a la Phase 1. No se implementaron nuevas funcionalidades, sino que se estabilizó la base actual.
+
+### Alcance
+
+- Auditoría de dependencias, seguridad, estructura de archivos y consistencia del código.
+- Revisión de la configuración para despliegue en Vercel (Supabase, Sentry, Prisma).
+- Verificación final exhaustiva (\lint\, \	ypecheck\, \uild\).
+- Elaboración de propuesta técnica (plan de implementación) para la Phase 1 enfocada en AXIOM Growth (módulo de prospección y generación de ingresos).
+
+### Resultado
+
+Completado. La base de código de la Phase 0 (Foundation) se encuentra 100% estable y lista para escalar. No hay advertencias de linter, y los tipos de TypeScript están completamente alineados. 
+
+### Decisiones técnicas
+
+- **Mantenimiento de Dependencias:** Se decidió NO actualizar Prisma a 7.x ni React a 19.2.7 para preservar la estabilidad obtenida con Prisma 6.19.3, evitando la introducción de bugs relacionados a configuraciones de adaptadores y conexiones directas de DB en la capa SSR.
+- **Preparación Vercel/Supabase:** La integración quedó condicionada a la inyección final de variables de entorno en Vercel por parte del usuario, manteniendo la seguridad de las credenciales fuera del repositorio.
+
