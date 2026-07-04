@@ -17,37 +17,12 @@ interface AppLayoutProps {
  */
 export default function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="app-shell">
+    <div className="flex min-h-screen bg-[var(--c-bg-base)]">
       <Sidebar />
-      <div className="app-main">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <Topbar />
-        <main className="app-content">{children}</main>
+        <main className="flex-1 w-full max-w-[1440px] mx-auto overflow-y-auto">{children}</main>
       </div>
-
-      <style>{`
-        .app-shell {
-          display: flex;
-          min-height: 100vh;
-          background-color: var(--c-bg-base);
-        }
-
-        .app-main {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          min-width: 0;
-          overflow: hidden;
-        }
-
-        .app-content {
-          flex: 1;
-          padding: var(--s-6);
-          max-width: 1280px;
-          width: 100%;
-          margin: 0 auto;
-          overflow-y: auto;
-        }
-      `}</style>
     </div>
   );
 }
