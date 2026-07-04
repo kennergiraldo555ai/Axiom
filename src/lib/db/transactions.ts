@@ -1,6 +1,6 @@
-import type { Prisma } from '@prisma/client';
-import { prisma } from './client';
-import { setWorkspaceId } from './rls';
+import type { Prisma } from "@prisma/client";
+import { prisma } from "./client";
+import { setWorkspaceId } from "./rls";
 
 /**
  * Wraps a block of database operations in an interactive transaction.
@@ -14,15 +14,12 @@ import { setWorkspaceId } from './rls';
 export async function withTransaction<T>(
   callback: (tx: Prisma.TransactionClient) => Promise<T>,
   workspaceId?: string,
-  options?: { maxWait?: number; timeout?: number }
+  options?: { maxWait?: number; timeout?: number },
 ): Promise<T> {
-  return await prisma.$transaction(
-    async (tx) => {
-      if (workspaceId) {
-        await setWorkspaceId(tx, workspaceId);
-      }
-      return await callback(tx);
-    },
-    options
-  );
+  return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    if (workspaceId) {
+      await setWorkspaceId(tx, workspaceId);
+    }
+    return await callback(tx);
+  }, options);
 }
