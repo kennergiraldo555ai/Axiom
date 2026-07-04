@@ -74,7 +74,7 @@ export function ProspectSearch({ onSearchComplete }: ProspectSearchProps) {
         <Input
           id="category"
           name="category"
-          placeholder="Ej. Barberías, Clínicas Dentales..."
+          placeholder="Ej. Dental Clinics, Software Agencies..."
           disabled={isSearching}
           required
         />

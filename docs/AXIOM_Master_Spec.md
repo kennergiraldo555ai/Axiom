@@ -132,15 +132,15 @@ Track lead status and outcome in CRM
 
 ### 2.4 Why These Decisions
 
-| Decision | Chosen | Rejected | Why |
-|---|---|---|---|
-| Framework | Next.js 16 App Router | Remix, T3, plain Vite | Best DX in Antigravity, RSC ships less JS, Server Actions remove API boilerplate, native to Vercel. |
-| Database | Supabase Postgres | Neon, self-hosted | Auth + RLS + Realtime + Storage in one. Auth alone saves weeks. RLS gives us row-level security without app-level checks. |
-| ORM | Prisma | Drizzle, raw SQL | Type-safe, migrations as code, schema-as-source-of-truth. Drizzle is faster but Prisma's DX wins for a decade-long project. |
-| Auth | Supabase Auth | NextAuth, custom | Tightly integrated with RLS, magic-link + OAuth out of the box, JWT sessions reusable for future WebSocket/edge cases. |
-| Styling | Tailwind + shadcn/ui | MUI, Chakra | Copy-paste components we own, no library lock-in, fits Linear/Notion aesthetic. |
-| AI Routing | Internal `ai_router` abstraction | Direct SDK calls | Model names change quarterly. Tasks change less often. Decouple task → model mapping. |
-| Tenancy | Single-user MVP, `workspace_id` everywhere | Full multi-tenant now | Ship faster, but the column means a future migration is `UPDATE` + RLS policy, not a schema rewrite. |
+| Decision   | Chosen                                     | Rejected              | Why                                                                                                                         |
+| ---------- | ------------------------------------------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Framework  | Next.js 16 App Router                      | Remix, T3, plain Vite | Best DX in Antigravity, RSC ships less JS, Server Actions remove API boilerplate, native to Vercel.                         |
+| Database   | Supabase Postgres                          | Neon, self-hosted     | Auth + RLS + Realtime + Storage in one. Auth alone saves weeks. RLS gives us row-level security without app-level checks.   |
+| ORM        | Prisma                                     | Drizzle, raw SQL      | Type-safe, migrations as code, schema-as-source-of-truth. Drizzle is faster but Prisma's DX wins for a decade-long project. |
+| Auth       | Supabase Auth                              | NextAuth, custom      | Tightly integrated with RLS, magic-link + OAuth out of the box, JWT sessions reusable for future WebSocket/edge cases.      |
+| Styling    | Tailwind + shadcn/ui                       | MUI, Chakra           | Copy-paste components we own, no library lock-in, fits Linear/Notion aesthetic.                                             |
+| AI Routing | Internal `ai_router` abstraction           | Direct SDK calls      | Model names change quarterly. Tasks change less often. Decouple task → model mapping.                                       |
+| Tenancy    | Single-user MVP, `workspace_id` everywhere | Full multi-tenant now | Ship faster, but the column means a future migration is `UPDATE` + RLS policy, not a schema rewrite.                        |
 
 ---
 
@@ -332,42 +332,42 @@ axiom/
 
 ### 4.1 Core Stack
 
-| Layer | Choice | Version | Notes |
-|---|---|---|---|
-| Runtime | Node.js | 22 LTS | Vercel-native. |
-| Language | TypeScript | 5.7+ | `strict: true`, `noUncheckedIndexedAccess: true`. |
-| Framework | Next.js | 16 (App Router) | RSC default, Server Actions, Route Handlers. |
-| Database | Supabase Postgres | 15+ | RLS enabled. |
-| ORM | Prisma | 6+ | Migrations as code. |
-| Auth | Supabase Auth | latest | Magic link + OAuth. |
-| Styling | Tailwind CSS | 4 | Design tokens as CSS variables. |
-| UI library | shadcn/ui | latest | Copy-paste, fully owned. |
-| Forms | React Hook Form + Zod | latest | Type-safe forms. |
-| Data fetching | TanStack Query | 5+ | For client-side mutations/invalidations. |
-| State | Zustand (client) | 5 | Tiny, ergonomic, no boilerplate. |
-| Tables | TanStack Table | 8 | Headless, virtualized when needed. |
-| Charts | Recharts | 2+ | For Dashboard MVP. |
-| Email OAuth | `@googleapis/gmail` + `arctic` | latest | Gmail API + generic OAuth. |
-| Logging | pino | 9 | Structured, fast. |
-| Errors | Sentry | latest | Source maps uploaded. |
-| Validation | Zod | 3+ | Schemas shared between client/server. |
-| AI SDK | `@anthropic-ai/sdk` | latest | Direct Anthropic SDK behind our router. |
-| Package manager | pnpm | 9+ | Workspaces, fast, disk-efficient. |
-| Testing | Vitest + Playwright | latest | Unit/integration + E2E. |
-| Linting | ESLint + Biome (optional) | latest | Biome for fast formatting, ESLint for rules. |
-| Git hooks | Husky + lint-staged | latest | Pre-commit gates. |
-| Email templating | React Email | latest | Type-safe email templates. |
+| Layer            | Choice                         | Version         | Notes                                             |
+| ---------------- | ------------------------------ | --------------- | ------------------------------------------------- |
+| Runtime          | Node.js                        | 22 LTS          | Vercel-native.                                    |
+| Language         | TypeScript                     | 5.7+            | `strict: true`, `noUncheckedIndexedAccess: true`. |
+| Framework        | Next.js                        | 16 (App Router) | RSC default, Server Actions, Route Handlers.      |
+| Database         | Supabase Postgres              | 15+             | RLS enabled.                                      |
+| ORM              | Prisma                         | 6+              | Migrations as code.                               |
+| Auth             | Supabase Auth                  | latest          | Magic link + OAuth.                               |
+| Styling          | Tailwind CSS                   | 4               | Design tokens as CSS variables.                   |
+| UI library       | shadcn/ui                      | latest          | Copy-paste, fully owned.                          |
+| Forms            | React Hook Form + Zod          | latest          | Type-safe forms.                                  |
+| Data fetching    | TanStack Query                 | 5+              | For client-side mutations/invalidations.          |
+| State            | Zustand (client)               | 5               | Tiny, ergonomic, no boilerplate.                  |
+| Tables           | TanStack Table                 | 8               | Headless, virtualized when needed.                |
+| Charts           | Recharts                       | 2+              | For Dashboard MVP.                                |
+| Email OAuth      | `@googleapis/gmail` + `arctic` | latest          | Gmail API + generic OAuth.                        |
+| Logging          | pino                           | 9               | Structured, fast.                                 |
+| Errors           | Sentry                         | latest          | Source maps uploaded.                             |
+| Validation       | Zod                            | 3+              | Schemas shared between client/server.             |
+| AI SDK           | `@anthropic-ai/sdk`            | latest          | Direct Anthropic SDK behind our router.           |
+| Package manager  | pnpm                           | 9+              | Workspaces, fast, disk-efficient.                 |
+| Testing          | Vitest + Playwright            | latest          | Unit/integration + E2E.                           |
+| Linting          | ESLint + Biome (optional)      | latest          | Biome for fast formatting, ESLint for rules.      |
+| Git hooks        | Husky + lint-staged            | latest          | Pre-commit gates.                                 |
+| Email templating | React Email                    | latest          | Type-safe email templates.                        |
 
 ### 4.2 External Services
 
-| Service | Purpose | Cost Tier | Notes |
-|---|---|---|---|
-| Anthropic API | Claude Sonnet 4.5 + Opus 4 | pay-per-token | Sonnet for high-volume tasks, Opus for quality gates. |
-| Google Places API (New) | Prospect data source | $32 / 1k calls (Text Search) + $0 / Place Details | Place Details are free with Text Search. Cache aggressively. |
-| Supabase | Postgres + Auth + Storage | Free tier → Pro $25/mo | Single region initially. |
-| Vercel | Hosting + Edge functions | Pro $20/mo | Required for Next.js 16 cron + Edge. |
-| Sentry | Error tracking | Free tier → Team $26/mo | Source maps uploaded on every deploy. |
-| Resend (optional) | Transactional email fallback | Free 3k/mo | Only if Gmail OAuth is insufficient. |
+| Service                 | Purpose                      | Cost Tier                                         | Notes                                                        |
+| ----------------------- | ---------------------------- | ------------------------------------------------- | ------------------------------------------------------------ |
+| Anthropic API           | Claude Sonnet 4.5 + Opus 4   | pay-per-token                                     | Sonnet for high-volume tasks, Opus for quality gates.        |
+| Google Places API (New) | Prospect data source         | $32 / 1k calls (Text Search) + $0 / Place Details | Place Details are free with Text Search. Cache aggressively. |
+| Supabase                | Postgres + Auth + Storage    | Free tier → Pro $25/mo                            | Single region initially.                                     |
+| Vercel                  | Hosting + Edge functions     | Pro $20/mo                                        | Required for Next.js 16 cron + Edge.                         |
+| Sentry                  | Error tracking               | Free tier → Team $26/mo                           | Source maps uploaded on every deploy.                        |
+| Resend (optional)       | Transactional email fallback | Free 3k/mo                                        | Only if Gmail OAuth is insufficient.                         |
 
 ### 4.3 Future-Ready Choices
 
@@ -521,7 +521,7 @@ model AiPromptLog {
 model BusinessCategory {
   id            String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
   workspaceId   String?  @map("workspace_id")  // null = global taxonomy
-  label         String   // "Barbershops"
+  label         String   // "Dental Clinics"
   googlePlaceType String @map("google_place_type")  // "hair_care"
   icon          String?
   createdAt     DateTime @default(now()) @map("created_at")
@@ -798,8 +798,8 @@ The aesthetic is dense, fast, keyboard-driven. Dark mode is primary (light mode 
   --c-info: #60a5fa;
 
   /* Typography */
-  --font-sans: 'Inter', 'Geist', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: "Inter", "Geist", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 
   /* Radii */
   --r-sm: 4px;
@@ -817,9 +817,9 @@ The aesthetic is dense, fast, keyboard-driven. Dark mode is primary (light mode 
   --s-7: 48px;
 
   /* Shadows — subtle, never harsh */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 ```
 
@@ -887,6 +887,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 **Expected output:** A repo that boots, type-checks, lints, and deploys to Vercel with a green CI.
 
 **Tasks:**
+
 1. `pnpm create next-app` with TypeScript, Tailwind, App Router.
 2. Install dependencies per §4.
 3. Set up Prisma + Supabase connection. Run first migration (workspace, user, integration tables only).
@@ -900,6 +901,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 11. Deploy to Vercel staging. Verify `/login` works end-to-end.
 
 **Definition of Done:**
+
 - `pnpm dev` boots without warnings.
 - `pnpm build` succeeds.
 - CI is green on `main`.
@@ -915,6 +917,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 **Expected output:** A working `aiRouter.complete()` with one provider (Anthropic), one task (`prospect_analysis`), full prompt logging, cost tracking, and a retry/fallback layer.
 
 **Tasks:**
+
 1. Define the `Provider` interface (`src/lib/ai/providers/types.ts`).
 2. Implement `AnthropicProvider` (`src/lib/ai/providers/anthropic.ts`) — wraps the Anthropic SDK, handles retries, parses responses.
 3. Define the `Task` registry. Each task is a file in `src/lib/ai/tasks/` exporting `{ taskName, defaultModel, promptTemplate, outputSchema, fallbackModel? }`.
@@ -934,6 +937,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 9. Write unit tests for the router: cache hit, cache miss, retry on validation failure, fallback to Opus, error propagation.
 
 **Definition of Done:**
+
 - Calling `aiRouter.complete({ task: 'prospect_analysis', input: mockProspect })` returns a typed, validated result.
 - Cost is recorded.
 - Prompt is logged.
@@ -950,6 +954,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 **Expected output:** `placesAdapter.search({ city, category })` returns normalized prospects. Categories are seeded. Idempotent upsert into `prospects`.
 
 **Tasks:**
+
 1. Define `PlacesAdapter` interface and `GooglePlacesAdapter` implementation.
 2. Implement `search({ city, category })`:
    - Calls Places API Text Search (New) with `<category> in <city>`.
@@ -963,7 +968,8 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 7. Implement rate-limit handling (Google allows 100 QPS for Pro tier; we queue with 10 RPS to be safe).
 
 **Definition of Done:**
-- Searching "Barbershops in Madrid" persists 20–60 prospects.
+
+- Searching "Dental Clinics in Madrid" persists 20–60 prospects.
 - Re-running the same search returns the same prospects without duplicates (idempotent).
 - Categories table is seeded with at least 50 categories.
 - Tests cover happy path, pagination, rate-limit retry, and API error.
@@ -977,6 +983,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 **Expected output:** A `/growth/prospecting` page where the user can search, see prospects, trigger analysis, view scores and opportunities, and review message drafts.
 
 **Tasks:**
+
 1. Build `SearchForm` (city autocomplete + category dropdown).
 2. Build `ProspectList` (table with name, category, rating, score badge, status).
 3. Build `ProspectDetail` panel (right side) with tabs: Overview, Analysis, Message.
@@ -989,6 +996,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 10. Implement Realtime subscription so the list updates live as analyses complete.
 
 **Definition of Done:**
+
 - User can search → see 20–60 prospects → click "Analyze all" → watch scores populate in real time → click a prospect → see analysis + draft message → edit the message → click "Approve".
 - All Server Actions are validated with zod.
 - All AI calls go through the router (verify by searching the codebase for direct SDK imports — should be zero outside `src/lib/ai/providers/`).
@@ -1002,6 +1010,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 **Expected output:** A `/crm` page with leads list, lead detail, status changes, activity log, and a "Convert to Lead" action from prospects.
 
 **Tasks:**
+
 1. Build `LeadList` (TanStack Table, filter by status, sort by priority/nextFollowUp).
 2. Build `LeadDetail` (contact info, source prospect link, message, status timeline, activity feed).
 3. Implement `convertToLead` Server Action: creates `Lead`, sets `Prospect.convertedToLeadId`, emits `LeadEvent`.
@@ -1011,6 +1020,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 7. Build `/settings` page: profile, integrations (Gmail OAuth connect button — non-functional stub in this phase, wired in Phase 5), AI config (read-only display of which model is used for which task).
 
 **Definition of Done:**
+
 - Approving a prospect creates a lead visible in CRM.
 - Lead statuses can be changed; events are logged.
 - Dashboard shows correct KPIs (test fixtures cover edge cases: 0 prospects, 0 leads, etc.).
@@ -1025,6 +1035,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 **Expected output:** User can connect Gmail, send the approved message via email, copy to clipboard, or open WhatsApp click-to-chat.
 
 **Tasks:**
+
 1. Implement OAuth flow using `arctic` (Gmail, with `gmail.send` scope).
 2. Store tokens encrypted (AES-256-GCM) in `integrations.metadata`.
 3. Implement `EmailProvider.send({ to, subject, body })` interface + `GmailProvider`.
@@ -1036,6 +1047,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 9. Write integration tests with mocked Gmail API.
 
 **Definition of Done:**
+
 - User can connect Gmail, see connection status in settings.
 - User can send an email from a lead — it arrives (test against a sandbox inbox).
 - All three outreach channels log events with timestamps.
@@ -1050,6 +1062,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 **Expected output:** Production-ready. Docs complete. Runbooks written. E2E tests green. Sentry clean on staging for 7 days.
 
 **Tasks:**
+
 1. Write E2E Playwright tests for the full flow: login → search → analyze → convert → send.
 2. Add structured logging to every Server Action (input hash, duration, success/error).
 3. Add Sentry release tracking + source maps.
@@ -1062,6 +1075,7 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 10. Set up a staging → production promotion flow (Vercel previews → promote).
 
 **Definition of Done:**
+
 - All E2E tests pass on staging.
 - Lighthouse score ≥ 90 on all four sections for `/dashboard` and `/growth/prospecting`.
 - Zero high-severity vulnerabilities in `pnpm audit`.
@@ -1072,15 +1086,15 @@ Each phase has a model recommendation, a goal, and a Definition of Done. Antigra
 
 ## 8. Milestones
 
-| Milestone | Phase(s) | Target Outcome | Demo-able? |
-|---|---|---|---|
-| **M1 — Bootable Foundation** | P0 | App boots, auth works, deploy pipeline green | Yes — login flow |
-| **M2 — AI Router Live** | P1 | `/api/ai/test` returns an analyzed mock prospect | Yes — curl demo |
-| **M3 — First Real Prospects** | P2 | "Barbershops in Madrid" returns 20+ prospects | Yes — search demo |
-| **M4 — End-to-End Prospecting** | P3 | Search → analyze → view scores + drafts | Yes — full prospecting demo |
-| **M5 — Lead Conversion** | P4 | Approve prospect → see in CRM → change status | Yes — CRM demo |
-| **M6 — Outreach Working** | P5 | Send a real email from a lead | Yes — outreach demo |
-| **M7 — Production Launch** | P6 | Deployed to prod, docs complete, 7 days stable | Yes — production URL |
+| Milestone                       | Phase(s) | Target Outcome                                   | Demo-able?                  |
+| ------------------------------- | -------- | ------------------------------------------------ | --------------------------- |
+| **M1 — Bootable Foundation**    | P0       | App boots, auth works, deploy pipeline green     | Yes — login flow            |
+| **M2 — AI Router Live**         | P1       | `/api/ai/test` returns an analyzed mock prospect | Yes — curl demo             |
+| **M3 — First Real Prospects**   | P2       | "Dental Clinics in Madrid" returns 20+ prospects | Yes — search demo           |
+| **M4 — End-to-End Prospecting** | P3       | Search → analyze → view scores + drafts          | Yes — full prospecting demo |
+| **M5 — Lead Conversion**        | P4       | Approve prospect → see in CRM → change status    | Yes — CRM demo              |
+| **M6 — Outreach Working**       | P5       | Send a real email from a lead                    | Yes — outreach demo         |
+| **M7 — Production Launch**      | P6       | Deployed to prod, docs complete, 7 days stable   | Yes — production URL        |
 
 Each milestone is a PR merge gate. No milestone is "mostly done" — it's either done or not started.
 
@@ -1202,7 +1216,7 @@ These rules are non-negotiable. Antigravity must check each one before declaring
 
 ### 10.8 Comments
 
-- Comments explain *why*, not *what*. The code already says what.
+- Comments explain _why_, not _what_. The code already says what.
 - JSDoc on every exported function: `@param`, `@returns`, `@throws`.
 - TODOs must have an owner and a ticket reference: `// TODO(@alice, AX-123): ...`.
 
@@ -1232,9 +1246,10 @@ These rules are non-negotiable. Antigravity must check each one before declaring
 - `type`: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`, `ci`, `build`.
 - `scope`: `growth`, `crm`, `ai`, `db`, `auth`, `ui`, `infra`, etc.
 - `subject`: imperative mood, lowercase, no period, ≤ 72 chars.
-- `body`: wrapped at 100 chars, explains *why*.
+- `body`: wrapped at 100 chars, explains _why_.
 
 **Examples:**
+
 ```
 feat(growth): add prospecting search form
 
@@ -1244,7 +1259,7 @@ loading state during search.
 
 How to test:
 - Visit /growth/prospecting
-- Search "Barbershops" in "Madrid"
+- Search "Dental Clinics" in "Madrid"
 - Verify list populates
 
 Refs: AX-101
@@ -1257,18 +1272,23 @@ Refs: AX-101
 - PR description template:
   ```markdown
   ## What
+
   <what changed>
 
   ## Why
+
   <rationale>
 
   ## How to test
+
   <steps>
 
   ## Phase / Milestone
+
   Phase X — M Y
 
   ## Checklist
+
   - [ ] Tests added
   - [ ] Docs updated
   - [ ] No console.log
@@ -1298,14 +1318,14 @@ Refs: AX-101
 
 ### 12.1 Documentation Tiers
 
-| Tier | Location | Audience | Maintained By |
-|---|---|---|---|
-| **Tier 1 — README** | `README.md` | New developers | Lead Architect |
-| **Tier 2 — Architecture** | `docs/architecture.md` + `docs/adr/*` | Engineers, future contributors | Every PR that touches architecture |
-| **Tier 3 — API** | `docs/api/*` (generated from zod) | Frontend engineers | Auto-generated on every PR |
-| **Tier 4 — Runbooks** | `docs/runbooks/*` | On-call operators | Every new incident or operational learning |
-| **Tier 5 — Code** | JSDoc comments | Engineers reading code | Every PR |
-| **Tier 6 — User** | In-app tooltips + `/help` page | End users | Phase 6 |
+| Tier                      | Location                              | Audience                       | Maintained By                              |
+| ------------------------- | ------------------------------------- | ------------------------------ | ------------------------------------------ |
+| **Tier 1 — README**       | `README.md`                           | New developers                 | Lead Architect                             |
+| **Tier 2 — Architecture** | `docs/architecture.md` + `docs/adr/*` | Engineers, future contributors | Every PR that touches architecture         |
+| **Tier 3 — API**          | `docs/api/*` (generated from zod)     | Frontend engineers             | Auto-generated on every PR                 |
+| **Tier 4 — Runbooks**     | `docs/runbooks/*`                     | On-call operators              | Every new incident or operational learning |
+| **Tier 5 — Code**         | JSDoc comments                        | Engineers reading code         | Every PR                                   |
+| **Tier 6 — User**         | In-app tooltips + `/help` page        | End users                      | Phase 6                                    |
 
 ### 12.2 ADR Format
 
@@ -1313,24 +1333,30 @@ Refs: AX-101
 # ADR-NNNN: <Title>
 
 ## Status
+
 Proposed | Accepted | Deprecated | Superseded by ADR-XXXX
 
 ## Context
+
 <Why is this decision needed? What forces are at play?>
 
 ## Decision
+
 <What we decided.>
 
 ## Consequences
+
 - Positive: ...
 - Negative: ...
 - Neutral: ...
 
 ## Alternatives Considered
+
 - Option A: <why rejected>
 - Option B: <why rejected>
 
 ## References
+
 - Links to relevant articles, discussions, prior ADRs.
 ```
 
@@ -1339,6 +1365,7 @@ ADRs are numbered sequentially. Once accepted, they are immutable — supersessi
 ### 12.3 README Requirements
 
 The root `README.md` must contain:
+
 1. Project overview (3 paragraphs).
 2. Quick start (clone, install, env, migrate, seed, dev).
 3. Architecture summary (one diagram + 200 words).
@@ -1350,6 +1377,7 @@ The root `README.md` must contain:
 ### 12.4 Runbook Requirements
 
 Every runbook answers:
+
 1. What does this system do?
 2. How do I know it's healthy?
 3. How do I know it's broken?
@@ -1448,18 +1476,19 @@ A task, PR, or phase is "Done" only when ALL of the following are true:
 
 ### 14.2 Tools
 
-| Layer | Tool | Notes |
-|---|---|---|
-| Unit | Vitest | Fast, watch mode, JSDoc coverage. |
-| Integration | Vitest + Supabase local DB | Real Postgres via `supabase start` (Docker). |
-| E2E | Playwright | Cross-browser, runs on CI. |
-| Mocking | MSW (Mock Service Worker) | For HTTP mocking in integration tests. |
-| Fixtures | `tests/fixtures/` | Reusable test data. |
-| Coverage | c8 via Vitest | Reports to CI; fails build if <80% on changed files. |
+| Layer       | Tool                       | Notes                                                |
+| ----------- | -------------------------- | ---------------------------------------------------- |
+| Unit        | Vitest                     | Fast, watch mode, JSDoc coverage.                    |
+| Integration | Vitest + Supabase local DB | Real Postgres via `supabase start` (Docker).         |
+| E2E         | Playwright                 | Cross-browser, runs on CI.                           |
+| Mocking     | MSW (Mock Service Worker)  | For HTTP mocking in integration tests.               |
+| Fixtures    | `tests/fixtures/`          | Reusable test data.                                  |
+| Coverage    | c8 via Vitest              | Reports to CI; fails build if <80% on changed files. |
 
 ### 14.3 What to Test
 
 **Unit tests:**
+
 - All utility functions.
 - Zod schemas (valid + invalid cases).
 - AI router (cache hit/miss, retry, fallback, error).
@@ -1467,12 +1496,14 @@ A task, PR, or phase is "Done" only when ALL of the following are true:
 - Result type (`ok`, `err`, `map`).
 
 **Integration tests:**
+
 - Repository methods (real Postgres, real RLS).
 - Server Actions (with mocked adapters).
 - AI tasks (with mocked Anthropic responses).
 - Places adapter (with MSW-mocked Google API).
 
 **E2E tests:**
+
 - Login → dashboard.
 - Search prospects → analyze → view detail → edit message → approve → see in CRM.
 - Connect Gmail (mocked OAuth) → send email → verify event logged.
@@ -1848,6 +1879,7 @@ axiom/
 ## Database Design (Strict)
 
 Every table MUST have:
+
 - `id` (ULID string, 26 chars, generated by `gen_random_ulid()`)
 - `workspace_id` (string, FK to workspaces, default to user's personal workspace)
 - `created_at`, `updated_at`, `deleted_at` (soft delete)
@@ -1856,6 +1888,7 @@ Every table MUST have:
 Tables to create (Prisma models):
 
 **Foundation:**
+
 - `Workspace` (id, name, slug, plan, timestamps)
 - `User` (id, workspace_id, email, name, avatar_url, role, timestamps)
 - `ApiKey` (id, workspace_id, provider, encrypted_key, timestamps) — for user-supplied API keys
@@ -1864,6 +1897,7 @@ Tables to create (Prisma models):
 - `AiPromptLog` (id, workspace_id, task_id, model, input_hash, input_json, output_json, duration_ms, tokens_in, tokens_out, error_message, created_at)
 
 **AXIOM Growth:**
+
 - `BusinessCategory` (id, workspace_id nullable for global, label, google_place_type, icon, created_at)
 - `City` (id, name, country_code, lat, lng, place_id, created_at)
 - `Prospect` (id, workspace_id, place_id [unique per workspace], name, category_id, city_id, address, phone, website, email, rating, user_ratings_count, price_level, business_status, google_url, lat, lng, metadata jsonb, analysis_status enum, quality_score int, score_rationale jsonb, signals jsonb, opportunities jsonb, analyzed_at, analyzed_by_model, message_draft, message_draft_model, message_draft_at, message_edited, user_notes, converted_to_lead_id, timestamps)
@@ -1897,6 +1931,7 @@ export const aiRouter = {
 ```
 
 Behavior:
+
 1. Resolve task from `src/lib/ai/tasks/<task>.ts`. Each task exports: `{ taskName, defaultModel, fallbackModel?, promptTemplate, inputSchema (zod), outputSchema (zod) }`.
 2. Validate input against `inputSchema`. On fail, return `err` immediately.
 3. Check cache (`ai_prompt_logs` by `input_hash`). If hit and age < 7 days, return cached output.
@@ -1907,6 +1942,7 @@ Behavior:
 8. If task has `fallbackModel` and primary model fails twice, retry with fallback.
 
 Tasks to implement:
+
 - `prospect_analysis` — default model Sonnet. Input: Prospect (without PII like phone/email unless necessary). Output: `{ signals: Signal[], opportunities: Opportunity[], quality_score: 0-100, score_rationale: string }`.
 - `opportunity_detection` — Sonnet. Input: Prospect. Output: `{ opportunities: Opportunity[] }`. (Can be folded into prospect_analysis for MVP, but the task file should exist.)
 - `message_draft` — Sonnet. Input: Prospect + analysis. Output: `{ subject: string, body: string }`. Personalized, concise, no spam.
@@ -1949,6 +1985,7 @@ Design tokens as CSS variables in `src/styles/tokens.css`. Dark mode primary. Ac
 App shell: persistent sidebar (240px / 56px collapsed) + topbar (search, user menu). Command palette (`cmd+k`) for global search + quick actions.
 
 Routes:
+
 - `/login` — magic link + Google OAuth
 - `/dashboard` — KPI cards, recent leads, pipeline chart
 - `/growth/prospecting` — search form + prospect list + detail panel
@@ -1975,6 +2012,7 @@ Three channels, all require explicit user action:
 3. **Gmail send** — OAuth-connected, scope `gmail.send` only. Sends via Gmail API. Logs `event_type='email_sent'` with message ID. Updates `lead.outreach_sent_at`.
 
 Hard limits (enforced server-side):
+
 - Max 20 prospects per search.
 - Max 50 leads created per day per workspace.
 - Max 10 emails sent per day per workspace.
@@ -1983,6 +2021,7 @@ Hard limits (enforced server-side):
 NO "send all" button. NO bulk send. NO automation. Every send is one-at-a-time, explicit, audited.
 
 Gmail OAuth implementation:
+
 - Use `arctic` for the OAuth flow.
 - Store tokens encrypted (AES-256-GCM) in `integrations.metadata`.
 - Refresh tokens automatically before expiry.
@@ -1993,30 +2032,37 @@ Gmail OAuth implementation:
 ## Development Phases (Sequential, No Skipping)
 
 ### Phase 0 — Foundation Bootstrap
+
 **Model:** Claude Sonnet 4.5. Mechanical scaffolding.
 **DoD:** Repo boots, type-checks, lints, deploys to Vercel staging. Login works via magic link. Pre-commit hook active. CI green.
 
 ### Phase 1 — AI Router & Adapters
+
 **Model:** Claude Opus 4. Critical abstraction.
 **DoD:** `aiRouter.complete({ task: 'prospect_analysis', input: mockProspect })` returns validated typed result. Cost logged. Prompt logged. Cache hit on second call. ADR-0003 written.
 
 ### Phase 2 — Google Places Adapter & Categories
+
 **Model:** Claude Sonnet 4.5. Mechanical.
-**DoD:** "Barbershops in Madrid" persists 20–60 prospects idempotently. Categories seeded with 50+ entries. Tests cover pagination, rate-limit, errors.
+**DoD:** "Dental Clinics in Madrid" persists 20–60 prospects idempotently. Categories seeded with 50+ entries. Tests cover pagination, rate-limit, errors.
 
 ### Phase 3 — Prospecting UI & AI Analysis Flow
+
 **Model:** Claude Opus 4 for analysis pipeline + prompt quality. Claude Sonnet 4.5 for UI.
 **DoD:** Search → analyze → view scores + drafts → edit → approve. Realtime updates. All AI through router (verify zero direct SDK imports).
 
 ### Phase 4 — CRM & Lead Conversion
+
 **Model:** Claude Sonnet 4.5. CRUD-heavy.
 **DoD:** Approve prospect → creates lead → visible in CRM → status changes log events. Dashboard shows correct KPIs.
 
 ### Phase 5 — Outreach & Email Integration
+
 **Model:** Claude Opus 4 reviews OAuth security. Claude Sonnet 4.5 implements.
 **DoD:** Gmail connect works. Send email from lead → arrives. Copy + WhatsApp channels work. All sends logged. Hard limits enforced. Security review passes.
 
 ### Phase 6 — Hardening, Observability, Documentation
+
 **Model:** Claude Opus 4. Final polish.
 **DoD:** E2E tests green. Lighthouse ≥ 90. `pnpm audit` clean. README + ADRs + runbooks complete. Staging stable 7 days.
 
@@ -2061,14 +2107,14 @@ Each phase has its own DoD checklist (see §13). No phase starts until the previ
 - **API:** Server Actions named `verbNoun`. Return `Result<T, AppError>`. Zod schemas co-located. Cursor-based pagination.
 - **DB:** Every query through a repository method. Transactions for multi-table writes. Explicit column lists. No N+1.
 - **File length:** Components ≤ 200 lines. Server Actions ≤ 100. Services ≤ 300. Repositories ≤ 200 per table.
-- **Comments:** Explain *why*, not *what*. JSDoc on every export. TODOs need owner + ticket.
+- **Comments:** Explain _why_, not _what_. JSDoc on every export. TODOs need owner + ticket.
 
 ---
 
 ## Git Workflow
 
 - **Branches:** `main` (prod), `develop` (staging), `feat/<scope>-<desc>`, `fix/<scope>-<desc>`, `chore/<desc>`, `docs/<desc>`.
-- **Commits:** Conventional Commits. `<type>(<scope>): <subject>` then body explaining *why*. Subject ≤ 72 chars, imperative, lowercase, no period. Body wrapped at 100 chars.
+- **Commits:** Conventional Commits. `<type>(<scope>): <subject>` then body explaining _why_. Subject ≤ 72 chars, imperative, lowercase, no period. Body wrapped at 100 chars.
 - **PRs:** One PR per feature. Squash-merge to `develop`. Merge-commit to `main` for releases. At least one approval. CI green. Description template: What / Why / How to test / Phase / Milestone / Checklist.
 - **No force-push to `main` or `develop`.** No direct commits to `main` or `develop`. Rebase over merge when possible.
 
@@ -2144,4 +2190,4 @@ AXIOM is not a demo. It is not a prototype. It is a tool the user will run every
 
 ---
 
-*End of Master Prompt.*
+_End of Master Prompt._

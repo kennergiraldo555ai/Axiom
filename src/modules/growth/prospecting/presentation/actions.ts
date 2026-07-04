@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { SearchProspectsUseCase } from "../application/use-cases/search-prospects.use-case";
 import { QueryProspectsUseCase } from "../application/use-cases/query-prospects.use-case";
 import { AnalyzeProspectUseCase } from "../application/use-cases/analyze-prospect.use-case";
+import { GenerateProposalUseCase } from "../application/use-cases/generate-proposal.use-case";
 import { PrismaProspectRepository } from "../infrastructure/repositories/prisma-prospect.repository";
 import { requireWorkspace } from "@/lib/auth/guards";
 import type { ProspectQueryFilters } from "../domain/dtos/prospect-query.dto";
@@ -13,6 +14,7 @@ const prospectRepository = new PrismaProspectRepository();
 const searchUseCase = new SearchProspectsUseCase(prospectRepository);
 const queryUseCase = new QueryProspectsUseCase(prospectRepository);
 const analyzeUseCase = new AnalyzeProspectUseCase(prospectRepository);
+const generateProposalUseCase = new GenerateProposalUseCase(prospectRepository);
 
 export async function searchProspectsAction(query: string, location: { lat: number; lng: number }) {
   try {
@@ -66,6 +68,23 @@ export async function analyzeProspectAction(prospectId: string) {
     return { success: true, data: result };
   } catch (error) {
     console.error("Analyze prospect error:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function generateProposalAction(prospectId: string) {
+  try {
+    const { workspaceId } = await requireWorkspace();
+
+    const result = await generateProposalUseCase.execute({
+      workspaceId,
+      prospectId,
+    });
+
+    revalidatePath("/growth/prospecting");
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Generate proposal error:", error);
     return { success: false, error: (error as Error).message };
   }
 }

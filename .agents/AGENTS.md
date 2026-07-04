@@ -40,6 +40,7 @@ Antes de cerrar cualquier Sprint con interfaz gráfica, realiza tres revisiones 
 1. UX Review (Claridad, Flujo, Jerarquía, Consistencia, Accesibilidad, Velocidad percibida)
 2. Design Review (Espaciado, Tipografía, Colores, Contraste, Componentes, Responsive, Microinteracciones)
 3. Performance Review (Server Components, Client Components, Bundle, Renders, Lazy Loading, Streaming, Optimización)
+4. Product Review (¿Qué sensación transmite? ¿Qué tan cerca de Enterprise? ¿Qué parece MVP? ¿Qué parece terminado? ¿Qué mejoraría Linear/Stripe?)
 
 ## Despliegue Obligatorio (Fin de Sprint)
 
@@ -50,3 +51,11 @@ Al finalizar el Sprint:
 3. Esperar el despliegue automático de Vercel y verificar la aplicación en producción.
 4. Entregar la URL pública definitiva y confirmar que el flujo principal funciona correctamente.
    Solo entonces podrá darse por finalizado el Sprint.
+
+## Reglas de Producto y Nomenclatura Permanente
+
+1. **AXIOM no es un Dashboard:** Es un motor de inteligencia comercial. Cada pantalla debe responder preguntas clave de negocio (ej. "¿A quién debería venderle?", "¿Cuál es el siguiente negocio al que debo venderle?").
+2. **Jerarquía Visual Estricta:** Los datos de negocio importan más que los técnicos. El Score, Prioridad, y Acciones Recomendadas deben ser protagonistas por encima de IDs, direcciones o hashes.
+3. **La IA es Protagonista:** El análisis de IA no puede ser texto plano. Debe estructurarse claramente en: Resumen, Fortalezas, Problemas, Oportunidades, Servicios recomendados, Prioridad, Probabilidad de cierre, Próximo paso.
+4. **Nomenclatura (Cero Barberías):** Prohibido usar "Barberías" en código (salvo ejemplos locales). Todo se llama: `Business`, `Prospect`, `Lead`, `Opportunity`, `Industry`, `Business Category`, `Solution`, `Service Recommendation`.
+5. **Navegación Impecable:** El usuario nunca debe sentirse perdido. Siempre debe haber visible: Estado actual, Próximo paso, Acción principal y Acción secundaria.
