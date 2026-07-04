@@ -55,7 +55,6 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
   const [activeTab, setActiveTab] = React.useState("intelligence");
   const [draftContent, setDraftContent] = React.useState(prospect?.messageDraft || "");
 
-  // eslint-disable-next-line
   React.useEffect(() => {
     if (prospect?.messageDraft) {
       setDraftContent(prospect.messageDraft);
