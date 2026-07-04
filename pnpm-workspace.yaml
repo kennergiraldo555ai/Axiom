@@ -3,6 +3,8 @@ allowBuilds:
   "@prisma/engines": true
   "@sentry/cli": true
   prisma: true
+  sharp: true
+  unrs-resolver: true
 # pnpm-workspace.yaml
 # pnpm 11+ configuration — settings moved here from package.json
 # See: https://pnpm.io/settings
