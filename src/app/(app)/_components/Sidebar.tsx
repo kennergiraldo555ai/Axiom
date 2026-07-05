@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { Route } from "next";
+import { useState } from "react";
+import { createClient } from "@/lib/auth/supabase/client";
 import {
   LayoutDashboard,
   Target,
@@ -15,6 +17,8 @@ import {
   BarChart3,
   Settings,
   Sparkles,
+  LogOut,
+  Loader2,
 } from "lucide-react";
 
 interface NavItem {
@@ -73,10 +77,24 @@ const BOTTOM_NAV_ITEMS: NavItem[] = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
 
   function isActive(href: string): boolean {
     if (href === "/dashboard") return pathname === "/dashboard";
     return pathname.startsWith(href);
+  }
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.push("/login");
+    } catch {
+      // If sign out fails, force redirect anyway
+      window.location.href = "/login";
+    }
   }
 
   return (
@@ -109,10 +127,25 @@ export function Sidebar() {
       </nav>
 
       {/* Bottom nav */}
-      <div className="p-3 border-t border-[var(--c-border-subtle)] shrink-0">
+      <div className="p-3 border-t border-[var(--c-border-subtle)] shrink-0 flex flex-col gap-1">
         {BOTTOM_NAV_ITEMS.map((item) => (
           <SidebarItem key={item.href} item={item} active={isActive(item.href)} />
         ))}
+        <button
+          id="sidebar-sign-out"
+          onClick={handleSignOut}
+          disabled={signingOut}
+          className="flex items-center gap-3 px-3 py-2 rounded-[var(--r-md)] text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-accent)] text-[var(--c-text-secondary)] hover:bg-[var(--c-bg-hover)] hover:text-[var(--c-danger)] disabled:opacity-50"
+        >
+          <span className="text-[var(--c-text-tertiary)]">
+            {signingOut ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <LogOut className="w-4 h-4" />
+            )}
+          </span>
+          {signingOut ? "Saliendo..." : "Cerrar sesión"}
+        </button>
       </div>
     </aside>
   );
