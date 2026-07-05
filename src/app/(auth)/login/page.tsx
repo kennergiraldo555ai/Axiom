@@ -15,9 +15,10 @@ function translateAuthError(message: string): string {
     "User already registered": "Este correo ya está registrado. Intenta iniciar sesión.",
     "Signup requires a valid password": "Debes ingresar una contraseña válida.",
     "Password should be at least 6 characters": "La contraseña debe tener al menos 6 caracteres.",
-    "Email rate limit exceeded": "Demasiados intentos. Intenta de nuevo en unos minutos.",
+    "Email rate limit exceeded":
+      "Hemos recibido varias solicitudes en poco tiempo. Espera unos minutos antes de intentarlo nuevamente.",
     "For security purposes, you can only request this after 60 seconds.":
-      "Por seguridad, debes esperar 60 segundos antes de solicitar otro correo.",
+      "Hemos recibido varias solicitudes en poco tiempo. Espera unos minutos antes de intentarlo nuevamente.",
   };
 
   for (const [key, value] of Object.entries(map)) {
