@@ -32,6 +32,7 @@ model Workspace {
   users        User[]
   prospects    Prospect[]
   leads        Lead[]
+  tasks        Task[]
   categories   BusinessCategory[]
   aiCosts      AiCostRecord[]
   apiKeys      ApiKey[]
@@ -228,6 +229,9 @@ model Lead {
   finalMessage   String?    @map("final_message")
   // Pipeline
   priority       Int        @default(0)
+  value          Int?       @map("value_cents")
+  currency       String     @default("USD")
+  expectedCloseAt DateTime? @map("expected_close_at")
   assignedToId   String?    @map("assigned_to_id")
   lastContactedAt DateTime? @map("last_contacted_at")
   nextFollowUpAt  DateTime? @map("next_follow_up_at")
@@ -245,6 +249,7 @@ model Lead {
   sourceProspect Prospect?  @relation("ProspectToLead")
   activities LeadActivity[]
   events     LeadEvent[]
+  tasks      Task[]
 
   @@index([workspaceId, status])
   @@index([workspaceId, priority])
@@ -281,6 +286,26 @@ model LeadEvent {
   @@index([leadId, createdAt])
   @@index([eventType, createdAt])
   @@map("lead_events")
+}
+
+model Task {
+  id          String    @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId String    @map("workspace_id")
+  leadId      String?   @map("lead_id")
+  title       String
+  description String?
+  dueDate     DateTime? @map("due_date")
+  isCompleted Boolean   @default(false) @map("is_completed")
+  assignedToId String?  @map("assigned_to_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  lead      Lead?     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, isCompleted, dueDate])
+  @@index([leadId])
+  @@map("tasks")
 }
 
 // ============================================================

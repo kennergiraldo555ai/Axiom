@@ -59,3 +59,13 @@ Al finalizar el Sprint:
 3. **La IA es Protagonista:** El análisis de IA no puede ser texto plano. Debe estructurarse claramente en: Resumen, Fortalezas, Problemas, Oportunidades, Servicios recomendados, Prioridad, Probabilidad de cierre, Próximo paso.
 4. **Nomenclatura (Cero Barberías):** Prohibido usar "Barberías" en código (salvo ejemplos locales). Todo se llama: `Business`, `Prospect`, `Lead`, `Opportunity`, `Industry`, `Business Category`, `Solution`, `Service Recommendation`.
 5. **Navegación Impecable:** El usuario nunca debe sentirse perdido. Siempre debe haber visible: Estado actual, Próximo paso, Acción principal y Acción secundaria.
+
+## Reglas Growth 1.0 y Arquitectura Escalable
+
+1. **Gestión del Estado:** Uso de Zustand permitido ÚNICAMENTE para estado visual temporal (paneles, filtros, drag&drop). NUNCA para almacenar datos de negocio. Toda la data del CRM viene del servidor usando Server Actions y `useOptimistic`.
+2. **Localización (ES UI / EN Code):** La interfaz debe estar 100% en español (Ej: Embudo, Cliente potencial, Configuración). El código debe estar 100% en inglés (Ej: Pipeline, Lead, Settings).
+3. **UX Enterprise:** Cada pantalla debe ser premium y responder: ¿Qué hace?, ¿Por qué es útil? y ¿Qué debo hacer después?. Menos tablas, más visualización y contexto útil.
+4. **IA First:** El diseño siempre debe contemplar cómo la IA (Agentes, RAG, Summaries) puede mejorar la experiencia, incluso si se implementa después.
+5. **Componentes:** Buscar -> Extender -> Reutilizar. Solo crear componentes nuevos si es absolutamente necesario.
+6. **Escalabilidad:** Diseñar el sistema anticipando integraciones futuras con WhatsApp, Email, LinkedIn, MCP, Multiagentes y Embeddings. Cero refactors masivos.
+7. **Filosofía AXIOM:** Cada nueva funcionalidad debe responder afirmativamente a: "¿Esto ayuda realmente al usuario a vender más?".
