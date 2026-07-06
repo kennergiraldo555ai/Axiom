@@ -32,7 +32,23 @@ import type { Lead, LeadStatus } from "@prisma/client";
 ✅ **HACER:** En entornos de producción, la migración de la base de datos debe ejecutarse de forma segura. En Supabase/Vercel sin soporte para pooling agresivo en migraciones, usar `npx prisma migrate deploy` si la base de datos no está sincronizada, o usar Serverless push si aplica.
 ❌ **NUNCA HACER:** Modificar manualmente la base de datos en producción por fuera del flujo de Prisma.
 
-## 4. Pruebas de Desarrollo
+## 4. Resolución de Prisma y PNPM en Vercel (Symlinks)
+
+**Contexto:** PNPM usa enlaces simbólicos (symlinks) alojados en `.pnpm`. Si se fuerza una ruta absoluta/relativa estática en el generador de Prisma, Vercel compilará pero el cliente de Prisma generado no se inyectará en la ruta de resolución virtual de PNPM que Next.js utiliza.
+
+**REGLA OBLIGATORIA:**
+✅ **HACER:** Dejar que Prisma decida la ruta de salida por defecto en `schema.prisma`.
+
+```prisma
+generator client {
+  provider = "prisma-client-js"
+  // NO AGREGAR LA PROPIEDAD 'output' AQUÍ
+}
+```
+
+❌ **NUNCA HACER:** Configurar `output = "../node_modules/.prisma/client"`. Esto genera el cliente en el root real, pero TypeScript/Next.js buscará los tipos dentro del virtual store de `.pnpm`, resultando en el temido error "Module '@prisma/client' has no exported member...".
+
+## 5. Pruebas de Desarrollo
 
 ✅ **HACER:** Ante cualquier error de "Module '@prisma/client' has no exported member", el desarrollador está OBLIGADO a ejecutar un Clean Build local, simulando el entorno CI/CD.
 
