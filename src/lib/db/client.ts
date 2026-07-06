@@ -17,12 +17,13 @@ const getPrismaUrl = () => {
 };
 
 const prismaClientSingleton = () => {
+  const url = getPrismaUrl();
   return new PrismaClient({
-    datasources: {
-      db: {
-        url: getPrismaUrl(),
+    ...(url && {
+      datasources: {
+        db: { url },
       },
-    },
+    }),
   });
 };
 
