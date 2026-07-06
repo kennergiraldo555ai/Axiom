@@ -8,6 +8,10 @@ export interface PlaceResult {
   websiteUrl?: string;
   phoneNumber?: string;
   rating?: number;
+  userRatingsCount?: number;
+  googleMapsUrl?: string;
+  lat?: number;
+  lng?: number;
   provider: PlaceProviderId;
 }
 

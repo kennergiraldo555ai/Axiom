@@ -34,7 +34,7 @@ import {
   Clock,
   Briefcase,
   Wand2,
-  ListTodo
+  ListTodo,
 } from "lucide-react";
 import type { ProspectEntity } from "../domain/entities/prospect.entity";
 import { analyzeProspectAction, generateProposalAction } from "../presentation/actions";
@@ -109,11 +109,11 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
 
   const scoreRationale = prospect?.scoreRationale as Record<string, unknown> | null;
   const summary = (scoreRationale?.summary as string) || "Pendiente de resumen ejecutivo.";
-  
+
   const signals = prospect?.signals as Record<string, unknown> | null;
   const strengths = Array.isArray(signals?.strengths) ? signals.strengths : [];
   const weaknesses = Array.isArray(signals?.weaknesses) ? signals.weaknesses : [];
-  
+
   const opportunities = Array.isArray(prospect?.opportunities) ? prospect.opportunities : [];
 
   return (
@@ -136,11 +136,23 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                   </span>
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] text-[var(--c-text-tertiary)]">
-                      {prospect.categoryId || "Business"}
+                      {(() => {
+                        const m = prospect.metadata as Record<string, unknown> | null;
+                        const c = (m?.category as string) || "";
+                        return c && c !== "business"
+                          ? c.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())
+                          : "Negocio";
+                      })()}
                     </span>
                     <span className="text-[10px] text-[var(--c-border-strong)]">•</span>
                     <span className="text-[11px] text-[var(--c-text-tertiary)]">
-                      {prospect.cityId || "Location"}
+                      {prospect.address
+                        ? prospect.address
+                            .split(",")
+                            .slice(-2)
+                            .map((s) => s.trim())
+                            .join(", ")
+                        : "Sin ubicación"}
                     </span>
                   </div>
                 </div>
@@ -158,7 +170,9 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                   <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--c-text-tertiary)]">
                     Status
                   </span>
-                  <Badge variant={prospect.analysisStatus === "COMPLETED" ? "success" : "secondary"}>
+                  <Badge
+                    variant={prospect.analysisStatus === "COMPLETED" ? "success" : "secondary"}
+                  >
                     {prospect.analysisStatus === "COMPLETED" ? "Analizado" : "Pendiente"}
                   </Badge>
                 </div>
@@ -199,7 +213,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                         Próximo Paso
                       </span>
                       <div className="flex items-center gap-1.5 text-sm font-bold text-[var(--c-text-primary)]">
-                        <Zap className="w-3.5 h-3.5 text-[var(--c-accent)]" /> 
+                        <Zap className="w-3.5 h-3.5 text-[var(--c-accent)]" />
                         Cold Email (Urgente)
                       </div>
                     </div>
@@ -217,7 +231,13 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-[var(--c-text-tertiary)] shrink-0" />
-                  <span className={prospect.phone ? "text-[var(--c-text-primary)]" : "text-[var(--c-text-tertiary)]"}>
+                  <span
+                    className={
+                      prospect.phone
+                        ? "text-[var(--c-text-primary)]"
+                        : "text-[var(--c-text-tertiary)]"
+                    }
+                  >
                     {prospect.phone || "No phone"}
                   </span>
                 </div>
@@ -242,30 +262,34 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
               {/* Tabs System for Architecture Future-proofing */}
               <Tabs className="flex-1 overflow-hidden flex flex-col">
                 <TabsList className="px-8 border-b border-[var(--c-border-subtle)] sticky top-0 bg-[var(--c-bg-base)] z-10">
-                  <TabsTrigger 
-                    value="intelligence" 
-                    active={activeTab === "intelligence"} 
+                  <TabsTrigger
+                    value="intelligence"
+                    active={activeTab === "intelligence"}
                     onClick={() => setActiveTab("intelligence")}
                   >
                     <Sparkles className="w-3.5 h-3.5 mr-2 text-[var(--c-accent)]" />
                     AI Intelligence
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="outreach" 
+                  <TabsTrigger
+                    value="outreach"
                     active={activeTab === "outreach"}
                     onClick={() => setActiveTab("outreach")}
                   >
                     <MailIcon className="w-3.5 h-3.5 mr-2" />
                     Outreach
                   </TabsTrigger>
-                  
+
                   <div className="w-[1px] h-4 bg-[var(--c-border-strong)] mx-2 hidden sm:block" />
-                  
+
                   {/* Future Architecture Stubs */}
                   <TabsTrigger value="timeline" disabled className="opacity-50">
                     <Clock className="w-3.5 h-3.5 mr-2" /> Timeline
                   </TabsTrigger>
-                  <TabsTrigger value="meetings" disabled className="opacity-50 hidden md:inline-flex">
+                  <TabsTrigger
+                    value="meetings"
+                    disabled
+                    className="opacity-50 hidden md:inline-flex"
+                  >
                     <Briefcase className="w-3.5 h-3.5 mr-2" /> Meetings
                   </TabsTrigger>
                   <TabsTrigger value="tasks" disabled className="opacity-50 hidden lg:inline-flex">
@@ -274,11 +298,9 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                 </TabsList>
 
                 <div className="flex-1 overflow-y-auto px-8 py-6 bg-[var(--c-bg-elevated)] min-h-[400px]">
-                  
                   <TabsContent value="intelligence" active={activeTab === "intelligence"}>
                     {prospect.analysisStatus === "COMPLETED" ? (
                       <div className="flex flex-col gap-10">
-                        
                         {/* Summary & Metrics */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                           <div className="col-span-1 md:col-span-3 flex flex-col gap-3">
@@ -291,14 +313,18 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                           </div>
                           <div className="col-span-1 flex flex-col gap-4 p-5 rounded-[var(--r-md)] bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)]">
                             <div className="flex flex-col gap-1">
-                              <span className="text-[10px] uppercase text-[var(--c-text-tertiary)] font-semibold">Priority</span>
+                              <span className="text-[10px] uppercase text-[var(--c-text-tertiary)] font-semibold">
+                                Priority
+                              </span>
                               <div className="flex items-center gap-1.5 text-sm font-bold text-[var(--c-text-primary)]">
                                 <Activity className="w-4 h-4 text-[var(--c-danger)]" /> HIGH
                               </div>
                             </div>
                             <div className="w-full h-[1px] bg-[var(--c-border-strong)]" />
                             <div className="flex flex-col gap-1">
-                              <span className="text-[10px] uppercase text-[var(--c-text-tertiary)] font-semibold">Win Prob</span>
+                              <span className="text-[10px] uppercase text-[var(--c-text-tertiary)] font-semibold">
+                                Win Prob
+                              </span>
                               <div className="flex items-center gap-1.5 text-sm font-bold text-[var(--c-text-primary)]">
                                 <TrendingUp className="w-4 h-4 text-[var(--c-success)]" /> 75%
                               </div>
@@ -310,31 +336,45 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                           <div className="flex flex-col gap-4">
                             <h3 className="text-[11px] font-semibold text-[var(--c-text-secondary)] uppercase tracking-wider flex items-center gap-1.5">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-[var(--c-success)]" /> 
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[var(--c-success)]" />
                               Fortalezas
                             </h3>
                             <ul className="flex flex-col gap-3">
                               {strengths.map((s, i) => (
-                                <li key={i} className="text-[13px] text-[var(--c-text-primary)] flex items-start gap-2 bg-[var(--c-bg-base)] p-3 rounded-[var(--r-sm)] border border-[var(--c-border-subtle)]">
+                                <li
+                                  key={i}
+                                  className="text-[13px] text-[var(--c-text-primary)] flex items-start gap-2 bg-[var(--c-bg-base)] p-3 rounded-[var(--r-sm)] border border-[var(--c-border-subtle)]"
+                                >
                                   {s as string}
                                 </li>
                               ))}
-                              {strengths.length === 0 && <span className="text-xs text-[var(--c-text-tertiary)]">Sin fortalezas destacadas.</span>}
+                              {strengths.length === 0 && (
+                                <span className="text-xs text-[var(--c-text-tertiary)]">
+                                  Sin fortalezas destacadas.
+                                </span>
+                              )}
                             </ul>
                           </div>
-                          
+
                           <div className="flex flex-col gap-4">
                             <h3 className="text-[11px] font-semibold text-[var(--c-text-secondary)] uppercase tracking-wider flex items-center gap-1.5">
-                              <AlertTriangle className="w-3.5 h-3.5 text-[var(--c-danger)]" /> 
+                              <AlertTriangle className="w-3.5 h-3.5 text-[var(--c-danger)]" />
                               Problemas / Dolores
                             </h3>
                             <ul className="flex flex-col gap-3">
                               {weaknesses.map((w, i) => (
-                                <li key={i} className="text-[13px] text-[var(--c-text-primary)] flex items-start gap-2 bg-[var(--c-bg-base)] p-3 rounded-[var(--r-sm)] border border-[var(--c-border-subtle)]">
+                                <li
+                                  key={i}
+                                  className="text-[13px] text-[var(--c-text-primary)] flex items-start gap-2 bg-[var(--c-bg-base)] p-3 rounded-[var(--r-sm)] border border-[var(--c-border-subtle)]"
+                                >
                                   {w as string}
                                 </li>
                               ))}
-                              {weaknesses.length === 0 && <span className="text-xs text-[var(--c-text-tertiary)]">Sin dolores identificados.</span>}
+                              {weaknesses.length === 0 && (
+                                <span className="text-xs text-[var(--c-text-tertiary)]">
+                                  Sin dolores identificados.
+                                </span>
+                              )}
                             </ul>
                           </div>
                         </div>
@@ -342,24 +382,34 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                         {/* Opportunities and Recommended Services */}
                         <div className="flex flex-col gap-4">
                           <h3 className="text-[11px] font-semibold text-[var(--c-text-secondary)] uppercase tracking-wider flex items-center gap-1.5">
-                            <Lightbulb className="w-3.5 h-3.5 text-[var(--c-accent)]" /> 
+                            <Lightbulb className="w-3.5 h-3.5 text-[var(--c-accent)]" />
                             Servicios Recomendados & Oportunidades
                           </h3>
                           <div className="grid grid-cols-1 gap-4">
                             {opportunities.length > 0 ? (
                               opportunities.map((opp: Record<string, unknown>, i) => (
-                                <div key={i} className="flex flex-col md:flex-row gap-4 p-5 rounded-[var(--r-md)] bg-[var(--c-bg-base)] border border-[var(--c-border-strong)]">
+                                <div
+                                  key={i}
+                                  className="flex flex-col md:flex-row gap-4 p-5 rounded-[var(--r-md)] bg-[var(--c-bg-base)] border border-[var(--c-border-strong)]"
+                                >
                                   <div className="flex-1 flex flex-col gap-2">
                                     <div className="flex items-center gap-2">
                                       <span className="text-[13px] font-bold text-[var(--c-text-primary)] capitalize">
-                                        {typeof opp.type === "string" ? opp.type.replace(/_/g, " ") : "Oportunidad"}
+                                        {typeof opp.type === "string"
+                                          ? opp.type.replace(/_/g, " ")
+                                          : "Oportunidad"}
                                       </span>
-                                      <Badge variant="outline" className="text-[9px] bg-[var(--c-bg-subtle)] border-transparent text-[var(--c-text-secondary)]">
+                                      <Badge
+                                        variant="outline"
+                                        className="text-[9px] bg-[var(--c-bg-subtle)] border-transparent text-[var(--c-text-secondary)]"
+                                      >
                                         Solution
                                       </Badge>
                                     </div>
                                     <p className="text-[13px] text-[var(--c-text-secondary)] leading-relaxed">
-                                      <span className="font-semibold text-[var(--c-text-primary)]">Por qué lo necesitan: </span> 
+                                      <span className="font-semibold text-[var(--c-text-primary)]">
+                                        Por qué lo necesitan:{" "}
+                                      </span>
                                       {typeof opp.description === "string" ? opp.description : ""}
                                     </p>
                                   </div>
@@ -376,8 +426,12 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                     ) : prospect.analysisStatus === "IN_PROGRESS" || isAnalyzing ? (
                       <div className="h-full flex flex-col items-center justify-center text-center animate-pulse py-12">
                         <Sparkles className="h-8 w-8 text-[var(--c-accent)] mb-4 animate-bounce" />
-                        <p className="text-[13px] font-medium text-[var(--c-text-primary)]">Analizando el negocio...</p>
-                        <p className="text-xs text-[var(--c-text-tertiary)] mt-1.5">Extrayendo insights y recomendaciones.</p>
+                        <p className="text-[13px] font-medium text-[var(--c-text-primary)]">
+                          Analizando el negocio...
+                        </p>
+                        <p className="text-xs text-[var(--c-text-tertiary)] mt-1.5">
+                          Extrayendo insights y recomendaciones.
+                        </p>
                       </div>
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-center max-w-sm mx-auto py-12">
@@ -388,7 +442,8 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                           Sin Inteligencia Comercial
                         </p>
                         <p className="text-[13px] text-[var(--c-text-secondary)] leading-relaxed mb-6">
-                          Ejecuta el motor de IA para descubrir los dolores del negocio, extraer el Opportunity Score y recomendar soluciones precisas.
+                          Ejecuta el motor de IA para descubrir los dolores del negocio, extraer el
+                          Opportunity Score y recomendar soluciones precisas.
                         </p>
                         <Button onClick={handleAnalyze} disabled={isAnalyzing}>
                           <Sparkles className="w-4 h-4 mr-2 text-[var(--c-accent)]" />
@@ -415,9 +470,9 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                               <Copy className="w-3.5 h-3.5 mr-2" /> Copiar
                             </Button>
                           )}
-                          <Button 
-                            variant="default" 
-                            size="sm" 
+                          <Button
+                            variant="default"
+                            size="sm"
                             onClick={handleGenerateProposal}
                             disabled={isGenerating || prospect.analysisStatus !== "COMPLETED"}
                           >
@@ -435,29 +490,29 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
 
                       {prospect.messageDraft ? (
                         <div className="flex flex-col gap-3">
-                          <Textarea 
+                          <Textarea
                             className="min-h-[300px] text-[13px] leading-relaxed font-sans resize-y"
                             value={draftContent}
                             onChange={(e) => setDraftContent(e.target.value)}
                             placeholder="Tu propuesta aparecerá aquí..."
                           />
                           <p className="text-[10px] text-[var(--c-text-tertiary)] text-right">
-                            * Puedes editar el texto directamente antes de copiarlo. Creado por {prospect.messageDraftModel}.
+                            * Puedes editar el texto directamente antes de copiarlo. Creado por{" "}
+                            {prospect.messageDraftModel}.
                           </p>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-[var(--c-border-strong)] rounded-[var(--r-md)] bg-[var(--c-bg-base)]">
                           <MessageSquare className="w-6 h-6 text-[var(--c-text-tertiary)] mb-3" />
                           <p className="text-[13px] text-[var(--c-text-secondary)] mb-4 max-w-[250px]">
-                            {prospect.analysisStatus !== "COMPLETED" 
-                              ? "Debes analizar el negocio primero para generar una propuesta personalizada." 
+                            {prospect.analysisStatus !== "COMPLETED"
+                              ? "Debes analizar el negocio primero para generar una propuesta personalizada."
                               : "Genera una propuesta comercial altamente personalizada basada en el análisis IA."}
                           </p>
                         </div>
                       )}
                     </div>
                   </TabsContent>
-
                 </div>
               </Tabs>
             </div>
@@ -469,8 +524,8 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
               Cerrar
             </Button>
             <div className="flex items-center gap-3">
-              <Button 
-                onClick={() => setActiveTab("outreach")} 
+              <Button
+                onClick={() => setActiveTab("outreach")}
                 disabled={activeTab === "outreach"}
                 variant="secondary"
               >

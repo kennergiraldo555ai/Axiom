@@ -8,37 +8,72 @@ import type {
 
 export class GooglePlacesAdapter implements IPlacesProviderAdapter {
   id: PlaceProviderId = "google";
-  private apiKey: string;
   private baseUrl = "https://places.googleapis.com/v1/places";
 
-  constructor() {
-    this.apiKey = process.env.GOOGLE_PLACES_API_KEY || "";
+  /** Lazy-load the API key so it always picks up the latest env value */
+  private get apiKey(): string {
+    return process.env.GOOGLE_PLACES_API_KEY || "";
   }
 
   async search(request: SearchPlacesRequest): Promise<PlaceResult[]> {
     if (!this.apiKey) {
-      logger.warn({ provider: this.id }, "API key not configured");
-      return [];
+      logger.warn({ provider: this.id }, "GOOGLE_PLACES_API_KEY not configured");
+      throw new Error(
+        "El servicio de búsqueda de negocios no está configurado. Contacta al administrador.",
+      );
     }
 
-    // Implementación usando fetch nativo para Google Places API (New)
     try {
+      // Parse lat,lng from the location string
+      const parts = request.location.split(",").map((s) => s.trim());
+      const lat = parseFloat(parts[0] ?? "0");
+      const lng = parseFloat(parts[1] ?? "0");
+
+      const requestBody: Record<string, unknown> = {
+        textQuery: request.query,
+        pageSize: request.limit || 20,
+      };
+
+      // Add locationBias so results are centered around the user's selected city
+      if (!isNaN(lat) && !isNaN(lng)) {
+        requestBody.locationBias = {
+          circle: {
+            center: { latitude: lat, longitude: lng },
+            radius: 15000.0, // 15km radius
+          },
+        };
+      }
+
       const response = await fetch(`${this.baseUrl}:searchText`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-Goog-Api-Key": this.apiKey,
-          "X-Goog-FieldMask":
-            "places.id,places.displayName,places.formattedAddress,places.websiteUri,places.nationalPhoneNumber,places.rating,places.primaryType",
+          "X-Goog-FieldMask": [
+            "places.id",
+            "places.displayName",
+            "places.formattedAddress",
+            "places.websiteUri",
+            "places.nationalPhoneNumber",
+            "places.rating",
+            "places.userRatingCount",
+            "places.primaryType",
+            "places.googleMapsUri",
+            "places.location",
+          ].join(","),
         },
-        body: JSON.stringify({
-          textQuery: `${request.query} in ${request.location}`,
-          pageSize: request.limit || 10,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
-        throw new Error(`Google API responded with status: ${response.status}`);
+        const errorBody = await response.text().catch(() => "");
+        logger.error(
+          { status: response.status, body: errorBody, provider: this.id },
+          "Google Places API error response",
+        );
+        throw new Error(
+          `No pudimos conectar con el servicio de búsqueda (código ${response.status}). Intenta de nuevo.`,
+        );
       }
 
       const data = await response.json();
@@ -47,6 +82,8 @@ export class GooglePlacesAdapter implements IPlacesProviderAdapter {
 
       return data.places.map((place: unknown): PlaceResult => {
         const p = place as Record<string, unknown>;
+        const location = p.location as Record<string, number> | undefined;
+
         return {
           id: p.id as string,
           name: ((p.displayName as Record<string, unknown>)?.text as string) || "Unknown",
@@ -54,7 +91,11 @@ export class GooglePlacesAdapter implements IPlacesProviderAdapter {
           category: (p.primaryType as string) || "business",
           ...(p.websiteUri ? { websiteUrl: p.websiteUri as string } : {}),
           ...(p.nationalPhoneNumber ? { phoneNumber: p.nationalPhoneNumber as string } : {}),
-          ...(p.rating ? { rating: p.rating as number } : {}),
+          ...(typeof p.rating === "number" ? { rating: p.rating } : {}),
+          ...(typeof p.userRatingCount === "number" ? { userRatingsCount: p.userRatingCount } : {}),
+          ...(p.googleMapsUri ? { googleMapsUrl: p.googleMapsUri as string } : {}),
+          ...(location?.latitude ? { lat: location.latitude } : {}),
+          ...(location?.longitude ? { lng: location.longitude } : {}),
           provider: this.id,
         };
       });
@@ -66,7 +107,6 @@ export class GooglePlacesAdapter implements IPlacesProviderAdapter {
   }
 
   async getDetails(_placeId: string): Promise<PlaceResult | null> {
-    // Implementación futura si es necesaria, usando el field mask
     throw new Error("Not implemented");
   }
 }

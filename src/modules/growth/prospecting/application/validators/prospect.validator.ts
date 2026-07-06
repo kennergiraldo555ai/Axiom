@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const SearchGooglePlacesInputSchema = z.object({
-  workspaceId: z.string().ulid(),
+  workspaceId: z.string().min(1),
   query: z.string().min(3),
   location: z.object({
     lat: z.number(),
@@ -13,11 +13,11 @@ export const SearchGooglePlacesInputSchema = z.object({
 export type SearchGooglePlacesInput = z.infer<typeof SearchGooglePlacesInputSchema>;
 
 export const ProspectQueryFiltersSchema = z.object({
-  workspaceId: z.string().ulid(),
+  workspaceId: z.string().min(1),
   page: z.number().int().min(1).default(1),
   limit: z.number().int().min(1).max(100).default(50),
-  categoryId: z.string().ulid().optional(),
-  cityId: z.string().ulid().optional(),
+  categoryId: z.string().min(1).optional(),
+  cityId: z.string().min(1).optional(),
   analysisStatus: z.enum(["PENDING", "IN_PROGRESS", "COMPLETED", "FAILED", "SKIPPED"]).optional(),
   minQualityScore: z.number().min(0).max(100).optional(),
   maxQualityScore: z.number().min(0).max(100).optional(),

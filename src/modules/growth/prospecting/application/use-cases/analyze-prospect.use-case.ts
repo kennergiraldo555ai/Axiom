@@ -7,8 +7,8 @@ import type { ProspectEntity } from "../../domain/entities/prospect.entity";
 import type { AIProviderId } from "@/lib/ai/types";
 
 const AnalyzeProspectInputSchema = z.object({
-  workspaceId: z.string().ulid(),
-  prospectId: z.string().ulid(),
+  workspaceId: z.string().min(1),
+  prospectId: z.string().min(1),
   forceReanalyze: z.boolean().default(false),
 });
 

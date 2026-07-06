@@ -7,8 +7,8 @@ import type { ProspectEntity } from "../../domain/entities/prospect.entity";
 import type { AIProviderId } from "@/lib/ai/types";
 
 const GenerateProposalInputSchema = z.object({
-  workspaceId: z.string().ulid(),
-  prospectId: z.string().ulid(),
+  workspaceId: z.string().min(1),
+  prospectId: z.string().min(1),
 });
 
 export type GenerateProposalInput = z.infer<typeof GenerateProposalInputSchema>;
@@ -37,15 +37,13 @@ export class GenerateProposalUseCase {
       // 2. Extraer datos del análisis para el prompt
       const scoreRationale = prospect.scoreRationale as Record<string, unknown> | null;
       const summary = (scoreRationale?.summary as string) || "Business in need of improvement.";
-      
+
       const signals = prospect.signals as Record<string, unknown> | null;
-      const painPoints = Array.isArray(signals?.weaknesses) 
-        ? (signals?.weaknesses as string[]) 
+      const painPoints = Array.isArray(signals?.weaknesses)
+        ? (signals?.weaknesses as string[])
         : ["Needs digital presence improvement"];
-        
-      const opportunities = Array.isArray(prospect.opportunities) 
-        ? prospect.opportunities 
-        : [];
+
+      const opportunities = Array.isArray(prospect.opportunities) ? prospect.opportunities : [];
 
       // 3. Preparar Prompt
       const provider: AIProviderId =
@@ -84,7 +82,7 @@ export class GenerateProposalUseCase {
           prospectId,
           durationMs,
         },
-        "GenerateProposalUseCase completado exitosamente"
+        "GenerateProposalUseCase completado exitosamente",
       );
 
       return updatedProspect;
@@ -96,7 +94,7 @@ export class GenerateProposalUseCase {
           prospectId,
           error: err.message,
         },
-        "GenerateProposalUseCase fallido"
+        "GenerateProposalUseCase fallido",
       );
       throw err;
     }
