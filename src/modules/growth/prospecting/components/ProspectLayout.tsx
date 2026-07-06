@@ -25,10 +25,14 @@ export function ProspectLayout() {
         // En MVP no manejamos paginación en UI aún, solo mostramos los items
         setProspects(response.data.data);
       } else {
-        setError(response.error || "Error al cargar prospectos");
+        console.error("Error al cargar prospectos:", response.error);
+        setError(
+          "Ocurrió un problema al cargar los datos. Por favor, verifica tu conexión e intenta nuevamente.",
+        );
       }
-    } catch {
-      setError("Error inesperado al conectar con el servidor.");
+    } catch (e) {
+      console.error("Error inesperado en ProspectLayout:", e);
+      setError("Ocurrió un error inesperado al conectar con el servidor.");
     } finally {
       setIsLoading(false);
     }
@@ -65,8 +69,7 @@ export function ProspectLayout() {
       {error ? (
         <ErrorState
           title="No pudimos cargar los prospectos"
-          description="Ocurrió un error al intentar conectarse al servidor o procesar la petición."
-          solution={error}
+          description={error}
           onRetry={fetchProspects}
           isRetrying={isLoading}
         />

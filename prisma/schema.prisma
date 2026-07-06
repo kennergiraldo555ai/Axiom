@@ -28,7 +28,7 @@ model Workspace {
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  users        User[]
+  memberships  Membership[]
   prospects    Prospect[]
   leads        Lead[]
   tasks        Task[]
@@ -40,20 +40,36 @@ model Workspace {
   @@map("workspaces")
 }
 
-model User {
+model Membership {
   id          String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
   workspaceId String   @map("workspace_id")
+  userId      String   @map("user_id")
+  role        UserRole @default(MEMBER)
+  joinedAt    DateTime @default(now()) @map("joined_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@index([workspaceId])
+  @@map("memberships")
+}
+
+model User {
+  id          String   @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  authId      String   @unique @map("auth_id") // UUID from Supabase Auth
   email       String   @unique
   name        String?
   avatarUrl   String?  @map("avatar_url")
-  role        UserRole @default(MEMBER)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  memberships Membership[]
 
-  @@index([workspaceId])
+  @@index([authId])
   @@map("users")
 }
 

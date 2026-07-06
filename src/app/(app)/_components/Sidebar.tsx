@@ -34,45 +34,47 @@ interface NavGroup {
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    label: "Overview",
+    label: "Visión General",
+    items: [{ href: "/dashboard", label: "Panel", icon: <LayoutDashboard className="w-4 h-4" /> }],
+  },
+  {
+    label: "Motor de Crecimiento",
     items: [
-      { href: "/dashboard", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
+      { href: "/growth/prospecting", label: "Prospectos", icon: <Target className="w-4 h-4" /> },
+      { href: "/growth/campaigns", label: "Campañas", icon: <Megaphone className="w-4 h-4" /> },
+      {
+        href: "/growth/automation",
+        label: "Automatización",
+        icon: <Workflow className="w-4 h-4" />,
+      },
     ],
   },
   {
-    label: "Growth Engine",
+    label: "Ventas & CRM",
     items: [
-      { href: "/growth/prospecting", label: "Prospects", icon: <Target className="w-4 h-4" /> },
-      { href: "/growth/campaigns", label: "Campaigns", icon: <Megaphone className="w-4 h-4" /> },
-      { href: "/growth/automation", label: "Automation", icon: <Workflow className="w-4 h-4" /> },
-    ],
-  },
-  {
-    label: "Sales & CRM",
-    items: [
-      { href: "/crm/leads", label: "Leads", icon: <Sparkles className="w-4 h-4" /> },
+      { href: "/crm/leads", label: "Clientes Potenciales", icon: <Sparkles className="w-4 h-4" /> },
       {
         href: "/crm/opportunities",
-        label: "Opportunities",
+        label: "Oportunidades",
         icon: <Briefcase className="w-4 h-4" />,
       },
-      { href: "/crm/companies", label: "Companies", icon: <Building2 className="w-4 h-4" /> },
-      { href: "/crm/contacts", label: "Contacts", icon: <Users className="w-4 h-4" /> },
+      { href: "/crm/companies", label: "Empresas", icon: <Building2 className="w-4 h-4" /> },
+      { href: "/crm/contacts", label: "Contactos", icon: <Users className="w-4 h-4" /> },
       {
         href: "/crm/conversations",
-        label: "Conversations",
+        label: "Conversaciones",
         icon: <MessageSquare className="w-4 h-4" />,
       },
     ],
   },
   {
-    label: "Insights",
-    items: [{ href: "/reports", label: "Reports", icon: <BarChart3 className="w-4 h-4" /> }],
+    label: "Análisis",
+    items: [{ href: "/reports", label: "Reportes", icon: <BarChart3 className="w-4 h-4" /> }],
   },
 ];
 
 const BOTTOM_NAV_ITEMS: NavItem[] = [
-  { href: "/settings", label: "Settings", icon: <Settings className="w-4 h-4" /> },
+  { href: "/settings", label: "Configuración", icon: <Settings className="w-4 h-4" /> },
 ];
 
 export function Sidebar() {

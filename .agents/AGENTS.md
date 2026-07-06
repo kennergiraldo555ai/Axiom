@@ -69,3 +69,17 @@ Al finalizar el Sprint:
 5. **Componentes:** Buscar -> Extender -> Reutilizar. Solo crear componentes nuevos si es absolutamente necesario.
 6. **Escalabilidad:** Diseñar el sistema anticipando integraciones futuras con WhatsApp, Email, LinkedIn, MCP, Multiagentes y Embeddings. Cero refactors masivos.
 7. **Filosofía AXIOM:** Cada nueva funcionalidad debe responder afirmativamente a: "¿Esto ayuda realmente al usuario a vender más?".
+
+## Protocolo Obligatorio de Entrega
+
+Al finalizar CUALQUIER Sprint, Hotfix, Refactor, Feature o Corrección, SIEMPRE debes ejecutar este flujo completo de manera automática:
+
+1. Resolver completamente la tarea.
+2. Corregir cualquier error encontrado.
+3. Ejecutar pnpm lint, pnpm typecheck, pnpm build.
+4. Realizar pruebas funcionales.
+5. git add . && git commit (usando Conventional Commits).
+6. git push origin master automáticamente.
+7. Esperar despliegue de Vercel y verificar URL en producción.
+8. Entregar el Informe Final Obligatorio estructurado.
+   No mientas sobre haber hecho commit, push o verificación si hubo un problema técnico.
