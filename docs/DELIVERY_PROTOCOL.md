@@ -1,58 +1,25 @@
-# Delivery Protocol
+# AXIOM Delivery Protocol
 
-Al finalizar CUALQUIER Sprint, Hotfix, Refactor, Feature o Corrección, SIEMPRE se debe ejecutar este flujo completo de manera automática.
+## Política Obligatoria de Finalización de Sprints
 
-## 1. Validación de Calidad
+Queda **estrictamente prohibido** finalizar un Sprint o tarea únicamente porque los comandos locales (`pnpm build`, `pnpm lint`, `pnpm typecheck`) pasaron exitosamente. El éxito local no garantiza el despliegue en producción.
 
-Ejecutar los siguientes comandos obligatorios. No se puede continuar si alguno falla:
+Un Sprint solo se considera **FINALIZADO** cuando se cumplen de forma verificable y automatizada TODOS los siguientes puntos:
 
-```bash
-pnpm lint
-pnpm typecheck
-pnpm build
-```
+1. El commit fue realizado correctamente (utilizando Conventional Commits).
+2. El commit fue subido a GitHub (`git push`).
+3. GitHub refleja correctamente la rama y el commit esperado.
+4. Vercel terminó **completamente** el despliegue.
+5. GitHub y Vercel muestran **exactamente el mismo hash** de commit.
+6. La URL de producción responde correctamente (HTTP 200).
+7. Se verificó que la producción corresponde al último commit.
+8. El agente/desarrollador indica **explícitamente** si el usuario YA puede comenzar las pruebas manuales.
 
-## 2. Pruebas Funcionales
+## Procedimiento de Auditoría Final
 
-- Realizar todas las pruebas funcionales necesarias. No se entrega código sin probar.
+Antes de notificar al usuario que la tarea terminó, el agente deberá:
 
-## 3. Versionado (Git)
-
-Cuando TODO funcione correctamente:
-
-```bash
-git add .
-git commit -m "tipo(scope): mensaje"
-```
-
-_Mensajes profesionales siguiendo Conventional Commits (feat, fix, refactor, docs, chore)._
-
-## 4. Despliegue
-
-Hacer automáticamente:
-
-```bash
-git push origin master
-```
-
-(No se debe esperar a que el usuario lo pida).
-
-## 5. Verificación de Producción
-
-- Esperar el despliegue automático de Vercel.
-- Verificar que el deployment terminó correctamente.
-- Verificar que la URL de producción funciona.
-- Realizar una prueba rápida sobre producción.
-
-## 6. Informe Final Obligatorio
-
-Al finalizar, entregar el informe con la estructura estricta definida:
-
-- Estado del Commit (hash, mensaje)
-- Vercel Deployment (Estado, Tiempo, URL)
-- Producción (URL final, Resultado pruebas)
-- Pruebas Funcionales (Lint, Typecheck, Build, Problemas corregidos)
-- Documentación (Archivos MD creados, Arquitectura)
-- Próximo Sprint Recomendado
-
-_Regla de veracidad_: No afirmar que se hizo commit, push o verificación si hubo un impedimento técnico. Reportarlo claramente.
+- Consultar el estado del deploy mediante Vercel CLI o API.
+- Confirmar el match exacto del hash de git local vs. Vercel.
+- Validar las variables de entorno productivas (`DATABASE_URL`, `DIRECT_URL`).
+- Entregar un **Informe Final Obligatorio** que exponga todas estas métricas de verificación.

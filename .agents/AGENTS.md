@@ -83,3 +83,15 @@ Al finalizar CUALQUIER Sprint, Hotfix, Refactor, Feature o Corrección, SIEMPRE 
 7. Esperar despliegue de Vercel y verificar URL en producción.
 8. Entregar el Informe Final Obligatorio estructurado.
    No mientas sobre haber hecho commit, push o verificación si hubo un problema técnico.
+
+Ningún Sprint puede darse por terminado únicamente porque `pnpm build` pasó.
+Un Sprint solo se considera FINALIZADO cuando se cumplen TODOS los siguientes puntos:
+
+1. El commit fue realizado correctamente.
+2. El commit fue subido a GitHub.
+3. GitHub muestra el commit correcto.
+4. Vercel terminó completamente el despliegue.
+5. GitHub y Vercel muestran exactamente el mismo hash.
+6. La URL de producción responde correctamente.
+7. Se verificó que la producción corresponde al último commit.
+8. El agente indica explícitamente si el usuario YA puede comenzar las pruebas manuales.
