@@ -467,3 +467,107 @@ Documentado como deuda técnica menor para el próximo sprint.
 - docs/AI_DEVELOPMENT_RULES.md
 - src/lib/ai/router.ts
 - src/lib/ai/gemini.ts
+
+---
+
+# AXIOM-0007
+
+## Date
+
+2026-07-08
+
+## Status
+
+Approved
+
+## Title
+
+Preservación de Estado Frontend mediante Action Returns
+
+## Context
+
+Durante la carga de análisis de IA, la UI del ProspectLayout reseteaba la búsqueda activa y desmontaba la tabla porque se utilizaba un `fetchProspects()` genérico para actualizar el estado del prospecto modificado. Esto generaba un fallo masivo en UX (pantalla negra, desaparición de búsqueda).
+
+## Decision
+
+Las funciones Server Actions (`analyzeProspectAction`, `generateProposalAction`, `convertProspectToLeadAction`) deben retornar la entidad actualizada completa (`ProspectEntity`).
+Los componentes frontend deben actualizar el estado local explícitamente inyectando este retorno en lugar de volver a consultar la lista de resultados (`fetch`).
+
+## Alternatives Considered
+
+### Pasar filtros de búsqueda a `fetchProspects`
+
+Ventajas: Garantiza que la BD es la fuente de la verdad.
+Desventajas: Muy lento, innecesario y requiere acoplar estado de búsqueda en capas superiores.
+
+## Why This Decision Was Chosen
+
+Permite actualizaciones instantáneas de UI (O(1)) sobre el ítem modificado, evitando re-renders masivos y previniendo la pérdida de estado del árbol superior.
+
+## Consequences
+
+Positivas:
+
+- UI no parpadea.
+- Estado de búsqueda no se pierde.
+- Menos carga en BD.
+
+Negativas:
+
+- Si el objeto retornado no incluye relaciones pobladas completas, la UI podría verse desincronizada hasta un hard reload (no aplicable actualmente).
+
+## Risks
+
+Si se agregan nuevas relaciones anidadas, las Server Actions deben asegurarse de incluirlas en el retorno.
+
+---
+
+## Decision ID
+
+AXIOM-0021
+
+---
+
+## Date
+
+2026-07-08
+
+---
+
+## Status
+
+- Approved
+
+---
+
+## Title
+
+Initial Loading vs Explicit Caching for Prospecting
+
+---
+
+## Context
+
+Previously, entering the Prospecting module immediately triggered a fetch using the cache of the previous search. This caused a jarring user experience where results suddenly appeared before the user interacted with the UI, feeling like a history tab instead of a search engine.
+
+---
+
+## Decision
+
+We enforce an 'Initial Empty State' policy across data-fetching modules. The cache mechanism remains fully functional but is strictly explicit: it is only checked and rendered after the user clicks 'Search'. The initial load of the page will always display a premium Empty State / Onboarding component.
+
+---
+
+## Alternatives Considered
+
+1. Storing recent searches as chips.
+
+2. Prefetching without rendering.
+
+---
+
+## Consequences
+
+- Much cleaner, 'Enterprise Premium' feel.
+- Explicit user intent controls the data flow.
+- Performance is slightly better on initial mount.

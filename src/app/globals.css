@@ -22,13 +22,56 @@
   --color-accent: var(--c-accent);
   --color-accent-hover: var(--c-accent-hover);
 
+  --color-cyan: var(--c-cyan);
+  --color-violet: var(--c-violet);
+
   --color-success: var(--c-success);
   --color-warning: var(--c-warning);
   --color-danger: var(--c-danger);
   --color-info: var(--c-info);
 
+  --shadow-premium: var(--shadow-lg);
+  --shadow-glow: var(--shadow-glow);
   --font-family-sans: var(--font-sans);
   --font-family-mono: var(--font-mono);
+
+  --animate-shimmer: shimmer 1.5s infinite;
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+/* ─── Global utilities ───────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-border-subtle) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--c-border-subtle);
+    border-radius: var(--r-full);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--c-border-default);
+  }
 }
 
 /* ─── Global resets ──────────────────────────────────────────────── */

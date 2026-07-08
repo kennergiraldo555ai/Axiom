@@ -43,6 +43,9 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.endsWith(".svg");
 
   if (!user && !isAuthRoute && !isPublicRoute && !isStaticRoute) {
+    if (request.method !== "GET" || request.headers.has("next-action")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

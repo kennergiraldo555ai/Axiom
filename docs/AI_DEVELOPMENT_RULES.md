@@ -567,3 +567,18 @@ Server Action
 ```
 
 Last Updated: 2026-07-07
+
+---
+
+# UI & State Management Rules
+
+## Controlled Optimistic Updates for AI Operations
+
+Every interaction with AI systems (Analyze, Generate Proposal, Convert) MUST preserve the UI state perfectly and avoid heavy network re-fetches.
+
+1. **Actions Return the New State:** The Server Action must return the updated entity (e.g., `ProspectEntity`) directly after saving to the DB.
+2. **React Injection:** The Frontend must update its local state array `prospects.map(...)` synchronously, rather than refetching the whole list.
+3. **Graceful Loading:** Replace only the inner content with a specialized elegant `Skeleton` that matches the block's layout.
+4. **Button Behavior:** Do not unmount the action button. Disable it and update its text (e.g., "Analizando...") while the operation is in flight.
+
+This ensures a premium, instant feel matching linear/vercel standards, without maintaining two sources of truth.

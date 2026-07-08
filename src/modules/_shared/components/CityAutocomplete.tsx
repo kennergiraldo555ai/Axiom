@@ -115,7 +115,7 @@ export function CityAutocomplete({ onSelect, disabled }: CityAutocompleteProps) 
 
   return (
     <div className="relative w-full" ref={wrapperRef}>
-      <div className="relative">
+      <div className="relative group">
         <Input
           type="text"
           placeholder="Ej. Madrid, Barcelona, Bogotá..."
@@ -125,39 +125,42 @@ export function CityAutocomplete({ onSelect, disabled }: CityAutocompleteProps) 
             if (results.length > 0) setIsOpen(true);
           }}
           disabled={disabled}
-          className="w-full pr-10"
+          className="w-full h-10 text-sm pl-10 pr-10 bg-[var(--c-bg-subtle)] border-[var(--c-border-subtle)] focus:border-[var(--c-accent)] focus:ring-[var(--c-accent)] transition-all"
         />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <MapPin className="h-4 w-4 text-[var(--c-text-secondary)] group-focus-within:text-[var(--c-accent)] transition-colors" />
+        </div>
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           {isLoading ? (
             <Loader2 className="h-4 w-4 text-[var(--c-text-tertiary)] animate-spin" />
-          ) : (
-            <MapPin className="h-4 w-4 text-[var(--c-text-tertiary)]" />
-          )}
+          ) : null}
         </div>
       </div>
 
       {isOpen && query.length >= 2 && (
-        <div className="absolute z-50 w-full mt-1 bg-[var(--c-bg-primary)] border border-[var(--c-border)] rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-2 bg-[var(--c-bg-elevated)] border border-[var(--c-border-default)] rounded-[var(--r-xl)] shadow-premium overflow-hidden backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
           {results.length > 0 ? (
-            <ul className="py-1">
+            <ul className="py-2 max-h-[300px] overflow-auto custom-scrollbar">
               {results.map((city) => (
                 <li
                   key={city.id}
                   onClick={() => handleSelect(city)}
-                  className="px-4 py-2 hover:bg-[var(--c-bg-secondary)] cursor-pointer flex flex-col transition-colors"
+                  className="px-4 py-2.5 mx-2 rounded-[var(--r-md)] hover:bg-[var(--c-bg-hover)] cursor-pointer flex items-center gap-3 transition-colors"
                 >
-                  <span className="text-sm font-medium text-[var(--c-text-primary)]">
-                    {city.name}
-                  </span>
-                  <span className="text-xs text-[var(--c-text-secondary)]">
-                    {city.admin1 ? `${city.admin1}, ` : ""}
-                    {city.country}
-                  </span>
+                  <div className="flex-1 flex flex-col">
+                    <span className="text-[13px] font-medium text-[var(--c-text-primary)]">
+                      {city.name}
+                    </span>
+                    <span className="text-[11px] text-[var(--c-text-secondary)]">
+                      {city.admin1 ? `${city.admin1}, ` : ""}
+                      {city.country}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
           ) : !isLoading ? (
-            <div className="px-4 py-3 text-sm text-[var(--c-text-secondary)] text-center">
+            <div className="px-4 py-6 text-[13px] text-[var(--c-text-secondary)] text-center">
               No se encontraron ciudades
             </div>
           ) : null}

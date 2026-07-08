@@ -50,7 +50,7 @@ interface ProspectSidePanelProps {
   prospect: ProspectEntity | null;
   isOpen: boolean;
   onClose: () => void;
-  onUpdate: () => void;
+  onUpdate: (updatedProspect?: ProspectEntity) => void;
 }
 
 export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: ProspectSidePanelProps) {
@@ -74,7 +74,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
       const response = await analyzeProspectAction(prospect.id);
       if (response.success) {
         toast.success("Análisis IA completado", { id: loadingToast });
-        onUpdate();
+        onUpdate(response.data);
       } else {
         toast.error("Error en el análisis", { description: response.error, id: loadingToast });
       }
@@ -96,7 +96,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
         if (response.data?.messageDraft) {
           setDraftContent(response.data.messageDraft);
         }
-        onUpdate();
+        onUpdate(response.data);
       } else {
         toast.error("Error generando propuesta", { description: response.error, id: loadingToast });
       }
@@ -127,7 +127,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
       const response = await convertProspectToLeadAction(prospect.id, finalMessage);
       if (response.success) {
         toast.success("Cliente potencial creado en CRM", { id: loadingToast });
-        onUpdate();
+        onUpdate(response.data);
       } else {
         toast.error("Error al convertir prospecto", {
           description: response.error,
@@ -160,16 +160,16 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
         <>
           <SidePanelHeader
             title={
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-[var(--r-md)] bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)] flex items-center justify-center shrink-0">
-                  <Building2 className="w-5 h-5 text-[var(--c-text-secondary)]" />
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-[var(--r-xl)] bg-gradient-to-br from-[var(--c-bg-subtle)] to-[var(--c-bg-elevated)] border border-[var(--c-border-subtle)] flex items-center justify-center shrink-0 shadow-sm">
+                  <Building2 className="w-6 h-6 text-[var(--c-text-secondary)]" />
                 </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-lg font-semibold tracking-tight leading-none text-[var(--c-text-primary)]">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xl font-semibold tracking-tight leading-none text-[var(--c-text-primary)]">
                     {prospect.name}
                   </span>
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] text-[var(--c-text-tertiary)]">
+                    <span className="text-[12px] font-medium text-[var(--c-text-secondary)]">
                       {(() => {
                         const m = prospect.metadata as Record<string, unknown> | null;
                         const c = (m?.category as string) || "";
@@ -179,7 +179,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                       })()}
                     </span>
                     <span className="text-[10px] text-[var(--c-border-strong)]">•</span>
-                    <span className="text-[11px] text-[var(--c-text-tertiary)]">
+                    <span className="text-[12px] text-[var(--c-text-tertiary)]">
                       {prospect.address || "Sin ubicación"}
                     </span>
                   </div>
@@ -193,15 +193,26 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
           <SidePanelBody className="p-0">
             <div className="flex flex-col h-full bg-[var(--c-bg-base)]">
               {/* Header Status Bar */}
-              <div className="flex flex-wrap items-center gap-4 px-8 py-4 border-b border-[var(--c-border-subtle)] bg-[var(--c-bg-subtle)]">
-                <div className="flex flex-col gap-1">
+              <div className="flex flex-wrap items-center gap-6 px-10 py-5 border-b border-[var(--c-border-subtle)] bg-[var(--c-bg-subtle)]/50 backdrop-blur-md">
+                <div className="flex flex-col gap-1.5">
                   <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--c-text-tertiary)]">
                     Status
                   </span>
                   <Badge
-                    variant={prospect.analysisStatus === "COMPLETED" ? "success" : "secondary"}
+                    variant={
+                      prospect.analysisStatus === "COMPLETED"
+                        ? "success"
+                        : isAnalyzing
+                          ? "warning"
+                          : "secondary"
+                    }
+                    className="px-3"
                   >
-                    {prospect.analysisStatus === "COMPLETED" ? "Analizado" : "Pendiente"}
+                    {isAnalyzing
+                      ? "Analizando..."
+                      : prospect.analysisStatus === "COMPLETED"
+                        ? "Analizado"
+                        : "Pendiente"}
                   </Badge>
                 </div>
                 {prospect.qualityScore && (
@@ -575,14 +586,47 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                         </div>
                       </div>
                     ) : prospect.analysisStatus === "IN_PROGRESS" || isAnalyzing ? (
-                      <div className="h-full flex flex-col items-center justify-center text-center animate-pulse py-12">
-                        <Sparkles className="h-8 w-8 text-[var(--c-accent)] mb-4 animate-bounce" />
-                        <p className="text-[13px] font-medium text-[var(--c-text-primary)]">
-                          Analizando el negocio...
-                        </p>
-                        <p className="text-xs text-[var(--c-text-tertiary)] mt-1.5">
-                          Extrayendo insights y recomendaciones.
-                        </p>
+                      <div className="flex flex-col h-full justify-between">
+                        <div className="flex flex-col gap-10 animate-pulse opacity-70 mb-8">
+                          {/* Summary & Metrics Skeleton */}
+                          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div className="col-span-1 md:col-span-3 flex flex-col gap-4">
+                              <Skeleton className="h-3 w-32 rounded bg-[var(--c-border-strong)]" />
+                              <div className="flex flex-col gap-2.5 mt-1">
+                                <Skeleton className="h-4 w-full rounded bg-[var(--c-bg-subtle)]" />
+                                <Skeleton className="h-4 w-11/12 rounded bg-[var(--c-bg-subtle)]" />
+                                <Skeleton className="h-4 w-4/5 rounded bg-[var(--c-bg-subtle)]" />
+                              </div>
+                            </div>
+                            <div className="col-span-1 flex flex-col gap-4 p-5 rounded-[var(--r-md)] bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)]">
+                              <Skeleton className="h-10 w-full rounded bg-[var(--c-border-subtle)]" />
+                              <div className="w-full h-[1px] bg-[var(--c-border-strong)]" />
+                              <Skeleton className="h-10 w-full rounded bg-[var(--c-border-subtle)]" />
+                            </div>
+                          </div>
+
+                          {/* Signals Grid Skeleton */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="flex flex-col gap-4">
+                              <Skeleton className="h-3 w-28 rounded bg-[var(--c-border-strong)]" />
+                              <Skeleton className="h-12 w-full rounded-[var(--r-sm)] bg-[var(--c-bg-subtle)]" />
+                              <Skeleton className="h-12 w-full rounded-[var(--r-sm)] bg-[var(--c-bg-subtle)]" />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                              <Skeleton className="h-3 w-36 rounded bg-[var(--c-border-strong)]" />
+                              <Skeleton className="h-12 w-full rounded-[var(--r-sm)] bg-[var(--c-bg-subtle)]" />
+                              <Skeleton className="h-12 w-full rounded-[var(--r-sm)] bg-[var(--c-bg-subtle)]" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Kept button disabled at the bottom */}
+                        <div className="flex justify-center mt-auto">
+                          <Button disabled={true} className="w-full max-w-sm">
+                            <Sparkles className="w-4 h-4 mr-2 text-[var(--c-accent)] animate-pulse" />
+                            Analizando con AXIOM IA...
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-center max-w-sm mx-auto py-12">
@@ -596,7 +640,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                           Ejecuta el motor de IA para descubrir los dolores del negocio, extraer el
                           Opportunity Score y recomendar soluciones precisas.
                         </p>
-                        <Button onClick={handleAnalyze} disabled={isAnalyzing}>
+                        <Button onClick={handleAnalyze} disabled={isAnalyzing} className="w-full">
                           <Sparkles className="w-4 h-4 mr-2 text-[var(--c-accent)]" />
                           Ejecutar Análisis IA
                         </Button>

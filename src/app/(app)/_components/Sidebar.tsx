@@ -162,14 +162,16 @@ function SidebarItem({ item, active }: SidebarItemProps) {
   return (
     <Link
       href={item.href as Route}
-      className={`flex items-center gap-3 px-3 py-2 rounded-[var(--r-md)] text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-accent)] ${
+      className={`group flex items-center gap-3 px-3 py-2 rounded-[var(--r-md)] text-[13px] font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-accent)] ${
         active
-          ? "bg-[var(--c-bg-hover)] text-[var(--c-text-primary)] shadow-sm"
+          ? "bg-[var(--c-bg-hover)] text-[var(--c-text-primary)] font-semibold shadow-sm"
           : "text-[var(--c-text-secondary)] hover:bg-[var(--c-bg-hover)] hover:text-[var(--c-text-primary)]"
       }`}
       aria-current={active ? "page" : undefined}
     >
-      <span className={active ? "text-[var(--c-accent)]" : "text-[var(--c-text-tertiary)]"}>
+      <span
+        className={`transition-colors ${active ? "text-[var(--c-text-primary)]" : "text-[var(--c-text-tertiary)] group-hover:text-[var(--c-text-primary)]"}`}
+      >
         {item.icon}
       </span>
       {item.label}

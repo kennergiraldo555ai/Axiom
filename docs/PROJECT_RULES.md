@@ -416,3 +416,15 @@ the AI must first identify the most probable root cause.
 Avoid exploratory trial-and-error debugging whenever possible.
 
 Prefer architectural reasoning over repeated execution.
+
+---
+
+## Controlled Optimistic Updates (UX Pattern)
+
+**Rule:** Every interaction with AI Actions (Analyze, Generate Proposal, Convert) MUST preserve the UI state perfectly.
+
+1. **Server Actions Return State:** The Server Action must return the updated `ProspectEntity` directly.
+2. **React Injection:** The UI must inject this returned object directly into the local state array (`prospects.map`).
+3. **No Refetching:** Do NOT call `fetch` or `getProspectsAction` after an AI action unless absolutely necessary.
+4. **Targeted Skeletons:** Use targeted `Skeletons` specifically in the changed UI block. Never unmount the layout or change pageState to "loading" for single-item updates.
+5. **Disabled Buttons:** Buttons triggering the action should be disabled but remain visible while the action processes.

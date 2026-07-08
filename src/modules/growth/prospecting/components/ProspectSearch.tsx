@@ -59,52 +59,35 @@ export function ProspectSearch({ onSearchStart, onSearchComplete }: ProspectSear
   };
 
   return (
-    <SearchBar onSubmit={handleSubmit} className="items-end">
+    <SearchBar onSubmit={handleSubmit} className="items-end gap-5 p-5">
       <div className="flex-1 w-full">
         <label
           htmlFor="category"
-          className="block text-sm font-medium text-[var(--c-text-secondary)] mb-1"
+          className="block text-[13px] font-semibold text-[var(--c-text-secondary)] mb-2 tracking-wide"
         >
           Categoría
         </label>
         <Input
           id="category"
           name="category"
-          list="category-suggestions"
           placeholder="Ej. Dentistas, Agencias de Software..."
           disabled={isSearching}
           required
+          className="h-10 text-sm"
         />
-        <datalist id="category-suggestions">
-          <option value="Dentistas" />
-          <option value="Clínicas Odontológicas" />
-          <option value="Barberías" />
-          <option value="Peluquerías" />
-          <option value="Clínicas Estéticas" />
-          <option value="Spas" />
-          <option value="Gimnasios" />
-          <option value="Restaurantes" />
-          <option value="Cafeterías" />
-          <option value="Hoteles" />
-          <option value="Talleres Automotrices" />
-          <option value="Inmobiliarias" />
-          <option value="Abogados" />
-          <option value="Contadores" />
-          <option value="Veterinarias" />
-          <option value="Agencias de Viajes" />
-          <option value="Ferreterías" />
-          <option value="Constructoras" />
-          <option value="Tiendas de Mascotas" />
-          <option value="Academias" />
-        </datalist>
       </div>
       <div className="flex-1 w-full sm:max-w-[300px]">
-        <label className="block text-sm font-medium text-[var(--c-text-secondary)] mb-1">
+        <label className="block text-[13px] font-semibold text-[var(--c-text-secondary)] mb-2 tracking-wide">
           Ciudad
         </label>
         <CityAutocomplete onSelect={setSelectedCity} disabled={isSearching} />
       </div>
-      <Button type="submit" disabled={isSearching} className="w-full sm:w-auto">
+      <Button
+        type="submit"
+        disabled={isSearching}
+        variant="default"
+        className="w-full sm:w-auto h-10 px-8"
+      >
         <Search className="mr-2 h-4 w-4" />
         {isSearching ? "Buscando..." : "Buscar"}
       </Button>

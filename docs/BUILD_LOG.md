@@ -292,3 +292,88 @@ Cerrar completamente el módulo Growth Prospecting. Sin nuevas funcionalidades.
 - pnpm lint ✓
 - pnpm typecheck ✓
 - pnpm build ✓
+
+---
+
+# Sprint Estabilización UX (Local)
+
+**Estado:** Completado (solo desarrollo local — sin commit/push por instrucción explícita del usuario)
+
+## Objetivo
+
+Corregir dos regresiones críticas de UX (pérdida de estado y pantalla negra durante carga) y traducir el análisis de IA al español neutro.
+
+### Problema 1 — Análisis de IA en inglés
+
+**Causa raíz:** El prompt `evaluateProspectPrompt` en `prospecting.ts` estaba escrito en inglés y no instruía a la IA a responder explícitamente en español, provocando que los textos del JSON se generaran en inglés.
+**Solución aplicada:** Se tradujeron el `systemPrompt` y el `userPrompt` al español neutro, agregando una instrucción crítica (CRÍTICO) para que la salida conserve la estructura JSON pero genere todo el contenido en español enfocado en LATAM.
+**Por qué no rompe el resto del sistema:** No se modificaron las llaves del JSON, por lo que el parseo en `AnalyzeProspectUseCase` y el renderizado en la UI siguen funcionando perfectamente.
+
+### Problema 2 y 3 — UI Rota (Pantalla Negra) y Pérdida del Estado de Búsqueda
+
+**Causa raíz (Componentes responsables):**
+
+1. En `ProspectSidePanel`, la función `onUpdate()` se llamaba sin argumentos.
+2. En `ProspectLayout`, `onUpdate` apuntaba directamente a `fetchProspects()`, la cual, al no recibir filtros de búsqueda, ejecutaba una carga general de base de datos (`getProspectsAction({})`).
+3. Esto no solo reemplazaba el estado actual de la búsqueda (`prospects`) con la lista general, sino que además forzaba `setPageState("loading")`. Al cambiar el estado a "loading", el componente `<ProspectTable>` se desmontaba por completo (pantalla negra), y al finalizar, la UI mostraba resultados distintos a los que el usuario estaba viendo.
+   **Solución aplicada:**
+4. Los Use Cases y Actions de IA (`analyzeProspectAction`, etc.) ya retornaban el `ProspectEntity` actualizado.
+5. Se actualizó la firma de `onUpdate` en `<ProspectSidePanel>` para aceptar `(updatedProspect?: ProspectEntity)`.
+6. Se implementó `handleUpdate` en `ProspectLayout` que, al recibir un prospecto actualizado, simplemente lo reemplaza en el array local de estado (`prospects.map`) sin disparar un nuevo fetch ni cambiar `pageState`.
+   **Por qué no rompe el resto del sistema:**
+   Evita completamente peticiones de red redundantes y montajes innecesarios. Se preservan la búsqueda, el scroll, y el panel lateral intactos. Es un cambio puramente de React State (local).
+
+---
+
+# Sprint Mejora UX: Persistencia Inteligente del Análisis IA
+
+**Estado:** Completado (Local)
+
+## Objetivo
+
+Resolver la falta de inmediatez en la interfaz después de generar el análisis IA (el backend ya guardaba en base de datos correctamente, pero requería recargar para visualizar).
+
+## Solución (Patrón Optimista Controlado)
+
+Se implementó un patrón de "Actualización Optimista Controlada" para toda interacción con Gemini/Claude:
+
+1. Las Server Actions (`analyzeProspectAction`, etc.) retornan el objeto `ProspectEntity` completo actualizado directamente de la BD tras la transacción exitosa.
+2. La interfaz de usuario (`ProspectSidePanel` -> `ProspectLayout`) inyecta este objeto retornado en el React State usando `current.map(p => p.id === updated.id ? updated : p)`.
+3. No existe un estado de `prospect` paralelo: Todo el flujo consume del mismo arreglo `prospects` mantenido por `<ProspectLayout>`.
+
+## Patrón de UX Implementado
+
+- **Skeleton Elegante:** Durante el análisis (`isAnalyzing`), se reemplaza el empty state por una maqueta animada (`Skeleton`) idéntica a la estructura final del bloque de inteligencia. El botón de análisis se mantiene visible y deshabilitado.
+- **Cero Remounts:** No se utilizan tiempos de espera (`setTimeout`) ni desmontajes de contexto.
+- **Mantenimiento de Estado:** El scroll, la búsqueda activa (Hoteles vs Barberías) y la selección del panel permanecen intactos.
+
+## Reutilización
+
+Este mismo patrón **DEBE** emplearse para futuras integraciones: Generar Propuesta, Convertir a Lead, Chat Contextual, etc. Siempre:
+
+1. Invocar Action.
+2. Mantener UI viva (loading state local a la sección).
+3. Obtener Entity en `data`.
+4. Hacer `onUpdate(response.data)`.
+5. BD sigue siendo la única fuente de verdad, React solo la refleja instantáneamente.
+
+---
+
+# Sprint UI-2
+
+**Estado:** Completado
+
+## Objetivo
+
+Transformar la experiencia de entrada a Prospecting en un flujo Enterprise Premium, garantizando cero carga automatica de datos y cero regresiones funcionales.
+
+### Cambios Implementados
+
+- **Layout Inicial:** Se elimino el useEffect que gatillaba fetchProspects en montaje.
+- **Componentes Base:** Se genero EmptyState.tsx reutilizable con glassmorphism, glows y soporte de animaciones en /src/modules/_shared/components/.
+- **Skeletons:** Se reescribio el esqueleto de carga general a un ProspectGridSkeleton con animaciones Premium (shimmer) que imita exactamente la presentacion final de los resultados.
+- **Busqueda:** Se purgo el datalist nativo y se unificaron las alturas y bordes (h-10) del input de categorias y el CityAutocomplete.
+
+### Resultado
+
+Completado. La experiencia de busqueda ahora es 100% deliberada: comienza con un estado vacio inspirador, exige interaccion consciente del usuario y entrega una carga asincrona espectacular sin desmejorar el motor de cache preexistente.

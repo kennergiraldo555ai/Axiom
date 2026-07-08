@@ -9,32 +9,44 @@ interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
   action?: React.ReactNode;
 }
 
+/**
+ * A reusable premium Empty State component.
+ * Uses a subtle glassmorphic icon container and rich typography.
+ */
 export function EmptyState({
   title,
   description,
   icon,
   action,
   className,
+  children,
   ...props
 }: EmptyStateProps) {
   return (
     <div
       className={cn(
-        "flex min-h-[400px] flex-col items-center justify-center rounded-[var(--r-xl)] border border-dashed border-[var(--c-border-default)] bg-[var(--c-bg-subtle)] p-8 text-center animate-in fade-in-50",
+        "flex flex-col items-center justify-center text-center animate-in fade-in zoom-in-95 duration-500 py-20 px-6",
         className,
       )}
       {...props}
     >
-      <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--c-bg-elevated)] text-[var(--c-text-tertiary)] mb-4">
-          {icon || <FolderOpen className="h-10 w-10" />}
+      <div className="relative mb-6 group">
+        <div className="absolute inset-0 bg-gradient-to-tr from-[var(--c-accent)] to-[#a855f7] opacity-20 blur-xl rounded-full group-hover:opacity-30 transition-opacity duration-500" />
+        <div className="relative w-16 h-16 flex items-center justify-center rounded-[var(--r-2xl)] bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)] shadow-sm text-[var(--c-text-secondary)]">
+          {icon || <FolderOpen className="h-7 w-7" />}
         </div>
-        <h2 className="text-xl font-semibold text-[var(--c-text-primary)]">{title}</h2>
-        <p className="mb-8 mt-2 text-sm font-normal leading-6 text-[var(--c-text-secondary)]">
-          {description}
-        </p>
-        {action}
       </div>
+
+      <h3 className="text-xl font-semibold tracking-tight text-[var(--c-text-primary)] mb-3">
+        {title}
+      </h3>
+
+      <p className="text-[14px] leading-relaxed text-[var(--c-text-secondary)] max-w-sm mx-auto mb-8 text-balance">
+        {description}
+      </p>
+
+      {action && <div className="mb-4">{action}</div>}
+      {children}
     </div>
   );
 }

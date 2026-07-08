@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import * as React from "react";
@@ -8,13 +7,14 @@ import { ProspectSidePanel } from "./ProspectSidePanel";
 import { getProspectsAction } from "../presentation/actions";
 import type { ProspectEntity } from "../domain/entities/prospect.entity";
 import { ErrorState } from "@/modules/_shared/components/ErrorState";
-import { Search, Building2, Sparkles, TrendingUp, Globe } from "lucide-react";
+import { EmptyState } from "@/modules/_shared/components/EmptyState";
+import { Search, Building2, Sparkles, Globe } from "lucide-react";
 
 type PageState = "initial" | "loading" | "results" | "empty-results" | "error";
 
 export function ProspectLayout() {
   const [prospects, setProspects] = React.useState<ProspectEntity[]>([]);
-  const [pageState, setPageState] = React.useState<PageState>("loading");
+  const [pageState, setPageState] = React.useState<PageState>("initial");
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [hasSearched, setHasSearched] = React.useState(false);
 
@@ -80,10 +80,8 @@ export function ProspectLayout() {
     [hasSearched, prospects],
   );
 
-  React.useEffect(() => {
-    fetchProspects();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Note: We removed the automatic fetchProspects() on mount.
+  // The module now always starts in the "initial" state.
 
   const handleSearchStart = () => {
     setPageState("loading");
@@ -152,11 +150,26 @@ export function ProspectLayout() {
     return sortable;
   }, [prospects, sortConfig]);
 
+  const handleUpdate = React.useCallback(
+    (updatedProspect?: ProspectEntity) => {
+      if (updatedProspect) {
+        setProspects((current) =>
+          current.map((p) => (p.id === updatedProspect.id ? updatedProspect : p)),
+        );
+      } else {
+        if (!isSearchMode) {
+          fetchProspects(page, false);
+        }
+      }
+    },
+    [isSearchMode, fetchProspects, page],
+  );
+
   return (
     <div className="flex flex-col space-y-6">
       <ProspectSearch onSearchStart={handleSearchStart} onSearchComplete={handleSearchComplete} />
 
-      {pageState === "loading" && <ProspectTableSkeleton />}
+      {pageState === "loading" && <ProspectGridSkeleton />}
 
       {pageState === "initial" && <OnboardingState />}
 
@@ -193,7 +206,7 @@ export function ProspectLayout() {
         prospect={selectedProspect}
         isOpen={isPanelOpen}
         onClose={handleClosePanel}
-        onUpdate={fetchProspects}
+        onUpdate={handleUpdate}
       />
     </div>
   );
@@ -201,70 +214,56 @@ export function ProspectLayout() {
 
 // ── Onboarding State (First visit, no data yet) ─────────────────────
 
+// ── Onboarding State (First visit, no data yet) ─────────────────────
+
 function OnboardingState() {
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-6">
-      <div className="max-w-lg text-center">
-        {/* Icon cluster */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--c-accent)]/20 to-[var(--c-accent)]/5 border border-[var(--c-accent)]/20 flex items-center justify-center">
-            <Search className="w-5 h-5 text-[var(--c-accent)]" />
+    <div className="flex flex-col items-center justify-center py-10">
+      <EmptyState
+        title="Encuentra tu próximo cliente"
+        description="Busca negocios por categoría y ciudad. AXIOM los analizará con inteligencia artificial para encontrar oportunidades de venta ocultas."
+        icon={<Sparkles className="w-8 h-8 text-purple-400" />}
+      >
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <div className="flex flex-wrap justify-center gap-2">
+            {[
+              { icon: Building2, label: "Dental Clinics" },
+              { icon: Globe, label: "Software Agencies" },
+              { icon: Building2, label: "Real Estate" },
+              { icon: Globe, label: "Restaurants" },
+            ].map(({ icon: Icon, label }) => (
+              <div
+                key={label}
+                className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-full)] bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)] text-[13px] text-[var(--c-text-secondary)] shadow-sm"
+              >
+                <Icon className="w-3.5 h-3.5 text-[var(--c-text-tertiary)]" />
+                {label}
+              </div>
+            ))}
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-500/5 border border-purple-500/20 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-purple-400" />
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-500/5 border border-blue-500/20 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-blue-400" />
-          </div>
-        </div>
 
-        <h2 className="text-xl font-semibold text-[var(--c-text-primary)] mb-3 tracking-tight">
-          Encuentra tu próximo cliente
-        </h2>
-        <p className="text-[14px] text-[var(--c-text-secondary)] leading-relaxed mb-8 max-w-md mx-auto">
-          Busca negocios por categoría y ciudad. AXIOM los analizará con inteligencia artificial
-          para encontrar oportunidades de venta ocultas.
-        </p>
-
-        {/* Search examples */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {[
-            { icon: Building2, label: "Dental Clinics" },
-            { icon: Globe, label: "Software Agencies" },
-            { icon: Building2, label: "Real Estate" },
-            { icon: Globe, label: "Restaurants" },
-          ].map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)] text-[13px] text-[var(--c-text-secondary)]"
-            >
-              <Icon className="w-3.5 h-3.5 text-[var(--c-text-tertiary)]" />
-              {label}
+          <div className="flex flex-col items-center gap-3 mt-4">
+            <p className="text-[12px] text-[var(--c-text-tertiary)]">
+              Ingresa una categoría y ciudad en el buscador superior para comenzar
+            </p>
+            <div className="w-6 h-6 rounded-full border border-[var(--c-border-strong)] flex items-center justify-center animate-bounce">
+              <svg
+                className="w-3 h-3 text-[var(--c-text-tertiary)]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
+                />
+              </svg>
             </div>
-          ))}
-        </div>
-
-        <div className="flex flex-col items-center gap-3">
-          <p className="text-[12px] text-[var(--c-text-tertiary)]">
-            Ingresa una categoría y ciudad en el buscador de arriba para comenzar
-          </p>
-          <div className="w-6 h-6 rounded-full border border-[var(--c-border-strong)] flex items-center justify-center animate-bounce">
-            <svg
-              className="w-3 h-3 text-[var(--c-text-tertiary)]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 10l7-7m0 0l7 7m-7-7v18"
-              />
-            </svg>
           </div>
         </div>
-      </div>
+      </EmptyState>
     </div>
   );
 }
@@ -273,50 +272,46 @@ function OnboardingState() {
 
 function EmptyResultsState() {
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-6">
-      <div className="max-w-sm text-center">
-        <div className="w-14 h-14 rounded-2xl bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)] flex items-center justify-center mx-auto mb-6">
-          <Search className="w-6 h-6 text-[var(--c-text-tertiary)]" />
-        </div>
-        <h3 className="text-lg font-semibold text-[var(--c-text-primary)] mb-2 tracking-tight">
-          Sin resultados
-        </h3>
-        <p className="text-[14px] text-[var(--c-text-secondary)] leading-relaxed">
-          La búsqueda no encontró negocios con esos criterios. Intenta con otra categoría o una
-          ciudad diferente.
-        </p>
-      </div>
-    </div>
+    <EmptyState
+      title="Sin resultados"
+      description="La búsqueda no encontró negocios con esos criterios. Intenta con otra categoría o una ciudad diferente."
+      icon={<Search className="w-8 h-8 text-[var(--c-text-tertiary)]" />}
+    />
   );
 }
 
 // ── Skeleton Loader ─────────────────────────────────────────────────
 
-function ProspectTableSkeleton() {
+import { Skeleton } from "@/modules/_shared/components/Skeleton";
+
+function ProspectGridSkeleton() {
   return (
-    <div className="w-full rounded-xl border border-[var(--c-border-subtle)] bg-[var(--c-bg-elevated)] overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-6 px-6 py-4 border-b border-[var(--c-border-subtle)]">
-        <div className="h-3 w-24 rounded bg-[var(--c-bg-subtle)] animate-pulse" />
-        <div className="h-3 w-20 rounded bg-[var(--c-bg-subtle)] animate-pulse" />
-        <div className="h-3 w-16 rounded bg-[var(--c-bg-subtle)] animate-pulse" />
-        <div className="h-3 w-20 rounded bg-[var(--c-bg-subtle)] animate-pulse" />
-        <div className="h-3 w-16 rounded bg-[var(--c-bg-subtle)] animate-pulse ml-auto" />
-      </div>
-      {/* Rows */}
-      {[1, 2, 3, 4, 5].map((i) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 pb-12">
+      {Array.from({ length: 8 }).map((_, i) => (
         <div
           key={i}
-          className="flex items-center gap-6 px-6 py-5 border-b border-[var(--c-border-subtle)] last:border-b-0"
+          className="rounded-[var(--r-2xl)] border border-[var(--c-border-subtle)] bg-[var(--c-bg-subtle)] p-5 flex flex-col gap-4"
         >
-          <div className="flex flex-col gap-2 flex-1">
-            <div className="h-4 w-48 rounded bg-[var(--c-bg-subtle)] animate-pulse" />
-            <div className="h-3 w-28 rounded bg-[var(--c-bg-subtle)] animate-pulse opacity-60" />
+          {/* Header */}
+          <div className="flex justify-between items-start gap-3">
+            <div className="flex flex-col gap-2 flex-1">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-1/2" />
+            </div>
+            <Skeleton className="h-5 w-16 rounded-full shrink-0" />
           </div>
-          <div className="h-3 w-32 rounded bg-[var(--c-bg-subtle)] animate-pulse hidden sm:block" />
-          <div className="h-3 w-12 rounded bg-[var(--c-bg-subtle)] animate-pulse hidden sm:block" />
-          <div className="h-5 w-20 rounded-full bg-[var(--c-bg-subtle)] animate-pulse" />
-          <div className="h-4 w-8 rounded bg-[var(--c-bg-subtle)] animate-pulse" />
+
+          {/* Info Grid */}
+          <div className="grid grid-cols-2 gap-3 mt-2">
+            <Skeleton className="h-3 w-full col-span-2" />
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-3 w-24" />
+          </div>
+
+          {/* Footer */}
+          <div className="mt-4 pt-4 border-t border-[var(--c-border-subtle)] flex items-center justify-between">
+            <Skeleton className="h-4 w-16" />
+          </div>
         </div>
       ))}
     </div>

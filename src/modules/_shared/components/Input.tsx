@@ -12,10 +12,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            "flex h-9 w-full rounded-[var(--r-md)] border bg-[var(--c-bg-elevated)] px-3 py-1 text-[13px] transition-all file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[var(--c-text-tertiary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--c-bg-base)] disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[var(--c-bg-hover)]",
+            "flex h-9 w-full rounded-[var(--r-md)] border bg-[var(--c-bg-subtle)] px-3 py-1 text-[13px] text-[var(--c-text-primary)] transition-all duration-300 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[var(--c-text-tertiary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[var(--c-bg-hover)]",
             error
               ? "border-[var(--c-danger)] focus-visible:ring-[var(--c-danger)]"
-              : "border-[var(--c-border-subtle)] focus-visible:ring-[var(--c-accent)] hover:border-[var(--c-border-default)]",
+              : "border-[var(--c-border-subtle)] focus-visible:ring-[var(--c-accent)] focus-visible:border-[var(--c-accent)] hover:border-[var(--c-border-default)]",
             className,
           )}
           ref={ref}
