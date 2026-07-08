@@ -125,30 +125,28 @@ export function CityAutocomplete({ onSelect, disabled }: CityAutocompleteProps) 
             if (results.length > 0) setIsOpen(true);
           }}
           disabled={disabled}
-          className="w-full h-10 text-sm pl-10 pr-10 bg-[var(--c-bg-subtle)] border-[var(--c-border-subtle)] focus:border-[var(--c-accent)] focus:ring-[var(--c-accent)] transition-all"
+          className="w-full h-[50px] text-[15px] pl-12 pr-10 bg-[var(--c-bg-base)] border-[var(--c-border-strong)] focus:border-[var(--c-accent)] focus:ring-[var(--c-accent)] focus:shadow-[0_0_15px_rgba(0,229,255,0.3)] font-medium transition-all shadow-tactile rounded-[var(--r-md)]"
         />
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <MapPin className="h-4 w-4 text-[var(--c-text-secondary)] group-focus-within:text-[var(--c-accent)] transition-colors" />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+          <MapPin className="h-5 w-5 text-[var(--c-text-tertiary)] group-focus-within:text-[var(--c-accent)] group-focus-within:drop-shadow-[0_0_5px_rgba(0,229,255,0.8)] transition-all" />
         </div>
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 text-[var(--c-text-tertiary)] animate-spin" />
-          ) : null}
+        <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+          {isLoading ? <Loader2 className="h-4 w-4 text-[var(--c-accent)] animate-spin" /> : null}
         </div>
       </div>
 
       {isOpen && query.length >= 2 && (
-        <div className="absolute z-50 w-full mt-2 bg-[var(--c-bg-elevated)] border border-[var(--c-border-default)] rounded-[var(--r-xl)] shadow-premium overflow-hidden backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute z-50 w-full mt-2 bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-xl)] shadow-glow overflow-hidden backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
           {results.length > 0 ? (
             <ul className="py-2 max-h-[300px] overflow-auto custom-scrollbar">
               {results.map((city) => (
                 <li
                   key={city.id}
                   onClick={() => handleSelect(city)}
-                  className="px-4 py-2.5 mx-2 rounded-[var(--r-md)] hover:bg-[var(--c-bg-hover)] cursor-pointer flex items-center gap-3 transition-colors"
+                  className="px-4 py-2 mx-2 rounded-[var(--r-md)] hover:bg-[var(--c-accent)]/10 cursor-pointer flex items-center gap-3 transition-colors group/item"
                 >
                   <div className="flex-1 flex flex-col">
-                    <span className="text-[13px] font-medium text-[var(--c-text-primary)]">
+                    <span className="text-[13px] font-bold text-[var(--c-text-primary)] group-hover/item:text-[var(--c-accent)] transition-colors">
                       {city.name}
                     </span>
                     <span className="text-[11px] text-[var(--c-text-secondary)]">
@@ -160,7 +158,7 @@ export function CityAutocomplete({ onSelect, disabled }: CityAutocompleteProps) 
               ))}
             </ul>
           ) : !isLoading ? (
-            <div className="px-4 py-6 text-[13px] text-[var(--c-text-secondary)] text-center">
+            <div className="px-4 py-6 text-[13px] text-[var(--c-accent)] text-center font-medium opacity-70">
               No se encontraron ciudades
             </div>
           ) : null}

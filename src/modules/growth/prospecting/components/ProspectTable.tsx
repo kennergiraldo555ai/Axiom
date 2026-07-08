@@ -54,7 +54,7 @@ export function ProspectTable({
   if (isLoading) return null;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 pb-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 pb-12">
       {prospects.map((prospect) => (
         <ProspectCard
           key={prospect.id}

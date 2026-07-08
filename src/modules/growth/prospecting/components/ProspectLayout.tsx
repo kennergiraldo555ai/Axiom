@@ -8,7 +8,7 @@ import { getProspectsAction } from "../presentation/actions";
 import type { ProspectEntity } from "../domain/entities/prospect.entity";
 import { ErrorState } from "@/modules/_shared/components/ErrorState";
 import { EmptyState } from "@/modules/_shared/components/EmptyState";
-import { Search, Building2, Sparkles, Globe } from "lucide-react";
+import { Search, Sparkles, Globe } from "lucide-react";
 
 type PageState = "initial" | "loading" | "results" | "empty-results" | "error";
 
@@ -19,7 +19,6 @@ export function ProspectLayout() {
   const [hasSearched, setHasSearched] = React.useState(false);
 
   const [selectedProspectId, setSelectedProspectId] = React.useState<string | null>(null);
-  const [isPanelOpen, setIsPanelOpen] = React.useState(false);
   const [sortConfig, setSortConfig] = React.useState<{
     key: string;
     direction: "asc" | "desc";
@@ -87,7 +86,6 @@ export function ProspectLayout() {
     setPageState("loading");
     setProspects([]);
     setSelectedProspectId(null);
-    setIsPanelOpen(false);
     setPage(1);
     setHasMore(true);
   };
@@ -111,12 +109,6 @@ export function ProspectLayout() {
 
   const handleSelectProspect = (prospect: ProspectEntity) => {
     setSelectedProspectId(prospect.id);
-    setIsPanelOpen(true);
-  };
-
-  const handleClosePanel = () => {
-    setIsPanelOpen(false);
-    setTimeout(() => setSelectedProspectId(null), 300);
   };
 
   const selectedProspect = React.useMemo(() => {
@@ -166,7 +158,7 @@ export function ProspectLayout() {
   );
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col gap-8 p-0">
       <ProspectSearch onSearchStart={handleSearchStart} onSearchComplete={handleSearchComplete} />
 
       {pageState === "loading" && <ProspectGridSkeleton />}
@@ -201,13 +193,14 @@ export function ProspectLayout() {
         />
       )}
 
-      <ProspectSidePanel
-        key={selectedProspectId || "empty"}
-        prospect={selectedProspect}
-        isOpen={isPanelOpen}
-        onClose={handleClosePanel}
-        onUpdate={handleUpdate}
-      />
+      {selectedProspect && (
+        <ProspectSidePanel
+          prospect={selectedProspect}
+          isOpen={!!selectedProspect}
+          onClose={() => setSelectedProspectId(null)}
+          onUpdate={handleUpdate}
+        />
+      )}
     </div>
   );
 }
@@ -218,52 +211,82 @@ export function ProspectLayout() {
 
 function OnboardingState() {
   return (
-    <div className="flex flex-col items-center justify-center py-10">
-      <EmptyState
-        title="Encuentra tu próximo cliente"
-        description="Busca negocios por categoría y ciudad. AXIOM los analizará con inteligencia artificial para encontrar oportunidades de venta ocultas."
-        icon={<Sparkles className="w-8 h-8 text-purple-400" />}
-      >
-        <div className="mt-8 flex flex-col items-center gap-4">
-          <div className="flex flex-wrap justify-center gap-2">
-            {[
-              { icon: Building2, label: "Dental Clinics" },
-              { icon: Globe, label: "Software Agencies" },
-              { icon: Building2, label: "Real Estate" },
-              { icon: Globe, label: "Restaurants" },
-            ].map(({ icon: Icon, label }) => (
-              <div
-                key={label}
-                className="flex items-center gap-2 px-4 py-2 rounded-[var(--r-full)] bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)] text-[13px] text-[var(--c-text-secondary)] shadow-sm"
-              >
-                <Icon className="w-3.5 h-3.5 text-[var(--c-text-tertiary)]" />
-                {label}
-              </div>
-            ))}
-          </div>
+    <div className="flex flex-col items-center justify-center py-16 md:py-24 relative w-full max-w-5xl mx-auto">
+      {/* Massive glowing rings and binoculars illustration */}
+      <div className="relative mb-12 group">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-tr from-[var(--c-accent)]/10 to-[var(--c-violet)]/10 rounded-full blur-[80px] pointer-events-none" />
 
-          <div className="flex flex-col items-center gap-3 mt-4">
-            <p className="text-[12px] text-[var(--c-text-tertiary)]">
-              Ingresa una categoría y ciudad en el buscador superior para comenzar
-            </p>
-            <div className="w-6 h-6 rounded-full border border-[var(--c-border-strong)] flex items-center justify-center animate-bounce">
-              <svg
-                className="w-3 h-3 text-[var(--c-text-tertiary)]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 10l7-7m0 0l7 7m-7-7v18"
-                />
-              </svg>
+        {/* Floating elements */}
+        <div className="absolute -top-10 -right-10 w-16 h-16 bg-gradient-to-br from-[var(--c-bg-elevated)] to-[#0B0D12] border border-[var(--c-border-strong)] rounded-2xl flex items-center justify-center shadow-tactile animate-pulse">
+          <Sparkles className="w-8 h-8 text-[var(--c-violet)]" />
+        </div>
+
+        {/* Center illustration container */}
+        <div className="relative w-48 h-48 sm:w-64 sm:h-64 bg-gradient-to-b from-[#1E2230] to-[#0B0D12] rounded-[40px] border border-[var(--c-border-strong)] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] flex items-center justify-center overflow-hidden">
+          {/* Inner ring */}
+          <div className="absolute inset-0 m-auto w-3/4 h-3/4 rounded-[30px] border border-[var(--c-border-subtle)]" />
+          {/* Binoculars representation using overlapping glowing circles */}
+          <div className="relative flex items-center gap-2">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#0B0D12] border-4 border-[var(--c-accent)] shadow-[0_0_30px_rgba(0,229,255,0.6),inset_0_0_20px_rgba(0,229,255,0.3)] relative z-10">
+              <div className="absolute inset-2 rounded-full bg-[var(--c-accent)]/20" />
             </div>
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#0B0D12] border-4 border-[var(--c-violet)] shadow-[0_0_30px_rgba(168,85,247,0.6),inset_0_0_20px_rgba(168,85,247,0.3)] relative z-10">
+              <div className="absolute inset-2 rounded-full bg-[var(--c-violet)]/20" />
+            </div>
+            {/* Center connector */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-4 bg-[#1E2230] z-0" />
+          </div>
+          {/* "A" logo hint floating */}
+          <div className="absolute bottom-8 right-8 text-[var(--c-accent)] opacity-40 font-bold text-4xl">
+            A
           </div>
         </div>
-      </EmptyState>
+      </div>
+
+      <div className="text-center max-w-2xl mb-16 relative z-10">
+        <h2 className="text-3xl sm:text-4xl font-black text-[var(--c-text-primary)] tracking-tight mb-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+          Encuentra tu próximo gran cliente
+        </h2>
+        <p className="text-[15px] sm:text-lg text-[var(--c-text-secondary)] leading-relaxed">
+          Busca negocios por categoría y ubicación para descubrir oportunidades de crecimiento
+          ocultas.
+        </p>
+      </div>
+
+      {/* Feature Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full relative z-10">
+        <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-2xl)] p-8 flex flex-col items-center text-center shadow-tactile hover:border-[var(--c-violet)]/50 hover:-translate-y-1 transition-all duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-[var(--c-violet)]/10 border border-[var(--c-violet)]/20 flex items-center justify-center mb-6">
+            <Sparkles className="w-7 h-7 text-[var(--c-violet)]" />
+          </div>
+          <h3 className="text-[16px] font-bold text-[var(--c-text-primary)] mb-3">IA Avanzada</h3>
+          <p className="text-[13px] text-[var(--c-text-tertiary)] leading-relaxed">
+            Analizamos su presencia online automáticamente para puntuar su calidad.
+          </p>
+        </div>
+
+        <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-2xl)] p-8 flex flex-col items-center text-center shadow-tactile hover:border-[var(--c-info)]/50 hover:-translate-y-1 transition-all duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-[var(--c-info)]/10 border border-[var(--c-info)]/20 flex items-center justify-center mb-6">
+            <Globe className="w-7 h-7 text-[var(--c-info)]" />
+          </div>
+          <h3 className="text-[16px] font-bold text-[var(--c-text-primary)] mb-3">
+            Datos Inteligentes
+          </h3>
+          <p className="text-[13px] text-[var(--c-text-tertiary)] leading-relaxed">
+            Información precisa y actualizada en tiempo real de múltiples fuentes.
+          </p>
+        </div>
+
+        <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-2xl)] p-8 flex flex-col items-center text-center shadow-tactile hover:border-[var(--c-accent)]/50 hover:-translate-y-1 transition-all duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-[var(--c-accent)]/10 border border-[var(--c-accent)]/20 flex items-center justify-center mb-6">
+            <Search className="w-7 h-7 text-[var(--c-accent)]" />
+          </div>
+          <h3 className="text-[16px] font-bold text-[var(--c-text-primary)] mb-3">Oportunidades</h3>
+          <p className="text-[13px] text-[var(--c-text-tertiary)] leading-relaxed">
+            Detectamos el potencial de crecimiento oculto para acelerar tus ventas.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

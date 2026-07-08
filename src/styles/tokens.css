@@ -7,33 +7,33 @@
 
 :root {
   /* ─── Neutral scale — true black and ultra dark grays ────────── */
-  --c-bg-base: #0b0d12;
-  --c-bg-elevated: #12141b;
-  --c-bg-subtle: rgba(255, 255, 255, 0.03);
-  --c-bg-hover: rgba(255, 255, 255, 0.06);
-  --c-border-subtle: rgba(255, 255, 255, 0.06);
-  --c-border-default: #1e2230;
-  --c-border-strong: rgba(255, 255, 255, 0.16);
+  --c-bg-base: #060b11;
+  --c-bg-elevated: rgba(18, 25, 38, 0.7);
+  --c-bg-subtle: rgba(255, 255, 255, 0.02);
+  --c-bg-hover: rgba(255, 255, 255, 0.05);
+  --c-border-subtle: rgba(255, 255, 255, 0.04);
+  --c-border-default: rgba(255, 255, 255, 0.08);
+  --c-border-strong: rgba(255, 255, 255, 0.15);
 
   /* ─── Text ────────────────────────────────────────────────────── */
-  --c-text-primary: #e6e8ee;
-  --c-text-secondary: #9ca3af;
-  --c-text-tertiary: #71717a;
-  --c-text-disabled: #52525b;
+  --c-text-primary: #ffffff;
+  --c-text-secondary: #a1aab8;
+  --c-text-tertiary: #6b7280;
+  --c-text-disabled: #4b5563;
 
-  /* ─── Accent — Purple/Indigo (Linear/Stripe inspired) ────────── */
-  --c-accent: #6366f1;
-  --c-accent-hover: #818cf8;
-  --c-cyan: #22d3ee;
-  --c-violet: #a855f7;
-  --c-accent-subtle: rgba(99, 102, 241, 0.15);
-  --c-accent-border: rgba(99, 102, 241, 0.3);
+  /* ─── Accent — Cyan/Neon (Neo-Tactile glowing) ────────────────── */
+  --c-accent: #00e5ff;
+  --c-accent-hover: #33ebff;
+  --c-cyan: #00e5ff;
+  --c-violet: #b388ff;
+  --c-accent-subtle: rgba(0, 229, 255, 0.15);
+  --c-accent-border: rgba(0, 229, 255, 0.3);
 
   /* ─── Semantic ────────────────────────────────────────────────── */
-  --c-success: #34d399;
-  --c-warning: #fbbf24;
-  --c-danger: #f87171;
-  --c-info: #60a5fa;
+  --c-success: #00e676;
+  --c-warning: #ffea00;
+  --c-danger: #ff1744;
+  --c-info: #2979ff;
 
   /* ─── Typography ──────────────────────────────────────────────── */
   --font-sans: "Inter", system-ui, sans-serif;
@@ -41,10 +41,10 @@
 
   /* ─── Border radii ────────────────────────────────────────────── */
   --r-sm: 4px;
-  --r-md: 6px;
-  --r-lg: 8px;
-  --r-xl: 12px;
-  --r-2xl: 16px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 24px;
 
   /* ─── Spacing scale (4px base) ───────────────────────────────── */
   --s-1: 4px;
@@ -56,11 +56,17 @@
   --s-7: 48px;
   --s-8: 64px;
 
-  /* ─── Shadows — ultra subtle, depth focused ──────────────────── */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  /* ─── Shadows & Glass — Neo-Tactile ──────────────────────────── */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.6);
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  --shadow-glow: 0 0 40px -10px rgba(99, 102, 241, 0.15);
+  --shadow-glow: 0 0 20px -5px rgba(0, 229, 255, 0.5);
+  --shadow-glass:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5),
+    0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  --shadow-tactile:
+    inset 2px 2px 4px rgba(255, 255, 255, 0.05), inset -2px -2px 4px rgba(0, 0, 0, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.4);
 
   /* ─── Sidebar ─────────────────────────────────────────────────── */
   --sidebar-width-expanded: 240px;

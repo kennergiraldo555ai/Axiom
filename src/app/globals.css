@@ -32,6 +32,8 @@
 
   --shadow-premium: var(--shadow-lg);
   --shadow-glow: var(--shadow-glow);
+  --shadow-glass: var(--shadow-glass);
+  --shadow-tactile: var(--shadow-tactile);
   --font-family-sans: var(--font-sans);
   --font-family-mono: var(--font-mono);
 
