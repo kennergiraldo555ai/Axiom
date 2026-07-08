@@ -37,7 +37,11 @@ import {
   ListTodo,
 } from "lucide-react";
 import type { ProspectEntity } from "../domain/entities/prospect.entity";
-import { analyzeProspectAction, generateProposalAction } from "../presentation/actions";
+import {
+  analyzeProspectAction,
+  convertProspectToLeadAction,
+  generateProposalAction,
+} from "../presentation/actions";
 import { toast } from "sonner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/modules/_shared/components/Tabs";
 import { Textarea } from "@/modules/_shared/components/Textarea";
@@ -52,6 +56,7 @@ interface ProspectSidePanelProps {
 export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: ProspectSidePanelProps) {
   const [isAnalyzing, setIsAnalyzing] = React.useState(false);
   const [isGenerating, setIsGenerating] = React.useState(false);
+  const [isConverting, setIsConverting] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("intelligence");
   const [draftContent, setDraftContent] = React.useState(prospect?.messageDraft || "");
 
@@ -107,6 +112,35 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
     toast.success("Copiado al portapapeles", { description: "Listo para enviar." });
   };
 
+  const handleConvertToLead = async () => {
+    if (!prospect || prospect.convertedToLeadId) return;
+
+    const finalMessage = draftContent.trim();
+    if (!finalMessage) {
+      toast.error("Primero genera o escribe una propuesta.");
+      return;
+    }
+
+    setIsConverting(true);
+    const loadingToast = toast.loading(`Convirtiendo ${prospect.name}...`);
+    try {
+      const response = await convertProspectToLeadAction(prospect.id, finalMessage);
+      if (response.success) {
+        toast.success("Cliente potencial creado en CRM", { id: loadingToast });
+        onUpdate();
+      } else {
+        toast.error("Error al convertir prospecto", {
+          description: response.error,
+          id: loadingToast,
+        });
+      }
+    } catch {
+      toast.error("Error inesperado", { id: loadingToast });
+    } finally {
+      setIsConverting(false);
+    }
+  };
+
   const scoreRationale = prospect?.scoreRationale as Record<string, unknown> | null;
   const summary = (scoreRationale?.summary as string) || "Pendiente de resumen ejecutivo.";
 
@@ -146,13 +180,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                     </span>
                     <span className="text-[10px] text-[var(--c-border-strong)]">•</span>
                     <span className="text-[11px] text-[var(--c-text-tertiary)]">
-                      {prospect.address
-                        ? prospect.address
-                            .split(",")
-                            .slice(-2)
-                            .map((s) => s.trim())
-                            .join(", ")
-                        : "Sin ubicación"}
+                      {prospect.address || "Sin ubicación"}
                     </span>
                   </div>
                 </div>
@@ -205,6 +233,27 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                     </div>
                   </>
                 )}
+                {prospect.businessStatus && (
+                  <>
+                    <div className="w-[1px] h-8 bg-[var(--c-border-strong)] hidden md:block" />
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--c-text-tertiary)]">
+                        Operación
+                      </span>
+                      <div className="flex items-center gap-1.5 text-sm font-bold text-[var(--c-text-primary)]">
+                        {prospect.businessStatus === "OPERATIONAL" ? (
+                          <span className="text-[var(--c-success)]">Abierto</span>
+                        ) : prospect.businessStatus === "CLOSED_TEMPORARILY" ? (
+                          <span className="text-[var(--c-warning)]">Cerrado Temp.</span>
+                        ) : prospect.businessStatus === "CLOSED_PERMANENTLY" ? (
+                          <span className="text-[var(--c-danger)]">Cerrado</span>
+                        ) : (
+                          prospect.businessStatus
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
                 {prospect.analysisStatus === "COMPLETED" && (
                   <>
                     <div className="w-[1px] h-8 bg-[var(--c-border-strong)] hidden md:block" />
@@ -222,42 +271,144 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
               </div>
 
               {/* CRM Info Row */}
-              <div className="flex flex-wrap gap-6 px-8 py-5 border-b border-[var(--c-border-subtle)] text-[13px]">
-                <div className="flex items-start gap-2 max-w-[200px]">
+              <div className="flex flex-col md:flex-row flex-wrap gap-x-8 gap-y-4 px-8 py-5 border-b border-[var(--c-border-subtle)] text-[13px]">
+                <div className="flex items-start gap-2 max-w-xs">
                   <MapPin className="w-4 h-4 text-[var(--c-text-tertiary)] mt-0.5 shrink-0" />
-                  <span className="text-[var(--c-text-secondary)] leading-relaxed">
-                    {prospect.address || "No address on file"}
-                  </span>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[var(--c-text-secondary)] leading-relaxed">
+                      {prospect.address || "No address on file"}
+                    </span>
+                    {(prospect.googleUrl || (prospect.lat && prospect.lng)) && (
+                      <a
+                        href={
+                          prospect.googleUrl ||
+                          `https://www.google.com/maps/search/?api=1&query=${prospect.lat},${prospect.lng}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[12px] text-[var(--c-accent)] hover:underline flex items-center gap-1 w-fit mt-0.5"
+                      >
+                        Abrir en Google Maps <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-[var(--c-text-tertiary)] shrink-0" />
-                  <span
-                    className={
-                      prospect.phone
-                        ? "text-[var(--c-text-primary)]"
-                        : "text-[var(--c-text-tertiary)]"
-                    }
-                  >
-                    {prospect.phone || "No phone"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-[var(--c-text-tertiary)] shrink-0" />
+
+                <div className="flex flex-col gap-3 min-w-[150px]">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-[var(--c-text-tertiary)] shrink-0" />
+                    <span
+                      className={
+                        prospect.phone
+                          ? "text-[var(--c-text-primary)]"
+                          : "text-[var(--c-text-tertiary)]"
+                      }
+                    >
+                      {prospect.phone || "No phone"}
+                    </span>
+                  </div>
+
                   {prospect.website ? (
                     <a
                       href={prospect.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[var(--c-accent)] hover:underline flex items-center gap-1"
+                      className="text-[var(--c-accent)] hover:underline flex items-center gap-1.5"
                     >
-                      {new URL(prospect.website).hostname.replace("www.", "")}
-                      <ExternalLink className="w-3 h-3" />
+                      {prospect.website.toLowerCase().includes("instagram.com") ? (
+                        <>
+                          <span className="text-[13px]">📷</span> Instagram
+                        </>
+                      ) : prospect.website.toLowerCase().includes("facebook.com") ? (
+                        <>
+                          <span className="text-[13px]">👍</span> Facebook
+                        </>
+                      ) : prospect.website.toLowerCase().includes("tiktok.com") ? (
+                        <>
+                          <span className="text-[13px]">🎵</span> TikTok
+                        </>
+                      ) : prospect.website.toLowerCase().includes("whatsapp.com") ||
+                        prospect.website.toLowerCase().includes("wa.me") ? (
+                        <>
+                          <span className="text-[13px]">💬</span> WhatsApp
+                        </>
+                      ) : (
+                        <>
+                          <Globe className="w-4 h-4 text-[var(--c-text-tertiary)]" /> Sitio Web
+                        </>
+                      )}
+                      <ExternalLink className="w-3 h-3 text-[var(--c-text-tertiary)]" />
                     </a>
                   ) : (
-                    <span className="text-[var(--c-text-tertiary)]">No website</span>
+                    <div className="flex items-center gap-2">
+                      <Globe className="w-4 h-4 text-[var(--c-text-tertiary)] shrink-0" />
+                      <span className="text-[var(--c-text-tertiary)]">No website</span>
+                    </div>
                   )}
                 </div>
+
+                {(() => {
+                  const m = prospect.metadata as Record<string, unknown> | null;
+                  const hours = m?.hours as string[] | undefined;
+                  if (!hours || hours.length === 0) return null;
+                  return (
+                    <div className="flex items-start gap-2 max-w-[200px]">
+                      <Clock className="w-4 h-4 text-[var(--c-text-tertiary)] mt-0.5 shrink-0" />
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[var(--c-text-secondary)] font-medium">Horario</span>
+                        <div className="flex flex-col">
+                          {hours.slice(0, 2).map((h, i) => (
+                            <span
+                              key={i}
+                              className="text-[11px] text-[var(--c-text-tertiary)] truncate"
+                            >
+                              {h}
+                            </span>
+                          ))}
+                          {hours.length > 2 && (
+                            <span className="text-[10px] text-[var(--c-text-tertiary)] italic">
+                              +{hours.length - 2} más...
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
+
+              {/* Photos Gallery */}
+              {(() => {
+                const m = prospect.metadata as Record<string, unknown> | null;
+                const photos = m?.photos as string[] | undefined;
+                if (!photos || photos.length === 0) return null;
+                return (
+                  <div className="px-8 py-5 border-b border-[var(--c-border-subtle)]">
+                    <h4 className="text-[11px] font-semibold text-[var(--c-text-secondary)] uppercase tracking-wider mb-3">
+                      Fotografías ({photos.length})
+                    </h4>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                      {photos.slice(0, 6).map((photoId, idx) => (
+                        <div
+                          key={idx}
+                          className="w-24 h-24 shrink-0 rounded-[var(--r-md)] border border-[var(--c-border-subtle)] bg-[var(--c-bg-subtle)] overflow-hidden"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`/api/places/photo?id=${encodeURIComponent(photoId)}`}
+                            alt={`Foto ${idx + 1}`}
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.parentElement!.style.display = "none";
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Tabs System for Architecture Future-proofing */}
               <Tabs className="flex-1 overflow-hidden flex flex-col">
@@ -537,6 +688,22 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
               >
                 {prospect.analysisStatus === "COMPLETED" ? "Re-analizar" : "Analizar Prospecto"}
                 <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+              <Button
+                onClick={handleConvertToLead}
+                disabled={
+                  isConverting ||
+                  Boolean(prospect.convertedToLeadId) ||
+                  prospect.analysisStatus !== "COMPLETED" ||
+                  !draftContent.trim()
+                }
+              >
+                {isConverting ? (
+                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                )}
+                {prospect.convertedToLeadId ? "Convertido a CRM" : "Convertir a cliente"}
               </Button>
             </div>
           </SidePanelFooter>

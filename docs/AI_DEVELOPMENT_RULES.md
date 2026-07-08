@@ -512,3 +512,58 @@ Every contributor is expected to protect the long-term quality of AXIOM.
 When in doubt:
 
 Choose the solution that future developers will thank you for.
+
+---
+
+# AI Provider Architecture
+
+## Active Provider
+
+The active AI provider is controlled by the `AI_PROVIDER` environment variable.
+
+Current active provider: **Gemini** (`AI_PROVIDER=gemini`)
+
+Anthropic remains implemented as a secondary adapter and can be reactivated by changing `AI_PROVIDER=anthropic`.
+
+## Provider Adapters
+
+| Provider  | Adapter File              | Status                  |
+| --------- | ------------------------- | ----------------------- |
+| Gemini    | `src/lib/ai/gemini.ts`    | Active                  |
+| Anthropic | `src/lib/ai/anthropic.ts` | Available (not default) |
+
+## Model Configuration
+
+The model is controlled by `DEFAULT_AI_MODEL` environment variable.
+
+If not set, use cases select the model default based on the active provider:
+
+- `AI_PROVIDER=gemini` → `gemini-1.5-flash`
+- `AI_PROVIDER=anthropic` → `claude-3-5-sonnet-20240620`
+
+## Required Environment Variables
+
+```
+AI_PROVIDER=gemini
+GEMINI_API_KEY=<your Google AI Studio key>
+DEFAULT_AI_MODEL=gemini-1.5-flash   # optional, overrides the default
+```
+
+## Important Notes
+
+- The `GEMINI_API_KEY` must be a Google AI Studio key (not a Vertex AI key).
+- The `Generative Language API` must be enabled in the Google Cloud project.
+- The key must not have API restrictions blocking `generativelanguage.googleapis.com`.
+
+## Architecture
+
+```
+Server Action
+  → Use Case (reads AI_PROVIDER env var)
+    → aiRouter.complete(request)
+      → GeminiAdapter (if provider=gemini)
+        → @google/genai SDK
+          → generativelanguage.googleapis.com
+```
+
+Last Updated: 2026-07-07

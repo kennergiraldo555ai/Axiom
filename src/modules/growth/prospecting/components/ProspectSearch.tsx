@@ -9,11 +9,14 @@ import { searchProspectsAction } from "../presentation/actions";
 import { toast } from "sonner";
 import { CityAutocomplete, type CityData } from "@/modules/_shared/components/CityAutocomplete";
 
+import type { ProspectEntity } from "../domain/entities/prospect.entity";
+
 interface ProspectSearchProps {
-  onSearchComplete: () => void;
+  onSearchStart: () => void;
+  onSearchComplete: (prospects: ProspectEntity[]) => void;
 }
 
-export function ProspectSearch({ onSearchComplete }: ProspectSearchProps) {
+export function ProspectSearch({ onSearchStart, onSearchComplete }: ProspectSearchProps) {
   const [isSearching, setIsSearching] = React.useState(false);
   const [selectedCity, setSelectedCity] = React.useState<CityData | null>(null);
 
@@ -26,7 +29,7 @@ export function ProspectSearch({ onSearchComplete }: ProspectSearchProps) {
       toast.error("Por favor ingresa una categoría y selecciona una ciudad");
       return;
     }
-
+    onSearchStart();
     setIsSearching(true);
     const loadingToast = toast.loading("Buscando prospectos...");
 
@@ -41,7 +44,7 @@ export function ProspectSearch({ onSearchComplete }: ProspectSearchProps) {
         toast.success(`Encontrados ${response.data?.length || 0} prospectos`, {
           id: loadingToast,
         });
-        onSearchComplete();
+        onSearchComplete(response.data || []);
       } else {
         toast.error("Error al buscar prospectos", {
           description: response.error,
@@ -67,10 +70,33 @@ export function ProspectSearch({ onSearchComplete }: ProspectSearchProps) {
         <Input
           id="category"
           name="category"
-          placeholder="Ej. Dental Clinics, Software Agencies..."
+          list="category-suggestions"
+          placeholder="Ej. Dentistas, Agencias de Software..."
           disabled={isSearching}
           required
         />
+        <datalist id="category-suggestions">
+          <option value="Dentistas" />
+          <option value="Clínicas Odontológicas" />
+          <option value="Barberías" />
+          <option value="Peluquerías" />
+          <option value="Clínicas Estéticas" />
+          <option value="Spas" />
+          <option value="Gimnasios" />
+          <option value="Restaurantes" />
+          <option value="Cafeterías" />
+          <option value="Hoteles" />
+          <option value="Talleres Automotrices" />
+          <option value="Inmobiliarias" />
+          <option value="Abogados" />
+          <option value="Contadores" />
+          <option value="Veterinarias" />
+          <option value="Agencias de Viajes" />
+          <option value="Ferreterías" />
+          <option value="Constructoras" />
+          <option value="Tiendas de Mascotas" />
+          <option value="Academias" />
+        </datalist>
       </div>
       <div className="flex-1 w-full sm:max-w-[300px]">
         <label className="block text-sm font-medium text-[var(--c-text-secondary)] mb-1">

@@ -380,11 +380,90 @@ It is the result of documented decisions that can be understood, challenged and 
 ### 5. Places Provider Abstraction
 
 - **Decisi�n:** Implementar \src/lib/adapters/places/router.ts\ para abstraer el origen de datos de prospectos (Google Places API New como primer adaptador).
-- **Razonamiento:** Evita acoplar la l�gica de negocio a un �nico proveedor de datos, permitiendo inyectar Yelp u otras fuentes en el futuro.
+- **Decisin:** Implementar \src/lib/adapters/places/router.ts\ para abstraer el origen de datos de prospectos (Google Places API New como primer adaptador).
+- **Razonamiento:** Evita acoplar la lgica de negocio a un nico proveedor de datos, permitiendo inyectar Yelp u otras fuentes en el futuro.
 - **Fecha:** Sprint 1.1
 
 ### 6. Prospecting Domain Architecture
 
-- **Decisi�n:** Implementar Clean Architecture estricta en el m�dulo \growth/prospecting\ separando en \domain/\, \pplication/\, \infrastructure/\ y \presentation/\.
-- **Razonamiento:** El m�dulo Prospecting es el n�cleo de AXIOM Growth. Separar entidades, validadores, casos de uso y repositorios garantiza que la l�gica de negocio pueda testearse y escalar sin depender de Prisma o de Next.js directamente.
+- **Decisin:** Implementar Clean Architecture estricta en el mdulo \growth/prospecting\ separando en \domain/\, \ pplication/\, \infrastructure/\ y \presentation/\.
+- **Razonamiento:** El mdulo Prospecting es el ncleo de AXIOM Growth. Separar entidades, validadores, casos de uso y repositorios garantiza que la lgica de negocio pueda testearse y escalar sin depender de Prisma o de Next.js directamente.
 - **Fecha:** Sprint 1.2
+
+---
+
+# AXIOM-0006
+
+## Date
+
+2026-07-07
+
+## Status
+
+Approved
+
+## Title
+
+Gemini como proveedor activo de IA (reemplaza Anthropic como default)
+
+## Context
+
+Durante Sprint 1.1 se implementó el AIRouter con Anthropic como primer adaptador documentado.
+En el Sprint de Estabilización Final se determinó que `AI_PROVIDER=gemini` es el proveedor activo en `.env.local`.
+Los use cases `AnalyzeProspectUseCase` y `GenerateProposalUseCase` tenían hardcodeado `claude-3-5-sonnet-20240620` como modelo fallback, causando un error 400 del SDK de Gemini al enviar un nombre de modelo inválido.
+
+## Decision
+
+El AIRouter mantiene su arquitectura multi-proveedor sin cambios.
+
+El proveedor activo se controla exclusivamente mediante la variable de entorno `AI_PROVIDER`.
+
+Los use cases detectan el provider activo y seleccionan el modelo fallback correcto:
+
+- `AI_PROVIDER=gemini` → modelo default: `gemini-1.5-flash`
+- `AI_PROVIDER=anthropic` → modelo default: `claude-3-5-sonnet-20240620`
+
+El modelo puede sobreescribirse con la variable `DEFAULT_AI_MODEL` en cualquier entorno.
+
+## Alternatives Considered
+
+### Hardcodear Gemini en los use cases
+
+Ventajas: simplicidad.
+
+Desventajas: rompe el principio de abstracción del AIRouter y hace imposible usar Anthropic sin modificar código.
+
+### Mantener el modelo fallback como Claude
+
+Ventajas: ninguna cuando el provider es Gemini.
+
+Desventajas: error garantizado en tiempo de ejecución.
+
+## Why This Decision Was Chosen
+
+Preserva la arquitectura multi-proveedor existente sin cambios estructurales.
+El cambio es mínimo (detección del provider en runtime) y no rompe ninguna funcionalidad existente.
+
+## Consequences
+
+Positivas:
+
+- Gemini funciona correctamente sin cambiar la arquitectura
+- Anthropic sigue siendo un adaptador válido y funcional
+- El modelo puede configurarse por entorno sin tocar código
+
+Negativas:
+
+- Si se agrega un tercer provider sin modelo default, el fallback seguirá siendo Claude o Gemini
+
+## Risks
+
+Si se introduce un nuevo provider y no se añade un caso en la lógica de detección, el modelo fallback podría ser incorrecto.
+Documentado como deuda técnica menor para el próximo sprint.
+
+## Related Documents
+
+- AXIOM_Master_Spec.md
+- docs/AI_DEVELOPMENT_RULES.md
+- src/lib/ai/router.ts
+- src/lib/ai/gemini.ts

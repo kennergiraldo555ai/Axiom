@@ -60,6 +60,8 @@ export class GooglePlacesAdapter implements IPlacesProviderAdapter {
             "places.primaryType",
             "places.googleMapsUri",
             "places.location",
+            "places.photos",
+            "places.regularOpeningHours",
           ].join(","),
         },
         body: JSON.stringify(requestBody),
@@ -97,6 +99,14 @@ export class GooglePlacesAdapter implements IPlacesProviderAdapter {
           ...(location?.latitude ? { lat: location.latitude } : {}),
           ...(location?.longitude ? { lng: location.longitude } : {}),
           provider: this.id,
+          metadata: {
+            photos: Array.isArray(p.photos)
+              ? p.photos.map((photo: unknown) => (photo as Record<string, unknown>).name)
+              : undefined,
+            hours: p.regularOpeningHours
+              ? (p.regularOpeningHours as Record<string, unknown>).weekdayDescriptions
+              : undefined,
+          },
         };
       });
     } catch (error: unknown) {

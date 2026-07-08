@@ -1,6 +1,12 @@
 import type { ProspectEntity } from "../entities/prospect.entity";
 import type { ProspectQueryFilters, PaginatedResult } from "../dtos/prospect-query.dto";
 
+export interface ConvertProspectToLeadData {
+  workspaceId: string;
+  prospectId: string;
+  finalMessage: string;
+}
+
 export interface IProspectRepository {
   findById(id: string): Promise<ProspectEntity | null>;
   findByPlaceId(workspaceId: string, placeId: string): Promise<ProspectEntity | null>;
@@ -17,6 +23,8 @@ export interface IProspectRepository {
   save(prospect: Omit<ProspectEntity, "id" | "createdAt" | "updatedAt">): Promise<ProspectEntity>;
 
   update(id: string, data: Partial<ProspectEntity>): Promise<ProspectEntity>;
+
+  convertToLead(data: ConvertProspectToLeadData): Promise<ProspectEntity>;
 
   delete(id: string): Promise<void>; // Soft delete
 }

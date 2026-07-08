@@ -13,6 +13,7 @@ export interface PlaceResult {
   lat?: number;
   lng?: number;
   provider: PlaceProviderId;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SearchPlacesRequest {

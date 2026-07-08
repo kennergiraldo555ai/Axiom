@@ -20,52 +20,95 @@ export function ProspectLayout() {
 
   const [selectedProspectId, setSelectedProspectId] = React.useState<string | null>(null);
   const [isPanelOpen, setIsPanelOpen] = React.useState(false);
+  const [sortConfig, setSortConfig] = React.useState<{
+    key: string;
+    direction: "asc" | "desc";
+  } | null>(null);
 
-  const fetchProspects = React.useCallback(async () => {
-    setErrorMessage(null);
-    try {
-      const response = await getProspectsAction();
-      if (response.success && response.data) {
-        const items = response.data.data;
-        if (items.length > 0) {
-          setProspects(items);
-          setPageState("results");
-          setHasSearched(true);
-        } else if (hasSearched) {
-          // User has searched before and now results are empty
-          setPageState("results");
-          setProspects([]);
-        } else {
-          // Fresh load, no prospects yet — show onboarding
-          setPageState("initial");
-        }
+  const [page, setPage] = React.useState(1);
+  const [hasMore, setHasMore] = React.useState(true);
+  const [isLoadingMore, setIsLoadingMore] = React.useState(false);
+  const [isSearchMode, setIsSearchMode] = React.useState(false);
+
+  const fetchProspects = React.useCallback(
+    async (pageNum = 1, isLoadMore = false) => {
+      if (!isLoadMore) {
+        setErrorMessage(null);
+        setPageState("loading");
+        setIsSearchMode(false);
       } else {
-        // Only show error if user has interacted, otherwise show initial state
-        if (hasSearched) {
-          setErrorMessage(response.error || "Ocurrió un problema al cargar los datos.");
+        setIsLoadingMore(true);
+      }
+
+      try {
+        const response = await getProspectsAction({}, pageNum, 20);
+        if (response.success && response.data) {
+          const items = response.data.data;
+          const totalItems = isLoadMore ? [...prospects, ...items] : items;
+
+          if (totalItems.length > 0) {
+            setProspects(totalItems);
+            setPageState("results");
+            setHasSearched(true);
+            setHasMore(items.length === 20);
+          } else if (hasSearched) {
+            setPageState("results");
+            setProspects([]);
+          } else {
+            setPageState("initial");
+          }
+        } else {
+          // Only show error if user has interacted, otherwise show initial state
+          if (hasSearched) {
+            setErrorMessage(response.error || "Ocurrió un problema al cargar los datos.");
+            setPageState("error");
+          } else {
+            setPageState("initial");
+          }
+        }
+      } catch {
+        if (hasSearched && !isLoadMore) {
+          setErrorMessage("Ocurrió un error inesperado al conectar con el servidor.");
           setPageState("error");
-        } else {
+        } else if (!hasSearched) {
           setPageState("initial");
         }
+      } finally {
+        setIsLoadingMore(false);
       }
-    } catch {
-      if (hasSearched) {
-        setErrorMessage("Ocurrió un error inesperado al conectar con el servidor.");
-        setPageState("error");
-      } else {
-        setPageState("initial");
-      }
-    }
-  }, [hasSearched]);
+    },
+    [hasSearched, prospects],
+  );
 
   React.useEffect(() => {
     fetchProspects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSearchComplete = () => {
+  const handleSearchStart = () => {
+    setPageState("loading");
+    setProspects([]);
+    setSelectedProspectId(null);
+    setIsPanelOpen(false);
+    setPage(1);
+    setHasMore(true);
+  };
+
+  const handleSearchComplete = (newProspects: ProspectEntity[]) => {
     setHasSearched(true);
-    fetchProspects();
+    setIsSearchMode(true);
+    setProspects(newProspects);
+    setPageState(newProspects.length > 0 ? "results" : "empty-results");
+    // La búsqueda retorna todos los resultados de la sesión de una vez, no hay paginación.
+    setHasMore(false);
+    setPage(1);
+  };
+
+  const handleLoadMore = () => {
+    if (isLoadingMore || !hasMore || isSearchMode) return;
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchProspects(nextPage, true);
   };
 
   const handleSelectProspect = (prospect: ProspectEntity) => {
@@ -82,9 +125,36 @@ export function ProspectLayout() {
     return prospects.find((p) => p.id === selectedProspectId) || null;
   }, [prospects, selectedProspectId]);
 
+  const handleSort = (key: string) => {
+    setSortConfig((current) => {
+      if (current?.key === key) {
+        if (current.direction === "desc") return { key, direction: "asc" };
+        return null;
+      }
+      return { key, direction: "desc" };
+    });
+  };
+
+  const sortedProspects = React.useMemo(() => {
+    const sortable = [...prospects];
+    if (sortConfig !== null) {
+      sortable.sort((a, b) => {
+        if (sortConfig.key === "qualityScore") {
+          const aScore = a.qualityScore || 0;
+          const bScore = b.qualityScore || 0;
+          if (aScore < bScore) return sortConfig.direction === "asc" ? -1 : 1;
+          if (aScore > bScore) return sortConfig.direction === "asc" ? 1 : -1;
+          return 0;
+        }
+        return 0;
+      });
+    }
+    return sortable;
+  }, [prospects, sortConfig]);
+
   return (
     <div className="flex flex-col space-y-6">
-      <ProspectSearch onSearchComplete={handleSearchComplete} />
+      <ProspectSearch onSearchStart={handleSearchStart} onSearchComplete={handleSearchComplete} />
 
       {pageState === "loading" && <ProspectTableSkeleton />}
 
@@ -94,10 +164,15 @@ export function ProspectLayout() {
 
       {pageState === "results" && prospects.length > 0 && (
         <ProspectTable
-          prospects={prospects}
+          prospects={sortedProspects}
           isLoading={false}
           selectedId={selectedProspectId}
           onSelect={handleSelectProspect}
+          onSort={handleSort}
+          sortConfig={sortConfig}
+          onLoadMore={handleLoadMore}
+          hasMore={hasMore}
+          isLoadingMore={isLoadingMore}
         />
       )}
 
@@ -114,6 +189,7 @@ export function ProspectLayout() {
       )}
 
       <ProspectSidePanel
+        key={selectedProspectId || "empty"}
         prospect={selectedProspect}
         isOpen={isPanelOpen}
         onClose={handleClosePanel}

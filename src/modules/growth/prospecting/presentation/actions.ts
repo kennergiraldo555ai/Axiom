@@ -5,6 +5,7 @@ import { SearchProspectsUseCase } from "../application/use-cases/search-prospect
 import { QueryProspectsUseCase } from "../application/use-cases/query-prospects.use-case";
 import { AnalyzeProspectUseCase } from "../application/use-cases/analyze-prospect.use-case";
 import { GenerateProposalUseCase } from "../application/use-cases/generate-proposal.use-case";
+import { ConvertProspectToLeadUseCase } from "../application/use-cases/convert-prospect-to-lead.use-case";
 import { PrismaProspectRepository } from "../infrastructure/repositories/prisma-prospect.repository";
 import { requireWorkspace } from "@/lib/auth/guards";
 import { isAppError } from "@/lib/errors/typed-errors";
@@ -16,6 +17,7 @@ const searchUseCase = new SearchProspectsUseCase(prospectRepository);
 const queryUseCase = new QueryProspectsUseCase(prospectRepository);
 const analyzeUseCase = new AnalyzeProspectUseCase(prospectRepository);
 const generateProposalUseCase = new GenerateProposalUseCase(prospectRepository);
+const convertProspectToLeadUseCase = new ConvertProspectToLeadUseCase(prospectRepository);
 
 /**
  * Translates internal errors into user-friendly messages.
@@ -52,8 +54,53 @@ function getUserFriendlyError(error: unknown): string {
   }
 
   // AI errors
-  if (message.includes("AI") || message.includes("IA") || message.includes("anthropic")) {
-    return "El motor de inteligencia artificial no está disponible en este momento. Intenta más tarde.";
+  const lowerMsg = message.toLowerCase();
+  if (
+    lowerMsg.includes("credit balance is too low") ||
+    lowerMsg.includes("400") ||
+    lowerMsg.includes("401") ||
+    lowerMsg.includes("403") ||
+    lowerMsg.includes("429") ||
+    lowerMsg.includes("500") ||
+    lowerMsg.includes("502") ||
+    lowerMsg.includes("503") ||
+    lowerMsg.includes("anthropic") ||
+    lowerMsg.includes("ia") ||
+    lowerMsg.includes("ai")
+  ) {
+    if (lowerMsg.includes("credit") || lowerMsg.includes("400")) {
+      return "No fue posible ejecutar el análisis porque el servicio de Inteligencia Artificial no tiene créditos disponibles. Contacta al administrador para recargar el servicio y vuelve a intentarlo.";
+    }
+    if (
+      lowerMsg.includes("401") ||
+      lowerMsg.includes("api key") ||
+      lowerMsg.includes("authentication")
+    ) {
+      return "Error de autenticación con la IA. La llave de acceso (API Key) es inválida o ha expirado.";
+    }
+    if (lowerMsg.includes("403") || lowerMsg.includes("permission")) {
+      return "Error de permisos. La llave de acceso no tiene autorización para realizar esta acción.";
+    }
+    if (lowerMsg.includes("429") || lowerMsg.includes("rate limit")) {
+      return "El servicio de Inteligencia Artificial está saturado en este momento (Rate Limit). Por favor, intenta de nuevo en unos minutos.";
+    }
+    if (lowerMsg.includes("500") || lowerMsg.includes("502") || lowerMsg.includes("503")) {
+      return "El proveedor de Inteligencia Artificial está experimentando problemas técnicos. Intenta más tarde.";
+    }
+    return "Ocurrió un error al comunicarse con el proveedor de Inteligencia Artificial.";
+  }
+
+  // Conversion errors
+  if (message.includes("already been converted")) {
+    return "Este prospecto ya fue convertido en cliente potencial.";
+  }
+
+  if (message.includes("before the AI analysis")) {
+    return "Primero debes completar el análisis IA antes de convertir el prospecto.";
+  }
+
+  if (message.includes("finalMessage") || message.includes("too_small")) {
+    return "La propuesta final debe tener al menos 20 caracteres.";
   }
 
   // Validation errors
@@ -83,15 +130,15 @@ export async function searchProspectsAction(query: string, location: { lat: numb
   }
 }
 
-export async function getProspectsAction(filters: ProspectQueryFilters = {}) {
+export async function getProspectsAction(filters: ProspectQueryFilters = {}, page = 1, limit = 20) {
   try {
     const { workspaceId } = await requireWorkspace();
 
     const results = await queryUseCase.execute({
       workspaceId,
-      page: 1,
-      limit: 100,
-      sortBy: "createdAt",
+      page,
+      limit,
+      sortBy: "qualityScore",
       sortOrder: "desc",
       ...filters,
     });
@@ -134,6 +181,25 @@ export async function generateProposalAction(prospectId: string) {
     return { success: true as const, data: result };
   } catch (error) {
     console.error("Generate proposal error:", error);
+    return { success: false as const, error: getUserFriendlyError(error) };
+  }
+}
+
+export async function convertProspectToLeadAction(prospectId: string, finalMessage: string) {
+  try {
+    const { workspaceId } = await requireWorkspace();
+
+    const result = await convertProspectToLeadUseCase.execute({
+      workspaceId,
+      prospectId,
+      finalMessage,
+    });
+
+    revalidatePath("/growth/prospecting");
+    revalidatePath("/crm");
+    return { success: true as const, data: result };
+  } catch (error) {
+    console.error("Convert prospect to lead error:", error);
     return { success: false as const, error: getUserFriendlyError(error) };
   }
 }

@@ -7,5 +7,6 @@ export * from "./application/validators/prospect.validator";
 export * from "./application/use-cases/search-prospects.use-case";
 export * from "./application/use-cases/analyze-prospect.use-case";
 export * from "./application/use-cases/query-prospects.use-case";
+export * from "./application/use-cases/convert-prospect-to-lead.use-case";
 
 export * from "./infrastructure/repositories/prisma-prospect.repository";

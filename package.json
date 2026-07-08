@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "db:push": "prisma db push --accept-data-loss",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
+    "@google/genai": "^2.10.0",
     "@prisma/client": "^6.19.3",
     "@sentry/nextjs": "^10.63.0",
     "@supabase/ssr": "^0.12.0",
@@ -61,7 +62,7 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "prettier --write",
-      "eslint --fix --max-warnings 0"
+      "eslint --fix --max-warnings 0 --no-warn-ignored"
     ],
     "*.{json,md,css,yaml,yml}": [
       "prettier --write"

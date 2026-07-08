@@ -368,3 +368,51 @@ The objective is not to build the perfect system.
 The objective is to deliver real business value, reach production, acquire customers, and generate revenue.
 
 Every decision must support that mission.
+
+---
+
+# LOCAL VALIDATION (MANDATORY)
+
+Nunca afirmar que localhost fue validado implícitamente por un build exitoso. La validación de localhost requiere ejecutar la aplicación (pnpm dev) y comprobar manualmente el flujo funcional completo.
+
+---
+
+## Browser Testing Policy
+
+The AI must NEVER use browser automation unless the user explicitly requests it.
+
+Functional testing belongs to the human developer.
+
+The AI is responsible for:
+
+- code
+- architecture
+- debugging
+- logs
+- backend
+- frontend
+- analysis
+
+The human is responsible for:
+
+- visual validation
+- UX validation
+- browser interaction
+- DevTools inspection
+- manual workflow verification
+
+Browser automation is disabled by default because it consumes unnecessary credits during MVP development.
+
+---
+
+## Root Cause First
+
+Before creating temporary test scripts,
+before creating debug files,
+before running repetitive experiments,
+
+the AI must first identify the most probable root cause.
+
+Avoid exploratory trial-and-error debugging whenever possible.
+
+Prefer architectural reasoning over repeated execution.

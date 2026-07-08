@@ -255,3 +255,40 @@ Realizar una auditoría completa (Visual, UX, Accesibilidad, Performance) y refa
 - Refactorización del ProspectSidePanel hacia un layout CRM profesional (AI Analysis organizado visualmente).
 - Cumplimiento de reglas de accesibilidad (Focus rings constantes).
 - Pase exitoso de Lint, Typecheck y Build Next.js.
+
+---
+
+# Sprint Estabilización Final (2026-07-07)
+
+**Estado:** Completado (solo desarrollo local — sin commit/push por instrucción explícita del usuario)
+
+## Objetivo
+
+Cerrar completamente el módulo Growth Prospecting. Sin nuevas funcionalidades.
+
+### Problema 1 — Gemini API Key inválida
+
+**Causa raíz:** `.env.local` contenía el placeholder literal `INSERT_YOUR_GEMINI_KEY`. Ningún cambio de código puede solucionarlo — requiere que el usuario coloque su clave real.
+
+**Bug adicional en código corregido:** Los use cases `AnalyzeProspectUseCase` y `GenerateProposalUseCase` tenían `"claude-3-5-sonnet-20240620"` como modelo fallback. Cuando `AI_PROVIDER=gemini`, el SDK de Gemini rechazaba ese nombre de modelo con error 400. Corregido para detectar el provider activo y usar `gemini-1.5-flash` como fallback cuando corresponde.
+
+### Problema 2 — Regresión de cobertura de prospectos (20 → 16)
+
+**Causa raíz:** `ProspectService.deduplicate()` comparaba nombres normalizados contra los prospectos ya existentes en DB. La normalización `str.toLowerCase().replace(/[^a-z0-9]/g, "")` eliminaba tildes y espacios causando falsos positivos (p.ej. "Barbería El Rey" y "Barbería El Reyecito" colapsaban al mismo hash). Negocios válidos eran descartados como duplicados.
+
+**Solución:** Se eliminó la comparación por nombre normalizado contra DB. Se mantiene la deduplicación por `placeId` exacto y teléfono exacto (identificadores inequívocos). La deduplicación por nombre se mantiene únicamente entre los resultados nuevos de la misma búsqueda (para evitar duplicados entre variantes).
+
+### Archivos modificados
+
+- `src/modules/growth/prospecting/application/use-cases/analyze-prospect.use-case.ts`
+- `src/modules/growth/prospecting/application/use-cases/generate-proposal.use-case.ts`
+- `src/modules/growth/prospecting/domain/services/prospect.service.ts`
+- `docs/BUILD_LOG.md` (este documento)
+- `docs/DECISIONS.md`
+- `docs/AI_DEVELOPMENT_RULES.md`
+
+### Validación
+
+- pnpm lint ✓
+- pnpm typecheck ✓
+- pnpm build ✓

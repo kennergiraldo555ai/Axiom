@@ -2,7 +2,7 @@ import nextConfig from "eslint-config-next/core-web-vitals";
 import nextTsConfig from "eslint-config-next/typescript";
 
 const eslintConfig = [
-  { ignores: ["*.js", "axiom-temp/**"] },
+  { ignores: ["*.js", "axiom-temp/**", "test_search.ts", "test-save.ts", "scripts/**"] },
   ...nextConfig,
   ...nextTsConfig,
   {

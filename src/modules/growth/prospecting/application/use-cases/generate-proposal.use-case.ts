@@ -1,10 +1,10 @@
 import { logger } from "@/lib/observability/logger";
 import { aiRouter } from "@/lib/ai/router";
+import { resolveAIProvider, resolveAIModel } from "@/lib/ai/config";
 import { evaluateProposalPrompt } from "@/lib/ai/prompts/growth/proposal";
 import type { IProspectRepository } from "../../domain/repositories/prospect.repository";
 import { z } from "zod";
 import type { ProspectEntity } from "../../domain/entities/prospect.entity";
-import type { AIProviderId } from "@/lib/ai/types";
 
 const GenerateProposalInputSchema = z.object({
   workspaceId: z.string().min(1),
@@ -45,10 +45,9 @@ export class GenerateProposalUseCase {
 
       const opportunities = Array.isArray(prospect.opportunities) ? prospect.opportunities : [];
 
-      // 3. Preparar Prompt
-      const provider: AIProviderId =
-        (process.env.DEFAULT_AI_PROVIDER as AIProviderId) || "anthropic";
-      const model = process.env.DEFAULT_AI_MODEL || "claude-3-5-sonnet-20240620";
+      // 3. Preparar Prompt — provider y modelo se leen desde .env.local
+      const provider = resolveAIProvider();
+      const model = resolveAIModel(provider);
 
       const promptResult = evaluateProposalPrompt({
         companyName: prospect.name,

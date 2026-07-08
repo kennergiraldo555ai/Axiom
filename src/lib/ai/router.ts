@@ -1,6 +1,7 @@
 import { logger } from "@/lib/observability/logger";
 import type { AIRequest, AIResponse, IAIProviderAdapter } from "./types";
 import { AnthropicAdapter } from "./anthropic";
+import { GeminiAdapter } from "./gemini";
 
 class AIRouter {
   private adapters: Map<string, IAIProviderAdapter> = new Map();
@@ -8,7 +9,7 @@ class AIRouter {
   constructor() {
     // Registramos los adaptadores disponibles
     this.adapters.set("anthropic", new AnthropicAdapter());
-    // this.adapters.set('openai', new OpenAIAdapter()); // placeholder para el futuro
+    this.adapters.set("gemini", new GeminiAdapter());
   }
 
   async complete(request: AIRequest): Promise<AIResponse> {

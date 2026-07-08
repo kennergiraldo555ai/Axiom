@@ -33,6 +33,7 @@ model Workspace {
   leads        Lead[]
   tasks        Task[]
   categories   BusinessCategory[]
+  searchSessions SearchSession[]
   aiCosts      AiCostRecord[]
   apiKeys      ApiKey[]
   integrations Integration[]
@@ -228,6 +229,30 @@ model Prospect {
   @@map("prospects")
 }
 
+model SearchSession {
+  id          String       @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
+  workspaceId String       @map("workspace_id")
+  query       String
+  city        String
+  country     String
+  variants    String[]
+  totalFound  Int          @default(0) @map("total_found")
+  googleCalls Int          @default(0) @map("google_calls")
+  prospectIds Json         @default("[]") @map("prospect_ids")
+  startedAt   DateTime     @default(now()) @map("started_at")
+  finishedAt  DateTime?    @map("finished_at")
+  expiresAt   DateTime     @map("expires_at")
+  status      SearchStatus @default(IN_PROGRESS)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, query, city, country])
+  @@index([workspaceId, status])
+  @@map("search_sessions")
+}
+
 model Lead {
   id             String     @id @default(dbgenerated("gen_random_ulid()")) @db.VarChar(26)
   workspaceId    String     @map("workspace_id")
@@ -352,6 +377,13 @@ enum AnalysisStatus {
   COMPLETED
   FAILED
   SKIPPED
+}
+
+enum SearchStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  EXPIRED
 }
 
 enum LeadSource {
