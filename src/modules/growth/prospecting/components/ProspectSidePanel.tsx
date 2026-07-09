@@ -149,7 +149,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
   const opportunities = Array.isArray(prospect?.opportunities) ? prospect.opportunities : [];
 
   return (
-    <SidePanel isOpen={isOpen} onClose={onClose} width="xl" className="bg-[#060b11]">
+    <SidePanel isOpen={isOpen} onClose={onClose} width="2xl" className="bg-[var(--c-bg-base)]">
       {!prospect ? (
         <div className="flex h-full items-center justify-center p-12">
           <Skeleton className="h-[400px] w-full opacity-50" />
@@ -160,37 +160,37 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
             title={null}
             description={null}
             onClose={onClose}
-            className="p-0 border-none bg-transparent absolute top-0 right-0 z-50 w-full flex justify-end p-4"
+            className="p-0 border-none bg-transparent absolute top-0 right-0 z-50 w-full flex justify-end p-6"
           />
 
           <SidePanelBody className="p-0 bg-transparent overflow-y-auto custom-scrollbar">
-            <div className="flex flex-col relative min-h-full pb-32">
+            <div className="flex flex-col relative min-h-full pb-40">
               {/* Cover Image */}
-              <div className="h-48 md:h-64 w-full relative shrink-0 bg-[#0B0D12]">
-                <div className="absolute inset-0 bg-gradient-to-t from-[#060b11] via-transparent to-transparent z-10" />
+              <div className="h-56 md:h-72 w-full relative shrink-0 bg-[var(--c-bg-base)]">
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,var(--c-bg-base)_100%)] z-10" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={`https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80`}
                   alt="Cover"
-                  className="w-full h-full object-cover opacity-50 mix-blend-overlay"
+                  className="w-full h-full object-cover opacity-60 mix-blend-overlay"
                 />
               </div>
 
               {/* Header Content overlaying cover */}
-              <div className="px-8 md:px-12 -mt-16 relative z-20 flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                  <div className="flex items-end gap-6">
-                    <div className="w-24 h-24 rounded-2xl bg-[var(--c-bg-elevated)] border-2 border-[#060b11] flex items-center justify-center shrink-0 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] relative group overflow-hidden">
+              <div className="px-10 md:px-16 -mt-20 relative z-20 flex flex-col gap-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                  <div className="flex items-end gap-8">
+                    <div className="w-28 h-28 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border-2 border-[var(--c-bg-base)] flex items-center justify-center shrink-0 shadow-[0_20px_40px_-10px_rgb(11_13_18_/_1)] relative group overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-[var(--c-accent)]/20 to-transparent pointer-events-none" />
-                      <Building2 className="w-10 h-10 text-[var(--c-accent)] drop-shadow-[0_0_10px_rgba(0,229,255,0.8)] relative z-10" />
+                      <Building2 className="w-12 h-12 text-[var(--c-accent)] drop-shadow-[0_0_12px_rgb(99_102_241_/_0.8)] relative z-10" />
                     </div>
-                    <div className="flex flex-col gap-2 pb-2">
-                      <h1 className="text-3xl md:text-4xl font-black tracking-tight leading-none text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                    <div className="flex flex-col gap-3 pb-2">
+                      <h1 className="text-4xl md:text-[44px] font-black tracking-tight leading-none text-[var(--c-text-primary)] drop-shadow-[0_0_15px_rgb(230_232_238_/_0.15)]">
                         {prospect.name}
                       </h1>
-                      <div className="flex items-center gap-3 text-[13px] font-medium text-[var(--c-text-secondary)]">
-                        <span className="text-[var(--c-accent)] flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--c-accent)] shadow-[0_0_5px_var(--c-accent)]" />
+                      <div className="flex items-center gap-4 text-[14px] font-medium text-[var(--c-text-secondary)]">
+                        <span className="text-[var(--c-accent)] flex items-center gap-2.5">
+                          <span className="w-2 h-2 rounded-full bg-[var(--c-accent)] shadow-[0_0_8px_var(--c-accent)]" />
                           {(() => {
                             const m = prospect.metadata as Record<string, unknown> | null;
                             const c = (m?.category as string) || "";
@@ -201,9 +201,9 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                               : "Negocio";
                           })()}
                         </span>
-                        <span className="w-1 h-1 rounded-full bg-[var(--c-border-strong)]" />
-                        <span className="flex items-center gap-1.5">
-                          <MapPin className="w-3.5 h-3.5" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--c-border-strong)]" />
+                        <span className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-[var(--c-text-tertiary)]" />
                           {prospect.address || "Sin ubicación"}
                         </span>
                       </div>
@@ -211,20 +211,20 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-3 pb-2">
-                    <button className="h-10 px-4 rounded-xl bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] flex items-center gap-2 text-[13px] font-bold text-[var(--c-text-primary)] hover:border-[var(--c-accent-border)] hover:text-[var(--c-accent)] transition-all shadow-tactile">
-                      <Globe className="w-4 h-4" /> Visitar sitio
+                  <div className="flex items-center gap-4 pb-2">
+                    <button className="h-12 px-6 rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] flex items-center gap-2.5 text-[14px] font-bold text-[var(--c-text-primary)] hover:border-[var(--c-accent-border)] hover:text-[var(--c-accent)] hover:shadow-[0_0_20px_-5px_rgb(99_102_241_/_0.3)] transition-all shadow-tactile">
+                      <Globe className="w-5 h-5" /> Visitar sitio
                     </button>
                     {!prospect.convertedToLeadId && (
                       <button
                         onClick={handleConvertToLead}
                         disabled={isConverting}
-                        className="h-10 px-6 rounded-xl bg-[var(--c-violet)] text-white font-bold text-[13px] flex items-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:shadow-[0_0_25px_rgba(168,85,247,0.6)] hover:bg-[#b388ff] transition-all disabled:opacity-50"
+                        className="h-12 px-8 rounded-[var(--r-xl)] bg-[linear-gradient(135deg,var(--c-primary),var(--c-accent))] text-[var(--c-text-primary)] font-black text-[14px] flex items-center gap-2.5 shadow-[0_12px_24px_-10px_rgba(168,85,247,0.6)] hover:shadow-[0_16px_32px_-10px_rgba(168,85,247,0.8)] hover:-translate-y-0.5 transition-all disabled:opacity-50"
                       >
                         {isConverting ? (
-                          <RefreshCw className="w-4 h-4 animate-spin" />
+                          <RefreshCw className="w-5 h-5 animate-spin" />
                         ) : (
-                          <ArrowRight className="w-4 h-4" />
+                          <ArrowRight className="w-5 h-5" />
                         )}
                         Añadir al CRM
                       </button>
@@ -233,52 +233,52 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                 </div>
 
                 {/* Metrics Bar */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-2xl p-4 shadow-tactile">
-                  <div className="flex flex-col gap-1.5 px-4 border-r border-[var(--c-border-strong)]">
-                    <span className="text-[10px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-2xl)] p-6 shadow-tactile mt-2">
+                  <div className="flex flex-col gap-2 px-4 border-r border-[var(--c-border-strong)]">
+                    <span className="text-[11px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
                       Score IA
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-end gap-2">
                       <span
-                        className={`text-2xl font-black ${prospect.qualityScore && prospect.qualityScore >= 80 ? "text-[var(--c-accent)] drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]" : prospect.qualityScore && prospect.qualityScore >= 50 ? "text-[var(--c-warning)]" : "text-[var(--c-text-primary)]"}`}
+                        className={`text-3xl font-black leading-none ${prospect.qualityScore && prospect.qualityScore >= 80 ? "text-[var(--c-accent)] drop-shadow-[0_0_12px_rgb(99_102_241_/_0.5)]" : prospect.qualityScore && prospect.qualityScore >= 50 ? "text-[var(--c-warning)]" : "text-[var(--c-text-primary)]"}`}
                       >
                         {prospect.qualityScore || "--"}
                       </span>
-                      <span className="text-[11px] font-bold text-[var(--c-text-tertiary)]">
+                      <span className="text-[13px] font-bold text-[var(--c-text-tertiary)] pb-1">
                         / 100
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1.5 px-4 md:border-r border-[var(--c-border-strong)]">
-                    <span className="text-[10px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
+                  <div className="flex flex-col gap-2 px-4 md:border-r border-[var(--c-border-strong)]">
+                    <span className="text-[11px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
                       Reputación
                     </span>
-                    <div className="flex items-center gap-2 text-2xl font-black text-white">
+                    <div className="flex items-center gap-2.5 text-3xl font-black text-[var(--c-text-primary)] leading-none">
                       {prospect.rating || "--"}
                       {prospect.rating && (
-                        <Star className="w-5 h-5 fill-[var(--c-warning)] text-[var(--c-warning)] drop-shadow-[0_0_8px_rgba(255,234,0,0.5)]" />
+                        <Star className="w-6 h-6 fill-[var(--c-warning)] text-[var(--c-warning)] drop-shadow-[0_0_12px_rgba(255,234,0,0.5)]" />
                       )}
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1.5 px-4 border-r border-[var(--c-border-strong)]">
-                    <span className="text-[10px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
+                  <div className="flex flex-col gap-2 px-4 border-r border-[var(--c-border-strong)] justify-center">
+                    <span className="text-[11px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
                       Estado
                     </span>
                     <Badge
                       variant={prospect.analysisStatus === "COMPLETED" ? "success" : "secondary"}
-                      className="w-fit mt-1"
+                      className="w-fit mt-1.5 px-3 py-1.5 text-[11px]"
                     >
                       {prospect.analysisStatus === "COMPLETED" ? "ANALIZADO" : "PENDIENTE"}
                     </Badge>
                   </div>
-                  <div className="flex flex-col gap-1.5 px-4">
-                    <span className="text-[10px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
+                  <div className="flex flex-col gap-2 px-4 justify-center">
+                    <span className="text-[11px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
                       Operación
                     </span>
-                    <div className="flex items-center gap-2 text-[14px] font-bold mt-1">
+                    <div className="flex items-center gap-2.5 text-[15px] font-bold mt-1.5">
                       {prospect.businessStatus === "OPERATIONAL" ? (
-                        <span className="text-[var(--c-success)] flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[var(--c-success)] shadow-[0_0_8px_var(--c-success)]" />{" "}
+                        <span className="text-[var(--c-success)] flex items-center gap-2.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[var(--c-success)] shadow-[0_0_10px_var(--c-success)]" />{" "}
                           ABIERTO
                         </span>
                       ) : (
@@ -292,21 +292,21 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
               </div>
 
               {/* Contact & Info Grid */}
-              <div className="px-8 md:px-12 mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-4 p-5 rounded-2xl bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile group">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#0B0D12] flex items-center justify-center border border-[var(--c-border-strong)] shadow-tactile shrink-0 group-hover:border-[var(--c-accent-border)] transition-colors">
-                      <Phone className="w-4 h-4 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors" />
+              <div className="px-10 md:px-16 mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-4 p-6 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile group hover:shadow-[0_0_20px_-5px_rgb(99_102_241_/_0.2)] hover:border-[var(--c-border-hover)] transition-all">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--c-bg-base)] flex items-center justify-center border border-[var(--c-border-strong)] shadow-tactile shrink-0 group-hover:border-[var(--c-accent-border)] transition-colors">
+                      <Phone className="w-5 h-5 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors" />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="text-[10px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[11px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
                         Teléfono
                       </span>
                       <span
                         className={
                           prospect.phone
-                            ? "text-[var(--c-text-primary)] font-bold text-[14px]"
-                            : "text-[var(--c-text-tertiary)] font-medium text-[13px]"
+                            ? "text-[var(--c-text-primary)] font-black text-[16px]"
+                            : "text-[var(--c-text-tertiary)] font-medium text-[15px]"
                         }
                       >
                         {prospect.phone || "Sin teléfono"}
@@ -315,13 +315,13 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4 p-5 rounded-2xl bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile group">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#0B0D12] flex items-center justify-center border border-[var(--c-border-strong)] shadow-tactile shrink-0 group-hover:border-[var(--c-accent-border)] transition-colors">
-                      <Globe className="w-4 h-4 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors" />
+                <div className="flex flex-col gap-4 p-6 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile group hover:shadow-[0_0_20px_-5px_rgb(99_102_241_/_0.2)] hover:border-[var(--c-border-hover)] transition-all">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--c-bg-base)] flex items-center justify-center border border-[var(--c-border-strong)] shadow-tactile shrink-0 group-hover:border-[var(--c-accent-border)] transition-colors">
+                      <Globe className="w-5 h-5 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors" />
                     </div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-[10px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
+                    <div className="flex flex-col min-w-0 gap-0.5">
+                      <span className="text-[11px] uppercase tracking-widest font-bold text-[var(--c-text-tertiary)]">
                         Sitio Web
                       </span>
                       {prospect.website ? (
@@ -329,12 +329,12 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                           href={prospect.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[var(--c-text-primary)] hover:text-[var(--c-accent)] font-bold text-[14px] truncate transition-colors"
+                          className="text-[var(--c-text-primary)] hover:text-[var(--c-accent)] font-black text-[16px] truncate transition-colors"
                         >
                           {prospect.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                         </a>
                       ) : (
-                        <span className="text-[var(--c-text-tertiary)] font-medium text-[13px]">
+                        <span className="text-[var(--c-text-tertiary)] font-medium text-[15px]">
                           Sin sitio web
                         </span>
                       )}
@@ -349,15 +349,15 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                 const photos = m?.photos as string[] | undefined;
                 if (!photos || photos.length === 0) return null;
                 return (
-                  <div className="px-8 md:px-12 mt-8">
-                    <h4 className="text-[10px] font-bold text-[var(--c-text-tertiary)] uppercase tracking-widest mb-4">
+                  <div className="px-10 md:px-16 mt-12">
+                    <h4 className="text-[12px] font-bold text-[var(--c-text-tertiary)] uppercase tracking-widest mb-6">
                       FOTOGRAFÍAS ({photos.length})
                     </h4>
-                    <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
+                    <div className="flex gap-5 overflow-x-auto pb-6 custom-scrollbar">
                       {photos.slice(0, 6).map((photoId, idx) => (
                         <div
                           key={idx}
-                          className="w-32 h-32 shrink-0 rounded-2xl border border-[var(--c-border-strong)] bg-[#0B0D12] overflow-hidden shadow-tactile group-hover:border-[var(--c-accent)] transition-all cursor-pointer hover:shadow-[0_0_20px_rgba(0,229,255,0.2)]"
+                          className="w-40 h-40 shrink-0 rounded-[var(--r-2xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-base)] overflow-hidden shadow-tactile group-hover:border-[var(--c-accent)] transition-all cursor-pointer hover:shadow-[0_0_24px_rgb(99_102_241_/_0.2)]"
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -377,85 +377,89 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
               })()}
 
               {/* Tabs System for Architecture Future-proofing */}
-              <Tabs className="flex-1 flex flex-col mt-4 min-h-[500px]">
-                <TabsList className="px-10 border-b border-[var(--c-border-strong)] sticky top-0 bg-[var(--c-bg-elevated)] z-10 flex gap-8 justify-start pt-2 pb-4">
+              <Tabs className="flex-1 flex flex-col mt-8 min-h-[600px]">
+                <TabsList className="px-12 border-b border-[var(--c-border-strong)] sticky top-0 bg-[var(--c-bg-elevated)]/90 backdrop-blur-xl z-30 flex gap-10 justify-start pt-4 pb-5">
                   <TabsTrigger
                     value="intelligence"
                     active={activeTab === "intelligence"}
                     onClick={() => setActiveTab("intelligence")}
-                    className="hover:text-[var(--c-accent)] transition-colors data-[state=active]:text-[var(--c-accent)] data-[state=active]:drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-bold tracking-wider"
+                    className="hover:text-[var(--c-accent)] transition-colors data-[state=active]:text-[var(--c-accent)] data-[state=active]:drop-shadow-[0_0_12px_rgb(99_102_241_/_0.8)] font-black tracking-widest text-[13px]"
                   >
-                    <Sparkles className="w-4 h-4 mr-2" />
+                    <Sparkles className="w-5 h-5 mr-2.5" />
                     INTELIGENCIA IA
                   </TabsTrigger>
                   <TabsTrigger
                     value="outreach"
                     active={activeTab === "outreach"}
                     onClick={() => setActiveTab("outreach")}
-                    className="hover:text-[var(--c-accent)] transition-colors data-[state=active]:text-[var(--c-accent)] data-[state=active]:drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] font-bold tracking-wider"
+                    className="hover:text-[var(--c-accent)] transition-colors data-[state=active]:text-[var(--c-accent)] data-[state=active]:drop-shadow-[0_0_12px_rgb(99_102_241_/_0.8)] font-black tracking-widest text-[13px]"
                   >
-                    <MailIcon className="w-4 h-4 mr-2" />
+                    <MailIcon className="w-5 h-5 mr-2.5" />
                     CONTACTO
                   </TabsTrigger>
 
-                  <div className="w-[1px] h-4 bg-[var(--c-border-strong)] mx-2 hidden sm:block self-center" />
+                  <div className="w-[1px] h-5 bg-[var(--c-border-strong)] mx-4 hidden sm:block self-center" />
 
                   {/* Future Architecture Stubs */}
-                  <TabsTrigger value="timeline" disabled className="opacity-30 tracking-wider">
+                  <TabsTrigger
+                    value="timeline"
+                    disabled
+                    className="opacity-30 tracking-widest font-bold text-[13px]"
+                  >
                     <Clock className="w-4 h-4 mr-2" /> HISTORIAL
                   </TabsTrigger>
                   <TabsTrigger
                     value="meetings"
                     disabled
-                    className="opacity-30 hidden md:inline-flex tracking-wider"
+                    className="opacity-30 hidden md:inline-flex tracking-widest font-bold text-[13px]"
                   >
                     <Briefcase className="w-4 h-4 mr-2" /> REUNIONES
                   </TabsTrigger>
                   <TabsTrigger
                     value="tasks"
                     disabled
-                    className="opacity-30 hidden lg:inline-flex tracking-wider"
+                    className="opacity-30 hidden lg:inline-flex tracking-widest font-bold text-[13px]"
                   >
                     <ListTodo className="w-4 h-4 mr-2" /> TAREAS
                   </TabsTrigger>
                 </TabsList>
 
-                <div className="flex-1 flex flex-col px-10 py-10 bg-transparent relative">
+                <div className="flex-1 flex flex-col px-12 py-12 bg-transparent relative">
                   <TabsContent
                     value="intelligence"
                     active={activeTab === "intelligence"}
                     className="flex-1 flex flex-col"
                   >
                     {prospect.analysisStatus === "COMPLETED" ? (
-                      <div className="flex flex-col gap-12">
+                      <div className="flex flex-col gap-16">
                         {/* Summary & Metrics */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-                          <div className="col-span-1 md:col-span-3 flex flex-col gap-4 relative z-10">
-                            <h3 className="text-[10px] font-bold text-[var(--c-accent)] uppercase tracking-widest drop-shadow-[0_0_5px_rgba(0,229,255,0.5)]">
+                          <div className="col-span-1 md:col-span-3 flex flex-col gap-5 relative z-10">
+                            <h3 className="text-[12px] font-bold text-[var(--c-accent)] uppercase tracking-widest drop-shadow-[0_0_8px_rgb(99_102_241_/_0.5)]">
                               RESUMEN EJECUTIVO
                             </h3>
-                            <p className="text-[14px] text-[var(--c-text-primary)] leading-relaxed font-medium bg-[var(--c-bg-elevated)] p-6 rounded-[var(--r-xl)] border border-[var(--c-border-strong)] shadow-tactile">
+                            <p className="text-[16px] text-[var(--c-text-primary)] leading-relaxed font-medium bg-[var(--c-bg-elevated)] p-8 rounded-[var(--r-2xl)] border border-[var(--c-border-strong)] shadow-tactile">
                               {summary}
                             </p>
                           </div>
-                          <div className="col-span-1 flex flex-col gap-5 p-6 rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile relative overflow-hidden group justify-center">
+                          <div className="col-span-1 flex flex-col gap-6 p-8 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile relative overflow-hidden group justify-center">
                             <div className="absolute inset-0 bg-gradient-to-b from-[var(--c-accent)]/10 to-transparent pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity" />
                             <div className="flex flex-col gap-2 relative z-10">
-                              <span className="text-[9px] uppercase text-[var(--c-text-tertiary)] font-bold tracking-[0.2em]">
+                              <span className="text-[11px] uppercase text-[var(--c-text-tertiary)] font-bold tracking-[0.2em]">
                                 PRIORIDAD
                               </span>
-                              <div className="flex items-center gap-2 text-[16px] font-black text-[var(--c-text-primary)]">
-                                <Activity className="w-4 h-4 text-[var(--c-danger)] drop-shadow-[0_0_8px_rgba(255,23,68,0.8)]" />{" "}
+                              <div className="flex items-center gap-2.5 text-[20px] font-black text-[var(--c-text-primary)]">
+                                <Activity className="w-5 h-5 text-[var(--c-danger)] drop-shadow-[0_0_12px_rgb(168_85_247_/_0.8)]" />{" "}
                                 HIGH
                               </div>
                             </div>
                             <div className="w-full h-[1px] bg-[var(--c-border-strong)] relative z-10" />
                             <div className="flex flex-col gap-2 relative z-10">
-                              <span className="text-[9px] uppercase text-[var(--c-text-tertiary)] font-bold tracking-[0.2em]">
+                              <span className="text-[11px] uppercase text-[var(--c-text-tertiary)] font-bold tracking-[0.2em]">
                                 PROB. CIERRE
                               </span>
-                              <div className="flex items-center gap-2 text-[16px] font-black text-[var(--c-text-primary)]">
-                                <TrendingUp className="w-4 h-4 text-[var(--c-success)] drop-shadow-[0_0_8px_rgba(0,230,118,0.8)]" />{" "}
+                              <div className="flex items-center gap-2.5 text-[20px] font-black text-[var(--c-text-primary)]">
+                                <TrendingUp className="w-5 h-5 text-[var(--c-success)] drop-shadow-[0_0_12px_rgb(34_211_238_/_0.8)]" />{" "}
                                 75%
                               </div>
                             </div>
@@ -463,51 +467,51 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                         </div>
 
                         {/* Signals Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                          <div className="flex flex-col gap-5">
-                            <h3 className="text-[10px] font-bold text-[var(--c-text-secondary)] uppercase tracking-widest flex items-center gap-3">
-                              <div className="w-7 h-7 rounded-full bg-[var(--c-bg-elevated)] flex items-center justify-center border border-[var(--c-success)]/30 shadow-[0_0_10px_rgba(0,230,118,0.2)]">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                          <div className="flex flex-col gap-6">
+                            <h3 className="text-[12px] font-bold text-[var(--c-text-secondary)] uppercase tracking-widest flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-[var(--c-bg-elevated)] flex items-center justify-center border border-[var(--c-success)]/30 shadow-[0_0_15px_rgb(34_211_238_/_0.2)]">
                                 <CheckCircle2 className="w-4 h-4 text-[var(--c-success)]" />
                               </div>
                               FORTALEZAS
                             </h3>
-                            <ul className="flex flex-col gap-4">
+                            <ul className="flex flex-col gap-5">
                               {strengths.map((s, i) => (
                                 <li
                                   key={i}
-                                  className="text-[14px] leading-relaxed font-medium text-[var(--c-text-primary)] flex items-start gap-4 bg-[var(--c-bg-elevated)] p-5 rounded-[var(--r-xl)] border border-[var(--c-border-strong)] shadow-tactile hover:border-[var(--c-success)]/50 transition-colors"
+                                  className="text-[15px] leading-relaxed font-medium text-[var(--c-text-primary)] flex items-start gap-4 bg-[var(--c-bg-elevated)] p-6 rounded-[var(--r-xl)] border border-[var(--c-border-strong)] shadow-tactile hover:border-[var(--c-success)]/50 transition-colors"
                                 >
-                                  <div className="w-2 h-2 rounded-full bg-[var(--c-success)] mt-1.5 shrink-0 shadow-[0_0_8px_rgba(0,230,118,0.8)]" />
+                                  <div className="w-2 h-2 rounded-full bg-[var(--c-success)] mt-2 shrink-0 shadow-[0_0_10px_rgb(34_211_238_/_0.8)]" />
                                   {s as string}
                                 </li>
                               ))}
                               {strengths.length === 0 && (
-                                <span className="text-[13px] font-bold text-[var(--c-text-tertiary)] p-4">
+                                <span className="text-[14px] font-bold text-[var(--c-text-tertiary)] p-4">
                                   Sin fortalezas destacadas.
                                 </span>
                               )}
                             </ul>
                           </div>
 
-                          <div className="flex flex-col gap-5">
-                            <h3 className="text-[10px] font-bold text-[var(--c-text-secondary)] uppercase tracking-widest flex items-center gap-3">
-                              <div className="w-7 h-7 rounded-full bg-[var(--c-bg-elevated)] flex items-center justify-center border border-[var(--c-danger)]/30 shadow-[0_0_10px_rgba(255,23,68,0.2)]">
+                          <div className="flex flex-col gap-6">
+                            <h3 className="text-[12px] font-bold text-[var(--c-text-secondary)] uppercase tracking-widest flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-[var(--c-bg-elevated)] flex items-center justify-center border border-[var(--c-danger)]/30 shadow-[0_0_15px_rgb(168_85_247_/_0.2)]">
                                 <AlertTriangle className="w-4 h-4 text-[var(--c-danger)]" />
                               </div>
                               PROBLEMAS / DOLORES
                             </h3>
-                            <ul className="flex flex-col gap-4">
+                            <ul className="flex flex-col gap-5">
                               {weaknesses.map((w, i) => (
                                 <li
                                   key={i}
-                                  className="text-[14px] leading-relaxed font-medium text-[var(--c-text-primary)] flex items-start gap-4 bg-[var(--c-bg-elevated)] p-5 rounded-[var(--r-xl)] border border-[var(--c-border-strong)] shadow-tactile hover:border-[var(--c-danger)]/50 transition-colors"
+                                  className="text-[15px] leading-relaxed font-medium text-[var(--c-text-primary)] flex items-start gap-4 bg-[var(--c-bg-elevated)] p-6 rounded-[var(--r-xl)] border border-[var(--c-border-strong)] shadow-tactile hover:border-[var(--c-danger)]/50 transition-colors"
                                 >
-                                  <div className="w-2 h-2 rounded-full bg-[var(--c-danger)] mt-1.5 shrink-0 shadow-[0_0_8px_rgba(255,23,68,0.8)]" />
+                                  <div className="w-2 h-2 rounded-full bg-[var(--c-danger)] mt-2 shrink-0 shadow-[0_0_10px_rgb(168_85_247_/_0.8)]" />
                                   {w as string}
                                 </li>
                               ))}
                               {weaknesses.length === 0 && (
-                                <span className="text-[13px] font-bold text-[var(--c-text-tertiary)] p-4">
+                                <span className="text-[14px] font-bold text-[var(--c-text-tertiary)] p-4">
                                   Sin dolores identificados.
                                 </span>
                               )}
@@ -516,36 +520,36 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                         </div>
 
                         {/* Opportunities and Recommended Services */}
-                        <div className="flex flex-col gap-6 mt-4 pb-8">
-                          <h3 className="text-[10px] font-bold text-[var(--c-accent)] uppercase tracking-widest flex items-center gap-3 drop-shadow-[0_0_5px_rgba(0,229,255,0.5)]">
-                            <div className="w-7 h-7 rounded-full bg-[var(--c-bg-elevated)] flex items-center justify-center border border-[var(--c-accent)] shadow-[0_0_10px_rgba(0,229,255,0.4)]">
+                        <div className="flex flex-col gap-8 pb-10">
+                          <h3 className="text-[12px] font-bold text-[var(--c-accent)] uppercase tracking-widest flex items-center gap-3 drop-shadow-[0_0_8px_rgb(99_102_241_/_0.5)]">
+                            <div className="w-8 h-8 rounded-full bg-[var(--c-bg-elevated)] flex items-center justify-center border border-[var(--c-accent)] shadow-[0_0_15px_rgb(99_102_241_/_0.4)]">
                               <Lightbulb className="w-4 h-4 text-[var(--c-accent)]" />
                             </div>
                             SERVICIOS RECOMENDADOS & OPORTUNIDADES
                           </h3>
-                          <div className="grid grid-cols-1 gap-5">
+                          <div className="grid grid-cols-1 gap-6">
                             {opportunities.length > 0 ? (
                               opportunities.map((opp: Record<string, unknown>, i) => (
                                 <div
                                   key={i}
-                                  className="flex flex-col md:flex-row gap-5 p-8 rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile hover:shadow-glow hover:border-[var(--c-accent-border)] transition-all group"
+                                  className="flex flex-col md:flex-row gap-6 p-10 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile hover:shadow-glow hover:border-[var(--c-accent-border)] transition-all group"
                                 >
-                                  <div className="flex-1 flex flex-col gap-3.5">
-                                    <div className="flex items-center gap-4">
-                                      <span className="text-[16px] font-black text-[var(--c-text-primary)] capitalize group-hover:text-[var(--c-accent)] transition-colors">
+                                  <div className="flex-1 flex flex-col gap-4">
+                                    <div className="flex items-center gap-5">
+                                      <span className="text-[18px] font-black text-[var(--c-text-primary)] capitalize group-hover:text-[var(--c-accent)] transition-colors">
                                         {typeof opp.type === "string"
                                           ? opp.type.replace(/_/g, " ")
                                           : "Oportunidad"}
                                       </span>
                                       <Badge
                                         variant="outline"
-                                        className="text-[10px] py-1 px-3 bg-[var(--c-bg-base)] border-[var(--c-accent-border)] text-[var(--c-accent)] shadow-[0_0_10px_rgba(0,229,255,0.1)] font-bold tracking-widest"
+                                        className="text-[11px] py-1.5 px-4 bg-[var(--c-bg-base)] border-[var(--c-accent-border)] text-[var(--c-accent)] shadow-[0_0_12px_rgb(99_102_241_/_0.15)] font-black tracking-widest"
                                       >
                                         SOLUCIÓN
                                       </Badge>
                                     </div>
-                                    <p className="text-[14px] text-[var(--c-text-secondary)] leading-relaxed font-medium">
-                                      <span className="font-bold text-[var(--c-text-primary)] uppercase tracking-wider text-[11px] mr-2">
+                                    <p className="text-[15px] text-[var(--c-text-secondary)] leading-relaxed font-medium mt-1">
+                                      <span className="font-bold text-[var(--c-text-primary)] uppercase tracking-widest text-[12px] mr-3">
                                         Por qué lo necesitan:
                                       </span>
                                       {typeof opp.description === "string" ? opp.description : ""}
@@ -554,7 +558,7 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                                 </div>
                               ))
                             ) : (
-                              <span className="text-[13px] font-bold text-[var(--c-text-tertiary)] p-4">
+                              <span className="text-[14px] font-bold text-[var(--c-text-tertiary)] p-4">
                                 No se identificaron oportunidades claras.
                               </span>
                             )}
@@ -562,73 +566,72 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                         </div>
                       </div>
                     ) : prospect.analysisStatus === "IN_PROGRESS" || isAnalyzing ? (
-                      <div className="flex flex-col flex-1 justify-between py-10">
-                        <div className="flex flex-col gap-12 animate-pulse opacity-70 mb-12 relative z-10 w-full max-w-4xl mx-auto">
+                      <div className="flex flex-col flex-1 justify-between py-12">
+                        <div className="flex flex-col gap-16 animate-pulse opacity-70 mb-16 relative z-10 w-full max-w-5xl mx-auto">
                           {/* Summary & Metrics Skeleton */}
-                          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-                            <div className="col-span-1 md:col-span-3 flex flex-col gap-5">
-                              <Skeleton className="h-4 w-40 rounded-[var(--r-md)] bg-[var(--c-border-strong)]" />
-                              <div className="flex flex-col gap-4 p-6 rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]">
-                                <Skeleton className="h-5 w-full rounded bg-[var(--c-bg-base)]" />
-                                <Skeleton className="h-5 w-11/12 rounded bg-[var(--c-bg-base)]" />
-                                <Skeleton className="h-5 w-4/5 rounded bg-[var(--c-bg-base)]" />
+                          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+                            <div className="col-span-1 md:col-span-3 flex flex-col gap-6">
+                              <Skeleton className="h-5 w-48 rounded-[var(--r-md)] bg-[var(--c-border-strong)]" />
+                              <div className="flex flex-col gap-5 p-8 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]">
+                                <Skeleton className="h-6 w-full rounded bg-[var(--c-bg-base)]" />
+                                <Skeleton className="h-6 w-11/12 rounded bg-[var(--c-bg-base)]" />
+                                <Skeleton className="h-6 w-4/5 rounded bg-[var(--c-bg-base)]" />
                               </div>
                             </div>
-                            <div className="col-span-1 flex flex-col gap-5 p-6 rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]">
-                              <Skeleton className="h-12 w-full rounded bg-[var(--c-bg-base)]" />
+                            <div className="col-span-1 flex flex-col gap-6 p-8 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]">
+                              <Skeleton className="h-16 w-full rounded bg-[var(--c-bg-base)]" />
                               <div className="w-full h-[1px] bg-[var(--c-border-strong)]" />
-                              <Skeleton className="h-12 w-full rounded bg-[var(--c-bg-base)]" />
+                              <Skeleton className="h-16 w-full rounded bg-[var(--c-bg-base)]" />
                             </div>
                           </div>
 
                           {/* Signals Grid Skeleton */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                            <div className="flex flex-col gap-5">
-                              <Skeleton className="h-4 w-32 rounded-[var(--r-md)] bg-[var(--c-border-strong)]" />
-                              <Skeleton className="h-16 w-full rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]" />
-                              <Skeleton className="h-16 w-full rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]" />
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                            <div className="flex flex-col gap-6">
+                              <Skeleton className="h-5 w-40 rounded-[var(--r-md)] bg-[var(--c-border-strong)]" />
+                              <Skeleton className="h-20 w-full rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]" />
+                              <Skeleton className="h-20 w-full rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]" />
                             </div>
-                            <div className="flex flex-col gap-5">
-                              <Skeleton className="h-4 w-40 rounded-[var(--r-md)] bg-[var(--c-border-strong)]" />
-                              <Skeleton className="h-16 w-full rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]" />
-                              <Skeleton className="h-16 w-full rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]" />
+                            <div className="flex flex-col gap-6">
+                              <Skeleton className="h-5 w-48 rounded-[var(--r-md)] bg-[var(--c-border-strong)]" />
+                              <Skeleton className="h-20 w-full rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]" />
+                              <Skeleton className="h-20 w-full rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)]" />
                             </div>
                           </div>
                         </div>
 
-                        {/* Kept button disabled at the bottom */}
                         <div className="flex justify-center relative z-10 mt-auto">
                           <Button
                             disabled={true}
-                            className="w-full max-w-sm rounded-[var(--r-full)] bg-[var(--c-bg-elevated)] border-[var(--c-accent)] text-[var(--c-accent)] shadow-[0_0_15px_rgba(0,229,255,0.3)] opacity-80 py-6 text-[14px]"
+                            className="w-full max-w-md rounded-[var(--r-full)] bg-[var(--c-bg-elevated)] border-[var(--c-accent)] text-[var(--c-accent)] shadow-[0_0_20px_rgb(99_102_241_/_0.3)] opacity-80 py-8 text-[15px]"
                           >
-                            <Sparkles className="w-5 h-5 mr-3 text-[var(--c-accent)] animate-pulse" />
+                            <Sparkles className="w-6 h-6 mr-4 text-[var(--c-accent)] animate-pulse" />
                             ANALIZANDO CON AXIOM IA...
                           </Button>
                         </div>
                       </div>
                     ) : (
-                      <div className="flex-1 flex flex-col items-center justify-center text-center max-w-md mx-auto py-20 relative z-10 w-full min-h-[400px]">
+                      <div className="flex-1 flex flex-col items-center justify-center text-center max-w-lg mx-auto py-24 relative z-10 w-full min-h-[500px]">
                         <div
-                          className="w-20 h-20 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile flex items-center justify-center mb-8 relative group cursor-pointer hover:shadow-glow hover:border-[var(--c-accent-border)] transition-all"
+                          className="w-24 h-24 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile flex items-center justify-center mb-10 relative group cursor-pointer hover:shadow-glow hover:border-[var(--c-accent-border)] transition-all"
                           onClick={handleAnalyze}
                         >
                           <div className="absolute inset-0 bg-gradient-to-br from-[var(--c-accent)]/10 to-transparent rounded-[var(--r-2xl)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-                          <Wand2 className="w-8 h-8 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors drop-shadow-[0_0_8px_rgba(0,229,255,0)] group-hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]" />
+                          <Wand2 className="w-10 h-10 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors drop-shadow-[0_0_8px_rgb(99_102_241_/_0)] group-hover:drop-shadow-[0_0_12px_rgb(99_102_241_/_0.8)]" />
                         </div>
-                        <p className="text-[22px] font-black tracking-tight text-[var(--c-text-primary)] mb-4 drop-shadow-[0_0_5px_rgba(255,255,255,0.1)]">
+                        <p className="text-[28px] font-black tracking-tight text-[var(--c-text-primary)] mb-5 drop-shadow-[0_0_8px_rgb(230_232_238_/_0.15)]">
                           Sin Inteligencia Comercial
                         </p>
-                        <p className="text-[15px] font-medium text-[var(--c-text-secondary)] leading-relaxed mb-10 px-6">
+                        <p className="text-[16px] font-medium text-[var(--c-text-secondary)] leading-relaxed mb-12 px-8">
                           Ejecuta el motor de IA para descubrir los dolores del negocio, extraer el
                           Score IA y recomendar soluciones precisas.
                         </p>
                         <Button
                           onClick={handleAnalyze}
                           disabled={isAnalyzing}
-                          className="w-full max-w-[280px] rounded-[var(--r-full)] bg-[var(--c-bg-elevated)] border border-[var(--c-accent)] text-[var(--c-accent)] shadow-[0_0_15px_rgba(0,229,255,0.3)] hover:shadow-[0_0_25px_rgba(0,229,255,0.6)] hover:bg-[var(--c-accent)]/10 font-bold tracking-widest transition-all py-6 text-[14px]"
+                          className="w-full max-w-[320px] rounded-[var(--r-full)] bg-[var(--c-bg-elevated)] border border-[var(--c-accent)] text-[var(--c-accent)] shadow-[0_0_20px_rgb(99_102_241_/_0.3)] hover:shadow-[0_0_30px_rgb(99_102_241_/_0.6)] hover:bg-[var(--c-accent)]/10 font-black tracking-widest transition-all py-8 text-[15px]"
                         >
-                          <Sparkles className="w-5 h-5 mr-3" />
+                          <Sparkles className="w-6 h-6 mr-3" />
                           EJECUTAR ANÁLISIS IA
                         </Button>
                       </div>
@@ -640,23 +643,23 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                     active={activeTab === "outreach"}
                     className="flex-1 flex flex-col"
                   >
-                    <div className="flex flex-col gap-8 relative z-10 w-full max-w-4xl mx-auto">
-                      <div className="flex items-center justify-between p-6 rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile">
-                        <div className="flex flex-col gap-2">
-                          <h3 className="text-[16px] font-black tracking-tight text-[var(--c-text-primary)] drop-shadow-[0_0_5px_rgba(255,255,255,0.1)]">
+                    <div className="flex flex-col gap-10 relative z-10 w-full max-w-5xl mx-auto">
+                      <div className="flex items-center justify-between p-8 rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-tactile">
+                        <div className="flex flex-col gap-2.5">
+                          <h3 className="text-[18px] font-black tracking-tight text-[var(--c-text-primary)] drop-shadow-[0_0_8px_rgb(230_232_238_/_0.15)]">
                             Cold Email & Propuesta
                           </h3>
-                          <p className="text-[12px] font-medium text-[var(--c-text-tertiary)]">
+                          <p className="text-[14px] font-medium text-[var(--c-text-tertiary)]">
                             Basado en los dolores descubiertos en el análisis.
                           </p>
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-5">
                           {prospect.messageDraft && (
                             <Button
                               variant="secondary"
                               size="sm"
                               onClick={handleCopyDraft}
-                              className="rounded-[var(--r-full)] text-[12px] font-bold border border-[var(--c-border-strong)] shadow-sm hover:border-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] transition-all bg-[var(--c-bg-base)] px-4"
+                              className="rounded-[var(--r-full)] text-[13px] font-bold border border-[var(--c-border-strong)] shadow-sm hover:border-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] transition-all bg-[var(--c-bg-base)] px-6 py-5"
                             >
                               <Copy className="w-4 h-4 mr-2" /> Copiar
                             </Button>
@@ -666,14 +669,14 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                             size="sm"
                             onClick={handleGenerateProposal}
                             disabled={isGenerating || prospect.analysisStatus !== "COMPLETED"}
-                            className="rounded-[var(--r-full)] text-[12px] font-bold bg-[var(--c-accent)] text-[#0b0d12] border-none shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:shadow-[0_0_25px_rgba(0,229,255,0.7)] hover:bg-[#33ebff] transition-all px-5"
+                            className="rounded-[var(--r-full)] text-[13px] font-black tracking-wide bg-[var(--c-accent)] text-[var(--c-bg-base)] border-none shadow-[0_0_20px_rgb(99_102_241_/_0.4)] hover:shadow-[0_0_30px_rgb(99_102_241_/_0.7)] hover:bg-[var(--c-primary)] transition-all px-8 py-5"
                           >
                             {isGenerating ? (
-                              <RefreshCw className="w-4 h-4 mr-2 animate-spin text-[#0b0d12]" />
+                              <RefreshCw className="w-5 h-5 mr-2.5 animate-spin text-[var(--c-bg-base)]" />
                             ) : prospect.messageDraft ? (
-                              <RefreshCw className="w-4 h-4 mr-2 text-[#0b0d12]" />
+                              <RefreshCw className="w-5 h-5 mr-2.5 text-[var(--c-bg-base)]" />
                             ) : (
-                              <PenLine className="w-4 h-4 mr-2 text-[#0b0d12]" />
+                              <PenLine className="w-5 h-5 mr-2.5 text-[var(--c-bg-base)]" />
                             )}
                             {prospect.messageDraft ? "Regenerar" : "Redactar (IA)"}
                           </Button>
@@ -681,14 +684,14 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                       </div>
 
                       {prospect.messageDraft ? (
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-5">
                           <Textarea
-                            className="min-h-[450px] text-[15px] leading-relaxed font-medium font-sans resize-y bg-[var(--c-bg-elevated)] border-[var(--c-border-strong)] rounded-[var(--r-xl)] shadow-inner p-8 focus-visible:ring-[var(--c-accent)] focus-visible:border-[var(--c-accent)] transition-all text-[var(--c-text-primary)]"
+                            className="min-h-[500px] text-[16px] leading-relaxed font-medium font-sans resize-y bg-[var(--c-bg-elevated)] border-[var(--c-border-strong)] rounded-[var(--r-2xl)] shadow-inner p-10 focus-visible:ring-[var(--c-accent)] focus-visible:border-[var(--c-accent)] transition-all text-[var(--c-text-primary)]"
                             value={draftContent}
                             onChange={(e) => setDraftContent(e.target.value)}
                             placeholder="Tu propuesta aparecerá aquí..."
                           />
-                          <p className="text-[11px] font-bold tracking-wider text-[var(--c-text-tertiary)] text-right px-2">
+                          <p className="text-[12px] font-bold tracking-widest text-[var(--c-text-tertiary)] text-right px-4">
                             * PUEDES EDITAR EL TEXTO DIRECTAMENTE ANTES DE COPIARLO. CREADO POR{" "}
                             <span className="text-[var(--c-accent)]">
                               {prospect.messageDraftModel}
@@ -697,11 +700,11 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                           </p>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-[var(--c-border-strong)] rounded-[var(--r-xl)] bg-[var(--c-bg-elevated)]/50 backdrop-blur-sm shadow-inner group">
-                          <div className="w-20 h-20 rounded-full bg-[var(--c-bg-base)] flex items-center justify-center mb-6 shadow-tactile border border-[var(--c-border-strong)] group-hover:border-[var(--c-accent-border)] transition-colors">
-                            <MessageSquare className="w-8 h-8 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors" />
+                        <div className="flex flex-col items-center justify-center py-32 text-center border-2 border-dashed border-[var(--c-border-strong)] rounded-[var(--r-2xl)] bg-[var(--c-bg-elevated)]/50 backdrop-blur-sm shadow-inner group">
+                          <div className="w-24 h-24 rounded-full bg-[var(--c-bg-base)] flex items-center justify-center mb-8 shadow-tactile border border-[var(--c-border-strong)] group-hover:border-[var(--c-accent-border)] transition-colors">
+                            <MessageSquare className="w-10 h-10 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors" />
                           </div>
-                          <p className="text-[15px] font-medium text-[var(--c-text-secondary)] mb-4 max-w-[350px] leading-relaxed">
+                          <p className="text-[16px] font-medium text-[var(--c-text-secondary)] mb-5 max-w-[450px] leading-relaxed">
                             {prospect.analysisStatus !== "COMPLETED"
                               ? "Debes analizar el negocio primero para generar una propuesta personalizada."
                               : "Genera una propuesta comercial altamente personalizada basada en el análisis IA."}
@@ -716,30 +719,30 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
           </SidePanelBody>
 
           {/* Action Bar Footer */}
-          <SidePanelFooter className="justify-between items-center border-t border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)]/95 backdrop-blur-xl py-6 px-10 shadow-[0_-10px_40px_rgba(0,0,0,0.6)] z-20 relative">
+          <SidePanelFooter className="justify-between items-center border-t border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)]/95 backdrop-blur-2xl py-8 px-12 shadow-[0_-15px_50px_rgb(11_13_18_/_0.8)] z-20 relative">
             <Button
               variant="ghost"
               onClick={onClose}
-              className="text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] font-bold tracking-wide rounded-[var(--r-full)] hover:bg-[var(--c-bg-subtle)] transition-all px-6 py-5"
+              className="text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] font-bold tracking-widest rounded-[var(--r-full)] hover:bg-[var(--c-bg-subtle)] transition-all px-8 py-6 text-[14px]"
             >
               Cerrar
             </Button>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-5">
               <Button
                 onClick={() => setActiveTab("outreach")}
                 disabled={activeTab === "outreach"}
                 variant="secondary"
-                className="font-bold tracking-wide rounded-[var(--r-full)] border border-[var(--c-border-strong)] bg-[var(--c-bg-base)] hover:border-[var(--c-text-secondary)] transition-all px-6 py-5"
+                className="font-bold tracking-widest rounded-[var(--r-full)] border border-[var(--c-border-strong)] bg-[var(--c-bg-base)] hover:border-[var(--c-text-secondary)] transition-all px-8 py-6 text-[14px]"
               >
                 Ver Propuesta
               </Button>
               <Button
                 onClick={handleAnalyze}
                 disabled={isAnalyzing || prospect.analysisStatus === "IN_PROGRESS"}
-                className="font-bold tracking-wide rounded-[var(--r-full)] bg-[var(--c-bg-base)] border border-[var(--c-border-strong)] hover:border-[var(--c-accent)] text-[var(--c-text-primary)] hover:text-[var(--c-accent)] hover:shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all px-6 py-5"
+                className="font-bold tracking-widest rounded-[var(--r-full)] bg-[var(--c-bg-base)] border border-[var(--c-border-strong)] hover:border-[var(--c-accent)] text-[var(--c-text-primary)] hover:text-[var(--c-accent)] hover:shadow-[0_0_20px_rgb(99_102_241_/_0.3)] transition-all px-8 py-6 text-[14px]"
               >
                 {prospect.analysisStatus === "COMPLETED" ? "Re-analizar" : "Analizar Prospecto"}
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-3" />
               </Button>
               <Button
                 onClick={handleConvertToLead}
@@ -749,14 +752,14 @@ export function ProspectSidePanel({ prospect, isOpen, onClose, onUpdate }: Prosp
                   prospect.analysisStatus !== "COMPLETED" ||
                   !draftContent.trim()
                 }
-                className="font-bold tracking-wide rounded-[var(--r-full)] bg-[var(--c-success)] text-[#0b0d12] border-none shadow-[0_0_20px_rgba(0,230,118,0.5)] hover:shadow-[0_0_30px_rgba(0,230,118,0.8)] hover:bg-[#33ff99] transition-all disabled:opacity-50 disabled:shadow-none px-6 py-5 ml-2"
+                className="font-black tracking-wide rounded-[var(--r-full)] bg-[var(--c-success)] text-[var(--c-bg-base)] border-none shadow-[0_0_24px_rgb(34_211_238_/_0.5)] hover:shadow-[0_0_36px_rgb(34_211_238_/_0.8)] hover:bg-[var(--c-primary)] transition-all disabled:opacity-50 disabled:shadow-none px-10 py-6 ml-3 text-[14px]"
               >
                 {isConverting ? (
-                  <RefreshCw className="w-5 h-5 mr-2 animate-spin text-[#0b0d12]" />
+                  <RefreshCw className="w-5 h-5 mr-3 animate-spin" />
                 ) : (
-                  <CheckCircle2 className="w-5 h-5 mr-2 text-[#0b0d12]" />
+                  <CheckCircle2 className="w-5 h-5 mr-3" />
                 )}
-                {prospect.convertedToLeadId ? "Convertido a Lead" : "Convertir a Lead"}
+                CONFIRMAR & ENVIAR A CRM
               </Button>
             </div>
           </SidePanelFooter>

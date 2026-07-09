@@ -15,33 +15,33 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn("flex flex-col gap-6 mb-12 relative z-10", className)}
+        className={cn("relative z-10 mb-16 flex flex-col gap-8", className)}
         {...props}
       >
         {breadcrumbs && (
-          <div className="text-[11px] text-[var(--c-text-tertiary)] flex items-center gap-2 font-bold tracking-widest uppercase">
+          <div className="text-[12px] text-[var(--c-text-tertiary)] flex items-center gap-3 font-bold tracking-[0.2em] uppercase">
             {breadcrumbs}
           </div>
         )}
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-4">
+        <div className="flex flex-col justify-between gap-10 md:flex-row md:items-end">
+          <div className="flex max-w-4xl flex-col gap-5">
+            <div className="flex items-center gap-5">
               {icon && (
-                <div className="text-[var(--c-accent)] drop-shadow-[0_0_10px_rgba(0,229,255,0.6)]">
+                <div className="text-[var(--c-accent)] drop-shadow-[0_0_24px_rgb(168_85_247_/_0.65)] scale-110">
                   {icon}
                 </div>
               )}
-              <h1 className="text-4xl font-black tracking-tight text-[var(--c-text-primary)] drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
+              <h1 className="text-5xl font-black tracking-tight text-[var(--c-text-primary)] md:text-[56px] drop-shadow-[0_0_15px_rgb(230_232_238_/_0.15)] leading-none">
                 {title}
               </h1>
             </div>
             {subtitle && (
-              <p className="text-[15px] font-medium leading-relaxed text-[var(--c-text-secondary)] max-w-3xl">
+              <p className="max-w-2xl text-[16px] font-medium leading-relaxed text-[var(--c-text-secondary)]">
                 {subtitle}
               </p>
             )}
           </div>
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex shrink-0 items-center gap-4">
             {metadata}
             {actions}
           </div>

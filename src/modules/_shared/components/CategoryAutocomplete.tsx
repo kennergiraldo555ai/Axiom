@@ -59,7 +59,7 @@ export function CategoryAutocomplete({ onSelect, disabled }: CategoryAutocomplet
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <div className="relative">
+      <div className="relative group/input-inner">
         <input
           ref={inputRef}
           type="text"
@@ -70,26 +70,26 @@ export function CategoryAutocomplete({ onSelect, disabled }: CategoryAutocomplet
           onClick={() => setOpen(true)}
           disabled={disabled}
           placeholder="Ej. Agencias de marketing..."
-          className="flex h-[50px] w-full rounded-[var(--r-md)] border border-[var(--c-border-strong)] bg-[var(--c-bg-base)] px-5 py-3 text-[15px] text-[var(--c-text-primary)] font-medium placeholder:text-[var(--c-text-disabled)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-accent)] focus-visible:border-[var(--c-accent)] focus-visible:shadow-[0_0_15px_rgba(0,229,255,0.3)] disabled:cursor-not-allowed disabled:opacity-50 transition-all shadow-tactile"
+          className="flex h-[60px] w-full rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-base)]/50 backdrop-blur-md px-6 py-4 text-[16px] font-medium text-[var(--c-text-primary)] shadow-tactile transition-all placeholder:text-[var(--c-text-disabled)] focus-visible:border-[var(--c-primary)] focus-visible:bg-[var(--c-bg-glass)] focus-visible:shadow-[0_0_30px_-10px_rgb(99_102_241_/_0.8)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--c-primary)] disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--c-border-hover)]"
           autoComplete="off"
           required
         />
-        <ChevronsUpDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-text-tertiary)] pointer-events-none opacity-50" />
+        <ChevronsUpDown className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--c-text-tertiary)] pointer-events-none transition-colors group-hover/input-inner:text-[var(--c-primary)]" />
       </div>
 
       {open && filteredCategories.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto custom-scrollbar rounded-[var(--r-md)] border border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)] backdrop-blur-xl p-1.5 shadow-glow z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute top-full left-0 right-0 mt-3 max-h-72 overflow-y-auto custom-scrollbar rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[linear-gradient(180deg,var(--c-bg-elevated),var(--c-bg-base))] backdrop-blur-2xl p-2 shadow-[0_24px_50px_-12px_rgb(11_13_18_/_1)] z-50 animate-in fade-in zoom-in-95 duration-200">
           {filteredCategories.map((category) => (
             <div
               key={category}
               onClick={() => handleSelect(category)}
-              className="relative flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm font-medium outline-none hover:bg-[var(--c-accent)]/10 hover:text-[var(--c-accent)] transition-colors text-[var(--c-text-secondary)]"
+              className="relative flex cursor-pointer select-none items-center rounded-[var(--r-lg)] px-4 py-3.5 text-[14px] font-semibold outline-none hover:bg-[var(--c-primary)]/10 hover:text-[var(--c-primary)] transition-all text-[var(--c-text-secondary)]"
             >
               <span
-                className={`mr-2 flex h-4 w-4 items-center justify-center ${value === category ? "opacity-100" : "opacity-0"}`}
+                className={`mr-3 flex h-5 w-5 items-center justify-center transition-all ${value === category ? "opacity-100 scale-100" : "opacity-0 scale-75"}`}
               >
                 <Check
-                  className="h-4 w-4 text-[var(--c-accent)] drop-shadow-[0_0_5px_rgba(0,229,255,0.8)]"
+                  className="h-5 w-5 text-[var(--c-primary)] drop-shadow-[0_0_8px_rgb(99_102_241_/_0.8)]"
                   strokeWidth={3}
                 />
               </span>

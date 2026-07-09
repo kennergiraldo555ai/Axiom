@@ -40,6 +40,12 @@ body {
   color: var(--c-text-primary);
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
 code,
 kbd,
 samp,

@@ -58,50 +58,50 @@ export function ProspectSearch({ onSearchStart, onSearchComplete }: ProspectSear
   };
 
   return (
-    <div className="relative group z-10 w-full max-w-5xl">
+    <div className="group relative z-20 w-full max-w-6xl mx-auto my-6">
       {/* Background glow for the search panel */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-[var(--c-violet)]/20 via-[var(--c-accent)]/20 to-[var(--c-violet)]/20 rounded-[var(--r-2xl)] blur-2xl opacity-40 group-hover:opacity-60 transition duration-700 pointer-events-none" />
+      <div className="pointer-events-none absolute -inset-px rounded-[var(--r-2xl)] bg-[linear-gradient(135deg,var(--c-primary),var(--c-accent),var(--c-secondary))] opacity-20 blur-2xl transition duration-1000 group-hover:opacity-40" />
 
-      <div className="relative p-6 sm:p-8 bg-gradient-to-b from-[var(--c-bg-elevated)] to-[#0B0D12] border border-[var(--c-border-strong)] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)] rounded-[var(--r-2xl)] backdrop-blur-2xl">
+      <div className="relative rounded-[var(--r-2xl)] border border-[var(--c-border-strong)] bg-[linear-gradient(180deg,rgba(18,20,27,0.7),rgba(11,13,18,0.9))] p-8 md:p-12 shadow-[0_30px_80px_-20px_rgba(11,13,18,1)] backdrop-blur-3xl overflow-visible">
         <SearchBar
           onSubmit={handleSubmit}
-          className="flex flex-col md:flex-row items-end gap-6 w-full bg-transparent p-0 border-none shadow-none"
+          className="flex flex-col md:flex-row items-end gap-8 w-full bg-transparent p-0 border-none shadow-none"
         >
-          <div className="flex-1 w-full relative group/input">
-            <label className="block text-[12px] font-semibold text-[var(--c-text-secondary)] mb-2.5 transition-colors group-hover/input:text-[var(--c-text-primary)]">
-              Categoría
+          <div className="flex-1 w-full relative group/input z-30">
+            <label className="block text-[13px] font-bold tracking-wide text-[var(--c-text-secondary)] mb-3 transition-colors group-hover/input:text-[var(--c-text-primary)]">
+              ¿Qué buscas?
             </label>
             <CategoryAutocomplete onSelect={setSelectedCategory} disabled={isSearching} />
           </div>
 
-          <div className="flex-1 w-full md:max-w-[340px] relative group/input">
-            <label className="block text-[12px] font-semibold text-[var(--c-text-secondary)] mb-2.5 transition-colors group-hover/input:text-[var(--c-text-primary)]">
-              Ciudad
+          <div className="flex-1 w-full md:max-w-[400px] relative group/input z-20">
+            <label className="block text-[13px] font-bold tracking-wide text-[var(--c-text-secondary)] mb-3 transition-colors group-hover/input:text-[var(--c-text-primary)]">
+              ¿Dónde?
             </label>
             <CityAutocomplete onSelect={setSelectedCity} disabled={isSearching} />
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center gap-4 w-full md:w-auto z-10">
             <Button
               type="submit"
               disabled={isSearching}
-              className="flex-1 md:flex-none h-[50px] px-8 bg-[var(--c-violet)] text-white font-bold text-[14px] tracking-wide border border-transparent shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.8)] hover:bg-[#b388ff] hover:-translate-y-0.5 transition-all duration-300 rounded-[var(--r-md)]"
+              className="h-[60px] flex-1 rounded-[var(--r-xl)] border border-transparent bg-[linear-gradient(135deg,var(--c-primary),var(--c-accent))] px-10 text-[15px] font-black tracking-wider text-white shadow-[0_18px_40px_-15px_rgb(99_102_241_/_0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-15px_rgb(168_85_247_/_0.9)] md:flex-none"
             >
-              <Search className="mr-2.5 h-5 w-5" strokeWidth={2.5} />
+              <Search className="mr-3 h-6 w-6" strokeWidth={2.5} />
               {isSearching ? "Buscando..." : "Buscar Prospectos"}
             </Button>
             <button
               type="button"
-              className="h-[50px] w-[50px] flex items-center justify-center rounded-[var(--r-md)] bg-[var(--c-bg-hover)] border border-[var(--c-border-strong)] text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] hover:border-[var(--c-border-hover)] transition-all shadow-tactile shrink-0"
+              className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-hover)]/50 text-[var(--c-text-secondary)] shadow-tactile transition-all hover:border-[var(--c-accent-border)] hover:bg-[var(--c-bg-elevated)] hover:text-[var(--c-accent)]"
               title="Filtros avanzados"
             >
               <svg
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
@@ -120,36 +120,13 @@ export function ProspectSearch({ onSearchStart, onSearchComplete }: ProspectSear
         </SearchBar>
 
         {/* Decorative arrow pointing to search */}
-        <div className="absolute -bottom-8 left-10 pointer-events-none hidden md:flex items-center gap-3 opacity-60">
-          <div className="w-8 h-8 rounded-full bg-[var(--c-bg-hover)] border border-[var(--c-border-strong)] flex items-center justify-center">
-            <div className="w-3 h-3 rounded-full bg-[var(--c-violet)] shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
+        <div className="absolute -bottom-12 left-16 pointer-events-none hidden md:flex items-center gap-4 opacity-50">
+          <div className="w-10 h-10 rounded-full bg-[var(--c-bg-base)] border border-[var(--c-border-strong)] flex items-center justify-center shadow-inner">
+            <div className="h-4 w-4 rounded-full bg-[var(--c-primary)] shadow-[0_0_12px_rgb(99_102_241_/_0.9)]" />
           </div>
-          <span className="text-[12px] text-[var(--c-text-tertiary)] max-w-[200px] leading-tight">
-            Busca por categoría y ubicación para encontrar los mejores prospectos.
+          <span className="text-[13px] font-medium text-[var(--c-text-tertiary)] max-w-[250px] leading-relaxed">
+            Busca por categoría y ubicación para encontrar los mejores prospectos para AXIOM.
           </span>
-          <svg
-            className="w-12 h-12 text-[var(--c-text-disabled)] ml-2"
-            viewBox="0 0 100 100"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 90 Q 30 20 90 20"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeDasharray="4 4"
-              fill="none"
-              strokeLinecap="round"
-            />
-            <path
-              d="M80 10 L 95 20 L 80 30"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </div>
       </div>
     </div>

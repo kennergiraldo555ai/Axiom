@@ -36,46 +36,70 @@ interface NavGroup {
 const NAV_GROUPS: NavGroup[] = [
   {
     label: "Visión General",
-    items: [{ href: "/dashboard", label: "Panel", icon: <LayoutDashboard className="w-4 h-4" /> }],
+    items: [
+      {
+        href: "/dashboard",
+        label: "Panel",
+        icon: <LayoutDashboard className="w-[18px] h-[18px]" />,
+      },
+    ],
   },
   {
     label: "Motor de Crecimiento",
     items: [
-      { href: "/growth/prospecting", label: "Prospectos", icon: <Target className="w-4 h-4" /> },
-      { href: "/growth/campaigns", label: "Campañas", icon: <Megaphone className="w-4 h-4" /> },
+      {
+        href: "/growth/prospecting",
+        label: "Prospectos",
+        icon: <Target className="w-[18px] h-[18px]" />,
+      },
+      {
+        href: "/growth/campaigns",
+        label: "Campañas",
+        icon: <Megaphone className="w-[18px] h-[18px]" />,
+      },
       {
         href: "/growth/automation",
         label: "Automatización",
-        icon: <Workflow className="w-4 h-4" />,
+        icon: <Workflow className="w-[18px] h-[18px]" />,
       },
     ],
   },
   {
     label: "Ventas & CRM",
     items: [
-      { href: "/crm/leads", label: "Clientes Potenciales", icon: <Sparkles className="w-4 h-4" /> },
+      {
+        href: "/crm/leads",
+        label: "Clientes Potenciales",
+        icon: <Sparkles className="w-[18px] h-[18px]" />,
+      },
       {
         href: "/crm/opportunities",
         label: "Oportunidades",
-        icon: <Briefcase className="w-4 h-4" />,
+        icon: <Briefcase className="w-[18px] h-[18px]" />,
       },
-      { href: "/crm/companies", label: "Empresas", icon: <Building2 className="w-4 h-4" /> },
-      { href: "/crm/contacts", label: "Contactos", icon: <Users className="w-4 h-4" /> },
+      {
+        href: "/crm/companies",
+        label: "Empresas",
+        icon: <Building2 className="w-[18px] h-[18px]" />,
+      },
+      { href: "/crm/contacts", label: "Contactos", icon: <Users className="w-[18px] h-[18px]" /> },
       {
         href: "/crm/conversations",
         label: "Conversaciones",
-        icon: <MessageSquare className="w-4 h-4" />,
+        icon: <MessageSquare className="w-[18px] h-[18px]" />,
       },
     ],
   },
   {
     label: "Análisis",
-    items: [{ href: "/reports", label: "Reportes", icon: <BarChart3 className="w-4 h-4" /> }],
+    items: [
+      { href: "/reports", label: "Reportes", icon: <BarChart3 className="w-[18px] h-[18px]" /> },
+    ],
   },
 ];
 
 const BOTTOM_NAV_ITEMS: NavItem[] = [
-  { href: "/settings", label: "Configuración", icon: <Settings className="w-4 h-4" /> },
+  { href: "/settings", label: "Configuración", icon: <Settings className="w-[18px] h-[18px]" /> },
 ];
 
 export function Sidebar() {
@@ -100,15 +124,12 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="w-[var(--sidebar-width-expanded)] min-h-screen bg-[var(--c-bg-base)] border-r border-[var(--c-border-subtle)] flex flex-col shrink-0 relative z-20">
+    <aside className="relative z-20 flex min-h-screen w-[260px] shrink-0 flex-col border-r border-[var(--c-border-subtle)] bg-[var(--c-bg-base)]">
       {/* Logo */}
-      <div className="h-24 flex items-center px-10 shrink-0">
-        <span className="text-xl font-bold text-[var(--c-text-primary)] tracking-tight flex items-center gap-4">
-          <div className="w-10 h-10 rounded-[var(--r-md)] bg-[var(--c-bg-elevated)] flex items-center justify-center shadow-tactile border border-[var(--c-border-strong)] relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-[var(--c-accent)]/20 to-transparent pointer-events-none" />
-            <span className="text-[var(--c-accent)] text-lg font-black drop-shadow-[0_0_8px_rgba(0,229,255,0.8)] relative z-10">
-              A
-            </span>
+      <div className="flex h-[100px] shrink-0 items-center px-8">
+        <span className="flex items-center gap-4 text-[22px] font-black tracking-[0.1em] text-[var(--c-text-primary)]">
+          <div className="group relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-[var(--r-xl)] bg-[linear-gradient(135deg,var(--c-primary),var(--c-accent))] shadow-[0_0_24px_-8px_rgb(99_102_241_/_0.8)]">
+            <span className="relative z-10 text-[20px] font-black text-white">A</span>
           </div>
           AXIOM
         </span>
@@ -116,11 +137,10 @@ export function Sidebar() {
 
       {/* Main nav */}
       <nav
-        className="flex-1 overflow-y-auto py-6 px-6 space-y-8 custom-scrollbar"
+        className="custom-scrollbar flex-1 space-y-10 overflow-y-auto px-6 py-6"
         aria-label="Navegación Principal"
       >
         {NAV_GROUPS.map((group) => {
-          // Translate group labels for Neo-Tactile 100% Spanish compliance
           const labelEs =
             group.label === "Overview"
               ? "Vista General"
@@ -129,39 +149,40 @@ export function Sidebar() {
                 : group.label;
           return (
             <div key={group.label} className="flex flex-col gap-2">
-              <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[var(--c-text-tertiary)] px-4 mb-3 drop-shadow-[0_0_5px_rgba(255,255,255,0.05)]">
+              <span className="mb-4 px-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--c-text-tertiary)]">
                 {labelEs}
               </span>
-              {group.items.map((item) => {
-                // Translate item labels
-                const itemLabelEs =
-                  item.label === "Dashboard"
-                    ? "Panel"
-                    : item.label === "Prospecting"
-                      ? "Prospectos"
-                      : item.label === "Campaigns"
-                        ? "Campañas"
-                        : item.label === "Leads"
-                          ? "Clientes Pot."
-                          : item.label === "Settings"
-                            ? "Ajustes"
-                            : item.label;
-                return (
-                  <SidebarItem
-                    key={item.href}
-                    item={{ ...item, label: itemLabelEs }}
-                    active={isActive(item.href)}
-                  />
-                );
-              })}
+              <div className="flex flex-col gap-1">
+                {group.items.map((item) => {
+                  const itemLabelEs =
+                    item.label === "Dashboard"
+                      ? "Panel"
+                      : item.label === "Prospecting"
+                        ? "Prospectos"
+                        : item.label === "Campaigns"
+                          ? "Campañas"
+                          : item.label === "Leads"
+                            ? "Clientes Pot."
+                            : item.label === "Settings"
+                              ? "Ajustes"
+                              : item.label;
+                  return (
+                    <SidebarItem
+                      key={item.href}
+                      item={{ ...item, label: itemLabelEs }}
+                      active={isActive(item.href)}
+                    />
+                  );
+                })}
+              </div>
             </div>
           );
         })}
       </nav>
 
       {/* Bottom nav & User */}
-      <div className="p-6 shrink-0 flex flex-col gap-4 mt-auto">
-        <div className="flex flex-col gap-2">
+      <div className="mt-auto flex shrink-0 flex-col gap-6 p-6">
+        <div className="flex flex-col gap-1">
           {BOTTOM_NAV_ITEMS.map((item) => {
             const itemLabelEs = item.label === "Settings" ? "Configuración" : item.label;
             return (
@@ -175,24 +196,26 @@ export function Sidebar() {
         </div>
 
         {/* Plan Growth Card */}
-        <div className="mt-2 p-4 rounded-2xl bg-gradient-to-b from-[var(--c-bg-elevated)] to-[var(--c-bg-base)] border border-[var(--c-border-strong)] shadow-tactile flex flex-col gap-3 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--c-violet)]/10 rounded-full blur-2xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
+        <div className="group relative flex flex-col gap-4 overflow-hidden rounded-[var(--r-2xl)] border border-[var(--c-border-strong)] bg-[linear-gradient(180deg,var(--c-bg-elevated),var(--c-bg-base))] p-5 shadow-tactile transition-all hover:border-[var(--c-primary-border)] hover:shadow-glow">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--c-primary),transparent)] opacity-50" />
 
           <div className="flex justify-between items-start">
-            <div className="flex flex-col">
-              <span className="text-[13px] font-semibold text-[var(--c-text-primary)] group-hover:text-[var(--c-accent)] transition-colors">
+            <div className="flex flex-col gap-1">
+              <span className="text-[14px] font-bold text-[var(--c-text-primary)] group-hover:text-[var(--c-primary)] transition-colors">
                 Plan Growth
               </span>
-              <span className="text-[11px] text-[var(--c-text-tertiary)]">Profesional</span>
+              <span className="text-[12px] font-medium text-[var(--c-text-tertiary)]">
+                Profesional
+              </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-[var(--c-text-tertiary)] group-hover:text-[var(--c-accent)] transition-colors" />
+            <ChevronRight className="w-4 h-4 text-[var(--c-text-tertiary)] transition-colors group-hover:text-[var(--c-primary)]" />
           </div>
 
-          <div className="flex flex-col gap-1.5 mt-1">
-            <div className="h-1.5 w-full bg-[var(--c-bg-hover)] rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-[var(--c-violet)] to-[var(--c-accent)] w-[62%] rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+          <div className="flex flex-col gap-2 mt-1">
+            <div className="h-1.5 w-full bg-[var(--c-border-strong)] rounded-full overflow-hidden">
+              <div className="h-full w-[62%] rounded-full bg-[linear-gradient(90deg,var(--c-primary),var(--c-accent))] shadow-[0_0_14px_rgb(99_102_241_/_0.8)]" />
             </div>
-            <div className="flex justify-between items-center text-[10px]">
+            <div className="flex justify-between items-center text-[11px] font-medium">
               <span className="text-[var(--c-text-tertiary)]">Renueva el 12 Jul 2025</span>
               <span className="text-[var(--c-text-secondary)] font-bold">62%</span>
             </div>
@@ -200,20 +223,22 @@ export function Sidebar() {
         </div>
 
         {/* User Profile Footer */}
-        <div className="flex items-center gap-3 p-3 mt-2 rounded-2xl hover:bg-[var(--c-bg-hover)] transition-colors cursor-pointer border border-transparent hover:border-[var(--c-border-subtle)]">
-          <div className="w-10 h-10 rounded-full bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] flex items-center justify-center shadow-tactile shrink-0">
-            <span className="text-xs font-bold text-[var(--c-text-primary)]">KG</span>
+        <div className="flex cursor-pointer items-center gap-4 rounded-[var(--r-2xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)] p-3 shadow-tactile transition-all hover:border-[var(--c-primary-border)] hover:bg-[var(--c-bg-hover)]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-base)] shadow-inner">
+            <span className="text-[13px] font-black text-[var(--c-text-primary)]">KG</span>
           </div>
-          <div className="flex flex-col flex-1 min-w-0">
-            <span className="text-[13px] font-semibold text-[var(--c-text-primary)] truncate">
+          <div className="flex flex-col flex-1 min-w-0 justify-center">
+            <span className="text-[14px] font-bold text-[var(--c-text-primary)] truncate">
               Kenner Giraldo
             </span>
-            <span className="text-[11px] text-[var(--c-text-tertiary)] truncate">Admin</span>
+            <span className="text-[12px] font-medium text-[var(--c-text-tertiary)] truncate">
+              Admin
+            </span>
           </div>
           <button
             onClick={handleSignOut}
             disabled={signingOut}
-            className="text-[var(--c-text-tertiary)] hover:text-[var(--c-danger)] transition-colors p-1"
+            className="flex h-8 w-8 items-center justify-center rounded-[var(--r-md)] text-[var(--c-text-tertiary)] transition-colors hover:bg-[var(--c-bg-base)] hover:text-[var(--c-danger)] border border-transparent hover:border-[var(--c-border-strong)]"
             title="Cerrar sesión"
           >
             {signingOut ? (
@@ -237,24 +262,22 @@ function SidebarItem({ item, active }: SidebarItemProps) {
   return (
     <Link
       href={item.href as Route}
-      className={`group flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-accent)] relative overflow-hidden ${
+      className={`group relative flex items-center gap-4 overflow-hidden rounded-[var(--r-xl)] px-4 py-3.5 text-[14px] font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-primary)] ${
         active
-          ? "text-[var(--c-text-primary)] font-semibold bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
-          : "text-[var(--c-text-secondary)] hover:bg-[var(--c-bg-hover)] hover:text-[var(--c-text-primary)] border border-transparent"
+          ? "bg-[var(--c-primary)]/10 text-[var(--c-primary)]"
+          : "bg-transparent text-[var(--c-text-secondary)] hover:bg-[var(--c-bg-hover)] hover:text-[var(--c-text-primary)]"
       }`}
       aria-current={active ? "page" : undefined}
     >
-      {/* Active state inner glow & indicator */}
+      {/* Active state indicator */}
       {active && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--c-violet)]/10 via-[var(--c-accent)]/5 to-transparent pointer-events-none" />
-        </>
+        <div className="absolute inset-y-0 left-0 w-1 rounded-r-full bg-[var(--c-primary)] shadow-[0_0_12px_rgb(99_102_241_/_0.8)]" />
       )}
 
       <span
-        className={`transition-all duration-300 relative z-10 ${
+        className={`transition-all duration-300 relative z-10 flex items-center justify-center ${
           active
-            ? "text-[var(--c-violet)] drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]"
+            ? "text-[var(--c-primary)] drop-shadow-[0_0_8px_rgb(99_102_241_/_0.5)]"
             : "text-[var(--c-text-tertiary)] group-hover:text-[var(--c-text-primary)]"
         }`}
       >

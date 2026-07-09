@@ -211,30 +211,30 @@ export function ProspectLayout() {
 
 function OnboardingState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 md:py-24 relative w-full max-w-5xl mx-auto">
+    <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center justify-center py-16 md:py-24">
       {/* Massive glowing rings and binoculars illustration */}
-      <div className="relative mb-12 group">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-tr from-[var(--c-accent)]/10 to-[var(--c-violet)]/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="group relative mb-12">
+        <div className="pointer-events-none absolute inset-x-[-120px] top-1/2 h-36 -translate-y-1/2 bg-[linear-gradient(90deg,transparent,rgb(99_102_241_/_0.12),rgb(168_85_247_/_0.1),transparent)] blur-3xl" />
 
         {/* Floating elements */}
-        <div className="absolute -top-10 -right-10 w-16 h-16 bg-gradient-to-br from-[var(--c-bg-elevated)] to-[#0B0D12] border border-[var(--c-border-strong)] rounded-2xl flex items-center justify-center shadow-tactile animate-pulse">
+        <div className="absolute -right-10 -top-10 flex h-16 w-16 animate-pulse items-center justify-center rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[linear-gradient(135deg,var(--c-bg-elevated),var(--c-bg-base))] shadow-tactile">
           <Sparkles className="w-8 h-8 text-[var(--c-violet)]" />
         </div>
 
         {/* Center illustration container */}
-        <div className="relative w-48 h-48 sm:w-64 sm:h-64 bg-gradient-to-b from-[#1E2230] to-[#0B0D12] rounded-[40px] border border-[var(--c-border-strong)] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] flex items-center justify-center overflow-hidden">
+        <div className="relative flex h-48 w-48 items-center justify-center overflow-hidden rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[linear-gradient(180deg,var(--c-border-base),var(--c-bg-base))] shadow-[0_20px_60px_-30px_rgb(11_13_18_/_0.9)] sm:h-64 sm:w-64">
           {/* Inner ring */}
-          <div className="absolute inset-0 m-auto w-3/4 h-3/4 rounded-[30px] border border-[var(--c-border-subtle)]" />
+          <div className="absolute inset-0 m-auto h-3/4 w-3/4 rounded-[var(--r-xl)] border border-[var(--c-border-subtle)]" />
           {/* Binoculars representation using overlapping glowing circles */}
           <div className="relative flex items-center gap-2">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#0B0D12] border-4 border-[var(--c-accent)] shadow-[0_0_30px_rgba(0,229,255,0.6),inset_0_0_20px_rgba(0,229,255,0.3)] relative z-10">
+            <div className="relative z-10 h-16 w-16 rounded-full border-4 border-[var(--c-primary)] bg-[var(--c-bg-base)] shadow-[0_0_30px_rgb(99_102_241_/_0.54),inset_0_0_20px_rgb(99_102_241_/_0.24)] sm:h-20 sm:w-20">
               <div className="absolute inset-2 rounded-full bg-[var(--c-accent)]/20" />
             </div>
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#0B0D12] border-4 border-[var(--c-violet)] shadow-[0_0_30px_rgba(168,85,247,0.6),inset_0_0_20px_rgba(168,85,247,0.3)] relative z-10">
+            <div className="relative z-10 h-16 w-16 rounded-full border-4 border-[var(--c-accent)] bg-[var(--c-bg-base)] shadow-[0_0_30px_rgb(168_85_247_/_0.54),inset_0_0_20px_rgb(168_85_247_/_0.24)] sm:h-20 sm:w-20">
               <div className="absolute inset-2 rounded-full bg-[var(--c-violet)]/20" />
             </div>
             {/* Center connector */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-4 bg-[#1E2230] z-0" />
+            <div className="absolute left-1/2 top-1/2 z-0 h-4 w-8 -translate-x-1/2 -translate-y-1/2 bg-[var(--c-border-base)]" />
           </div>
           {/* "A" logo hint floating */}
           <div className="absolute bottom-8 right-8 text-[var(--c-accent)] opacity-40 font-bold text-4xl">
@@ -244,7 +244,7 @@ function OnboardingState() {
       </div>
 
       <div className="text-center max-w-2xl mb-16 relative z-10">
-        <h2 className="text-3xl sm:text-4xl font-black text-[var(--c-text-primary)] tracking-tight mb-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+        <h2 className="mb-4 text-3xl font-bold tracking-normal text-[var(--c-text-primary)] sm:text-4xl">
           Encuentra tu próximo gran cliente
         </h2>
         <p className="text-[15px] sm:text-lg text-[var(--c-text-secondary)] leading-relaxed">
@@ -255,7 +255,7 @@ function OnboardingState() {
 
       {/* Feature Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full relative z-10">
-        <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-2xl)] p-8 flex flex-col items-center text-center shadow-tactile hover:border-[var(--c-violet)]/50 hover:-translate-y-1 transition-all duration-300">
+        <div className="flex flex-col items-center rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-glass)] p-8 text-center shadow-tactile transition-all duration-300 hover:-translate-y-1 hover:border-[var(--c-accent-border)]">
           <div className="w-14 h-14 rounded-2xl bg-[var(--c-violet)]/10 border border-[var(--c-violet)]/20 flex items-center justify-center mb-6">
             <Sparkles className="w-7 h-7 text-[var(--c-violet)]" />
           </div>
@@ -265,7 +265,7 @@ function OnboardingState() {
           </p>
         </div>
 
-        <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-2xl)] p-8 flex flex-col items-center text-center shadow-tactile hover:border-[var(--c-info)]/50 hover:-translate-y-1 transition-all duration-300">
+        <div className="flex flex-col items-center rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-glass)] p-8 text-center shadow-tactile transition-all duration-300 hover:-translate-y-1 hover:border-[var(--c-primary-border)]">
           <div className="w-14 h-14 rounded-2xl bg-[var(--c-info)]/10 border border-[var(--c-info)]/20 flex items-center justify-center mb-6">
             <Globe className="w-7 h-7 text-[var(--c-info)]" />
           </div>
@@ -277,7 +277,7 @@ function OnboardingState() {
           </p>
         </div>
 
-        <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-2xl)] p-8 flex flex-col items-center text-center shadow-tactile hover:border-[var(--c-accent)]/50 hover:-translate-y-1 transition-all duration-300">
+        <div className="flex flex-col items-center rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-glass)] p-8 text-center shadow-tactile transition-all duration-300 hover:-translate-y-1 hover:border-[var(--c-secondary-border)]">
           <div className="w-14 h-14 rounded-2xl bg-[var(--c-accent)]/10 border border-[var(--c-accent)]/20 flex items-center justify-center mb-6">
             <Search className="w-7 h-7 text-[var(--c-accent)]" />
           </div>

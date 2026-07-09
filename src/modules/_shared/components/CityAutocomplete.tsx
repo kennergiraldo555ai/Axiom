@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { MapPin, Loader2 } from "lucide-react";
-import { Input } from "./Input";
 
 export interface CityData {
   id: number;
@@ -115,8 +114,8 @@ export function CityAutocomplete({ onSelect, disabled }: CityAutocompleteProps) 
 
   return (
     <div className="relative w-full" ref={wrapperRef}>
-      <div className="relative group">
-        <Input
+      <div className="relative group/input-inner">
+        <input
           type="text"
           placeholder="Ej. Madrid, Barcelona, Bogotá..."
           value={query}
@@ -125,31 +124,32 @@ export function CityAutocomplete({ onSelect, disabled }: CityAutocompleteProps) 
             if (results.length > 0) setIsOpen(true);
           }}
           disabled={disabled}
-          className="w-full h-[50px] text-[15px] pl-12 pr-10 bg-[var(--c-bg-base)] border-[var(--c-border-strong)] focus:border-[var(--c-accent)] focus:ring-[var(--c-accent)] focus:shadow-[0_0_15px_rgba(0,229,255,0.3)] font-medium transition-all shadow-tactile rounded-[var(--r-md)]"
+          className="flex h-[60px] w-full rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-base)]/50 backdrop-blur-md pl-14 pr-12 text-[16px] font-medium text-[var(--c-text-primary)] shadow-tactile transition-all placeholder:text-[var(--c-text-disabled)] focus-visible:border-[var(--c-primary)] focus-visible:bg-[var(--c-bg-glass)] focus-visible:shadow-[0_0_30px_-10px_rgb(99_102_241_/_0.8)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--c-primary)] disabled:cursor-not-allowed disabled:opacity-50 hover:border-[var(--c-border-hover)]"
         />
-        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-          <MapPin className="h-5 w-5 text-[var(--c-text-tertiary)] group-focus-within:text-[var(--c-accent)] group-focus-within:drop-shadow-[0_0_5px_rgba(0,229,255,0.8)] transition-all" />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none">
+          <MapPin className="h-5 w-5 text-[var(--c-text-tertiary)] transition-all group-focus-within/input-inner:text-[var(--c-primary)] group-focus-within/input-inner:drop-shadow-[0_0_8px_rgb(99_102_241_/_0.8)]" />
         </div>
-        <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-          {isLoading ? <Loader2 className="h-4 w-4 text-[var(--c-accent)] animate-spin" /> : null}
+        <div className="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none">
+          {isLoading ? <Loader2 className="h-5 w-5 text-[var(--c-primary)] animate-spin" /> : null}
         </div>
       </div>
 
       {isOpen && query.length >= 2 && (
-        <div className="absolute z-50 w-full mt-2 bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-[var(--r-xl)] shadow-glow overflow-hidden backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute z-50 w-full mt-3 bg-[linear-gradient(180deg,var(--c-bg-elevated),var(--c-bg-base))] border border-[var(--c-border-strong)] rounded-[var(--r-xl)] shadow-[0_24px_50px_-12px_rgb(11_13_18_/_1)] overflow-hidden backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200 p-2">
           {results.length > 0 ? (
-            <ul className="py-2 max-h-[300px] overflow-auto custom-scrollbar">
+            <ul className="max-h-[300px] overflow-auto custom-scrollbar">
               {results.map((city) => (
                 <li
                   key={city.id}
                   onClick={() => handleSelect(city)}
-                  className="px-4 py-2 mx-2 rounded-[var(--r-md)] hover:bg-[var(--c-accent)]/10 cursor-pointer flex items-center gap-3 transition-colors group/item"
+                  className="px-4 py-3.5 mx-2 my-1 rounded-[var(--r-lg)] hover:bg-[var(--c-primary)]/10 cursor-pointer flex items-center gap-4 transition-all group/item"
                 >
+                  <MapPin className="w-4 h-4 text-[var(--c-text-tertiary)] group-hover/item:text-[var(--c-primary)] transition-colors" />
                   <div className="flex-1 flex flex-col">
-                    <span className="text-[13px] font-bold text-[var(--c-text-primary)] group-hover/item:text-[var(--c-accent)] transition-colors">
+                    <span className="text-[14px] font-semibold text-[var(--c-text-primary)] group-hover/item:text-[var(--c-primary)] transition-colors">
                       {city.name}
                     </span>
-                    <span className="text-[11px] text-[var(--c-text-secondary)]">
+                    <span className="text-[12px] font-medium text-[var(--c-text-tertiary)]">
                       {city.admin1 ? `${city.admin1}, ` : ""}
                       {city.country}
                     </span>
@@ -158,7 +158,7 @@ export function CityAutocomplete({ onSelect, disabled }: CityAutocompleteProps) 
               ))}
             </ul>
           ) : !isLoading ? (
-            <div className="px-4 py-6 text-[13px] text-[var(--c-accent)] text-center font-medium opacity-70">
+            <div className="px-6 py-8 text-[14px] text-[var(--c-text-secondary)] text-center font-medium">
               No se encontraron ciudades
             </div>
           ) : null}

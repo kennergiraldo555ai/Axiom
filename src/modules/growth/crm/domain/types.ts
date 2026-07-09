@@ -20,10 +20,10 @@ export interface PipelineColumn {
 }
 
 export const PIPELINE_COLUMNS: PipelineColumn[] = [
-  { id: "NEW", label: "Nuevo", color: "var(--c-blue, #3b82f6)" },
-  { id: "CONTACTED", label: "Contactado", color: "var(--c-amber, #f59e0b)" },
-  { id: "QUALIFIED", label: "Calificado", color: "var(--c-indigo, #6366f1)" },
-  { id: "PROPOSAL", label: "Propuesta", color: "var(--c-purple, #a855f7)" },
-  { id: "WON", label: "Ganado", color: "var(--c-green, #22c55e)" },
-  { id: "LOST", label: "Perdido", color: "var(--c-danger, #ef4444)" },
+  { id: "NEW", label: "Nuevo", color: "var(--c-primary)" },
+  { id: "CONTACTED", label: "Contactado", color: "var(--c-secondary)" },
+  { id: "QUALIFIED", label: "Calificado", color: "var(--c-primary)" },
+  { id: "PROPOSAL", label: "Propuesta", color: "var(--c-accent)" },
+  { id: "WON", label: "Ganado", color: "var(--c-secondary)" },
+  { id: "LOST", label: "Perdido", color: "var(--c-accent)" },
 ];

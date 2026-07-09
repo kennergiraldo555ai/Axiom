@@ -17,23 +17,25 @@ export default async function CrmPage() {
   const leads = leadsResult.ok ? leadsResult.value : [];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-theme(spacing.16))]">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-5 shrink-0 border-b border-white/5">
+    <div className="flex h-[calc(100vh-theme(spacing.16))] flex-col">
+      <div className="flex shrink-0 items-center justify-between border-b border-[var(--c-border-subtle)] px-1 pb-6">
         <div>
-          <h1 className="text-xl font-semibold text-gray-100 mb-1">Embudo de Ventas</h1>
-          <p className="text-sm text-gray-400">Gestiona y cierra oportunidades comerciales</p>
+          <h1 className="mb-2 text-4xl font-bold tracking-normal text-[var(--c-text-primary)]">
+            Embudo de Ventas
+          </h1>
+          <p className="text-sm text-[var(--c-text-secondary)]">
+            Gestiona y cierra oportunidades comerciales
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="default" size="sm" className="gap-2">
-            <Plus className="w-4 h-4" />
+            <Plus className="h-4 w-4" />
             Nuevo cliente potencial
           </Button>
         </div>
       </div>
 
-      {/* Main Content (Kanban) */}
-      <div className="flex-1 overflow-hidden p-6 bg-[#0a0a0a]">
+      <div className="flex-1 overflow-hidden pt-6">
         <PipelineKanban initialLeads={leads} />
       </div>
     </div>

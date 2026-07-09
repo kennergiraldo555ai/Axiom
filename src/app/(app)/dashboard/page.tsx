@@ -5,65 +5,56 @@ export const metadata: Metadata = {
   title: "Dashboard",
 };
 
+const previewItems = [
+  { label: "Prospección Inteligente", icon: Target },
+  { label: "Análisis Predictivo", icon: Activity },
+  { label: "Automatización", icon: Zap },
+];
+
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col min-h-[calc(100vh-3.5rem)] items-center justify-center p-8 animate-in fade-in-50 duration-500">
-      <div className="max-w-2xl w-full flex flex-col items-center text-center space-y-8 relative">
-        {/* Glow effect background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--c-accent)]/10 blur-[100px] rounded-full pointer-events-none" />
+    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center p-8 animate-in fade-in-50 duration-500">
+      <div className="relative flex w-full max-w-3xl flex-col items-center space-y-8 text-center">
+        <div className="pointer-events-none absolute inset-x-0 top-16 h-32 bg-[linear-gradient(90deg,transparent,rgb(99_102_241_/_0.13),rgb(168_85_247_/_0.1),transparent)] blur-3xl" />
 
-        {/* Logo / Icon */}
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-tr from-[var(--c-accent)] to-[#a855f7] blur-xl opacity-30 rounded-3xl" />
-          <div className="w-20 h-20 bg-[var(--c-bg-elevated)] border border-[var(--c-border-strong)] rounded-3xl shadow-xl flex items-center justify-center relative z-10">
-            <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-br from-[var(--c-accent)] to-[#a855f7]">
-              A
-            </span>
+          <div className="absolute inset-0 rounded-[var(--r-xl)] bg-[linear-gradient(135deg,var(--c-primary),var(--c-accent))] opacity-30 blur-xl" />
+          <div className="relative z-10 flex h-20 w-20 items-center justify-center rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)] shadow-tactile">
+            <span className="font-display text-3xl font-black text-[var(--c-text-primary)]">A</span>
           </div>
         </div>
 
-        {/* Text content */}
-        <div className="space-y-4 relative z-10">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--c-text-primary)]">
-            AXIOM <span className="text-[var(--c-accent)]">GROWTH</span>
+        <div className="relative z-10 space-y-4">
+          <h1 className="text-4xl font-bold tracking-normal text-[var(--c-text-primary)] sm:text-5xl">
+            AXIOM <span className="text-[var(--c-primary)]">GROWTH</span>
           </h1>
-          <p className="text-lg text-[var(--c-text-secondary)] max-w-[500px] mx-auto leading-relaxed">
+          <p className="mx-auto max-w-[560px] text-lg leading-relaxed text-[var(--c-text-secondary)]">
             El motor de inteligencia comercial está en desarrollo. Muy pronto tendrás acceso al
             panel completo de análisis, prospección y gestión de oportunidades.
           </p>
         </div>
 
-        {/* Feature preview cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full mt-8 relative z-10">
-          <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-subtle)] p-5 rounded-2xl flex flex-col items-center gap-3 text-center">
-            <div className="w-10 h-10 rounded-full bg-[var(--c-accent)]/10 text-[var(--c-accent)] flex items-center justify-center">
-              <Target className="w-5 h-5" />
-            </div>
-            <h3 className="text-[13px] font-semibold text-[var(--c-text-primary)] uppercase tracking-wider">
-              Prospección Inteligente
-            </h3>
-          </div>
-          <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-subtle)] p-5 rounded-2xl flex flex-col items-center gap-3 text-center">
-            <div className="w-10 h-10 rounded-full bg-[var(--c-accent)]/10 text-[var(--c-accent)] flex items-center justify-center">
-              <Activity className="w-5 h-5" />
-            </div>
-            <h3 className="text-[13px] font-semibold text-[var(--c-text-primary)] uppercase tracking-wider">
-              Análisis Predictivo
-            </h3>
-          </div>
-          <div className="bg-[var(--c-bg-elevated)] border border-[var(--c-border-subtle)] p-5 rounded-2xl flex flex-col items-center gap-3 text-center">
-            <div className="w-10 h-10 rounded-full bg-[var(--c-accent)]/10 text-[var(--c-accent)] flex items-center justify-center">
-              <Zap className="w-5 h-5" />
-            </div>
-            <h3 className="text-[13px] font-semibold text-[var(--c-text-primary)] uppercase tracking-wider">
-              Automatización
-            </h3>
-          </div>
+        <div className="relative z-10 mt-8 grid w-full grid-cols-1 gap-4 sm:grid-cols-3">
+          {previewItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.label}
+                className="flex flex-col items-center gap-3 rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-glass)] p-5 text-center shadow-tactile"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--c-primary-border)] bg-[var(--c-primary-subtle)] text-[var(--c-primary)]">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="text-[13px] font-semibold uppercase tracking-wider text-[var(--c-text-primary)]">
+                  {item.label}
+                </h3>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Tagline */}
-        <div className="pt-8 flex items-center gap-2 text-[13px] text-[var(--c-text-tertiary)] font-medium">
-          <Sparkles className="w-4 h-4 text-[var(--c-accent)]" />
+        <div className="flex items-center gap-2 pt-8 text-[13px] font-medium text-[var(--c-text-tertiary)]">
+          <Sparkles className="h-4 w-4 text-[var(--c-accent)]" />
           Próximamente en producción
         </div>
       </div>

@@ -18,11 +18,11 @@ export function LeadCard({ lead }: LeadCardProps) {
 
   return (
     <div className="group relative">
-      <Card className="cursor-grab active:cursor-grabbing p-3 hover:border-gray-600 transition-colors bg-[#111] border-white/10">
+      <Card className="cursor-grab border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)] p-3 shadow-tactile transition-colors hover:border-[var(--c-border-hover)] active:cursor-grabbing">
         <div className="flex flex-col gap-2">
           {/* Header */}
           <div className="flex items-start justify-between gap-2">
-            <h4 className="text-sm font-semibold text-gray-100 line-clamp-2 leading-tight">
+            <h4 className="line-clamp-2 text-sm font-semibold leading-tight text-[var(--c-text-primary)]">
               {lead.businessName || lead.name}
             </h4>
             {lead.priority > 0 && (
@@ -35,20 +35,20 @@ export function LeadCard({ lead }: LeadCardProps) {
           {/* Details */}
           <div className="flex flex-col gap-1.5 mt-1">
             {lead.businessName && lead.name !== lead.businessName && (
-              <div className="flex items-center gap-1.5 text-xs text-gray-400">
+              <div className="flex items-center gap-1.5 text-xs text-[var(--c-text-secondary)]">
                 <Building2 className="w-3 h-3 shrink-0" />
                 <span className="truncate">{lead.name}</span>
               </div>
             )}
 
-            <div className="flex items-center justify-between text-xs text-gray-400">
+            <div className="flex items-center justify-between text-xs text-[var(--c-text-secondary)]">
               {formattedValue ? (
-                <div className="flex items-center gap-1 font-medium text-gray-300">
-                  <DollarSign className="w-3 h-3 text-green-500" />
+                <div className="flex items-center gap-1 font-medium text-[var(--c-text-primary)]">
+                  <DollarSign className="h-3 w-3 text-[var(--c-secondary)]" />
                   <span>{formattedValue}</span>
                 </div>
               ) : (
-                <span className="text-gray-600 italic text-[11px]">Sin valor</span>
+                <span className="text-[11px] italic text-[var(--c-text-disabled)]">Sin valor</span>
               )}
 
               <div className="flex items-center gap-1" title="Fecha de creación">

@@ -31,8 +31,8 @@ export function EmptyState({
       {...props}
     >
       <div className="relative mb-6 group">
-        <div className="absolute inset-0 bg-gradient-to-tr from-[var(--c-accent)] to-[#a855f7] opacity-20 blur-xl rounded-full group-hover:opacity-30 transition-opacity duration-500" />
-        <div className="relative w-16 h-16 flex items-center justify-center rounded-[var(--r-2xl)] bg-[var(--c-bg-subtle)] border border-[var(--c-border-subtle)] shadow-sm text-[var(--c-text-secondary)]">
+        <div className="absolute inset-0 rounded-[var(--r-xl)] bg-[linear-gradient(135deg,var(--c-primary),var(--c-accent))] opacity-20 blur-xl transition-opacity duration-500 group-hover:opacity-30" />
+        <div className="relative flex h-16 w-16 items-center justify-center rounded-[var(--r-xl)] border border-[var(--c-border-subtle)] bg-[var(--c-bg-subtle)] text-[var(--c-text-secondary)] shadow-sm">
           {icon || <FolderOpen className="h-7 w-7" />}
         </div>
       </div>

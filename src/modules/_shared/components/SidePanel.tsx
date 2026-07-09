@@ -3,7 +3,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
-import { Button } from "./Button";
 
 interface SidePanelProps {
   isOpen: boolean;
@@ -38,14 +37,14 @@ export function SidePanel({ isOpen, onClose, children, className, width = "md" }
   return (
     <>
       <div
-        className="fixed inset-0 z-50 bg-[var(--c-bg-base)]/80 backdrop-blur-md animate-in fade-in-0 duration-300"
+        className="fixed inset-0 z-50 bg-[var(--c-bg-base)]/80 backdrop-blur-xl animate-in fade-in-0 duration-500"
         onClick={onClose}
         aria-hidden="true"
       />
 
       <div
         className={cn(
-          "fixed inset-y-4 right-4 z-50 flex flex-col bg-[var(--c-bg-elevated)]/90 backdrop-blur-3xl border border-[var(--c-border-strong)] rounded-[var(--r-2xl)] shadow-glow animate-in slide-in-from-right-full duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden",
+          "fixed inset-y-4 right-4 z-50 flex flex-col overflow-hidden rounded-[var(--r-2xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-base)] shadow-[0_24px_80px_-24px_rgba(11,13,18,1)] backdrop-blur-3xl animate-in slide-in-from-right-full duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
           widthClass,
           className,
         )}
@@ -53,8 +52,6 @@ export function SidePanel({ isOpen, onClose, children, className, width = "md" }
         role="dialog"
         aria-modal="true"
       >
-        {/* Glow accent bar at the top */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-accent)] to-transparent opacity-50" />
         {children}
       </div>
     </>
@@ -79,30 +76,28 @@ export function SidePanelHeader({
   return (
     <div
       className={cn(
-        "flex flex-col space-y-2 p-8 border-b border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)] shrink-0 shadow-tactile relative z-10",
+        "relative z-10 flex shrink-0 flex-col space-y-2 bg-[var(--c-bg-base)]/80 backdrop-blur-xl px-10 pt-10 pb-6",
         className,
       )}
     >
       <div className="flex items-center justify-between">
         {title && (
-          <h2 className="text-xl font-bold text-[var(--c-text-primary)] drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]">
+          <h2 className="text-[22px] font-black text-[var(--c-text-primary)] tracking-tight">
             {title}
           </h2>
         )}
         {onClose && (
-          <Button
-            variant="ghost"
-            size="icon"
+          <button
             onClick={onClose}
-            className="h-8 w-8 shrink-0 rounded-full text-[var(--c-text-tertiary)] hover:text-[var(--c-accent)] hover:bg-[var(--c-accent)]/10 hover:shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--c-border-strong)] bg-[var(--c-bg-glass)] text-[var(--c-text-tertiary)] shadow-tactile transition-all hover:border-[var(--c-text-primary)] hover:text-[var(--c-text-primary)] hover:scale-105"
             aria-label="Cerrar panel"
           >
-            <X className="h-4 w-4" />
-          </Button>
+            <X className="h-5 w-5" strokeWidth={2.5} />
+          </button>
         )}
       </div>
       {description && (
-        <div className="text-sm font-medium text-[var(--c-accent)] opacity-80">{description}</div>
+        <div className="text-[14px] font-medium text-[var(--c-text-secondary)]">{description}</div>
       )}
       {children}
     </div>
@@ -129,7 +124,7 @@ export function SidePanelFooter({
   return (
     <div
       className={cn(
-        "flex items-center justify-end p-6 border-t border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)] shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.3)]",
+        "flex shrink-0 items-center justify-end border-t border-[var(--c-border-strong)] bg-[var(--c-bg-elevated)] p-8 shadow-[0_-12px_34px_-24px_rgb(11_13_18_/_0.85)]",
         className,
       )}
     >

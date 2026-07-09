@@ -11,11 +11,14 @@ const badgeVariants = cva(
           "border-[var(--c-accent-border)] bg-[var(--c-accent-subtle)] text-[var(--c-accent)]",
         secondary:
           "border-[var(--c-border-subtle)] bg-[var(--c-bg-hover)] text-[var(--c-text-secondary)] hover:bg-[var(--c-border-subtle)]",
-        destructive: "border-red-900/30 bg-red-900/20 text-red-400",
+        destructive:
+          "border-[var(--c-accent-border)] bg-[var(--c-accent-subtle)] text-[var(--c-accent)]",
         outline: "text-[var(--c-text-secondary)] border-[var(--c-border-subtle)]",
-        success: "border-emerald-900/30 bg-emerald-900/20 text-emerald-400",
-        warning: "border-amber-900/30 bg-amber-900/20 text-amber-400",
-        info: "border-blue-900/30 bg-blue-900/20 text-blue-400",
+        success:
+          "border-[var(--c-secondary-border)] bg-[var(--c-secondary-subtle)] text-[var(--c-secondary)]",
+        warning:
+          "border-[var(--c-accent-border)] bg-[var(--c-accent-subtle)] text-[var(--c-accent)]",
+        info: "border-[var(--c-primary-border)] bg-[var(--c-primary-subtle)] text-[var(--c-primary)]",
         premium:
           "border-[var(--c-border-default)] bg-[var(--c-bg-base)] text-[var(--c-text-primary)] shadow-premium",
         ai: "border-[var(--c-violet)]/30 bg-[var(--c-violet)]/10 text-[var(--c-violet)] shadow-[0_0_10px_rgba(168,85,247,0.2)]",

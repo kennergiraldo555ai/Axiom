@@ -63,21 +63,21 @@ export function PipelineKanban({ initialLeads }: PipelineKanbanProps) {
   };
 
   return (
-    <div className="flex h-full gap-4 overflow-x-auto pb-4">
+    <div className="flex h-full gap-5 overflow-x-auto pb-4">
       {PIPELINE_COLUMNS.map((column) => (
         <div
           key={column.id}
-          className="flex w-[320px] shrink-0 flex-col rounded-xl bg-white/5 border border-white/10"
+          className="flex w-[320px] shrink-0 flex-col rounded-[var(--r-xl)] border border-[var(--c-border-strong)] bg-[var(--c-bg-glass)] shadow-tactile"
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, column.id)}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-[var(--c-border-subtle)] px-4 py-3.5">
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full" style={{ backgroundColor: column.color }} />
-              <h3 className="font-medium text-sm text-gray-200">{column.label}</h3>
+              <h3 className="text-sm font-medium text-[var(--c-text-primary)]">{column.label}</h3>
             </div>
-            <span className="text-xs text-gray-500 font-medium bg-white/5 px-2 py-0.5 rounded-full">
+            <span className="rounded-full border border-[var(--c-border-subtle)] bg-[var(--c-bg-hover)] px-2 py-0.5 text-xs font-medium text-[var(--c-text-tertiary)]">
               {optimisticLeads.filter((l) => l.status === column.id).length}
             </span>
           </div>
